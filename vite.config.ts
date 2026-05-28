@@ -8,4 +8,12 @@ export default defineConfig({
     uni(),
     uvtw()
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+        silenceDeprecations: ['legacy-js-api', 'import'],
+      },
+    },
+  },
 });
