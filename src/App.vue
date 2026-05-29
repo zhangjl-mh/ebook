@@ -10,7 +10,8 @@ onHide(() => {
   console.log("App Hide");
 });
 </script>
-<style lang="scss">
+
+<style>
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
