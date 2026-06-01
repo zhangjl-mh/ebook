@@ -22,14 +22,14 @@ const store = useMagazineStore();
 .category-tabs {
   display: flex;
   align-items: center;
-  gap: 56rpx;
-  padding: 28rpx 40rpx 0;
+  gap: 52rpx;
+  padding: 30rpx 32rpx 0;
   background: #fff;
 }
 
 .category-tabs__item {
   padding-bottom: 16rpx;
-  border-bottom: 6rpx solid transparent;
+  border-bottom: 5rpx solid transparent;
   color: #9ca3af;
   font-size: 30rpx;
   font-weight: 500;

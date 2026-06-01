@@ -1,12 +1,17 @@
 <template>
   <view class="index-page">
     <QSHeader />
-    <QSMagazineSwiper />
-    <QSSubscriptionBanner />
 
-    <view class="article-section">
-      <QSCategoryTabs />
-      <QSArticleList />
+    <view class="index-page__carousel">
+      <QSMagazineSwiper />
+    </view>
+
+    <view class="index-page__content">
+      <QSSubscriptionBanner />
+      <view class="article-section">
+        <QSCategoryTabs />
+        <QSArticleList />
+      </view>
     </view>
   </view>
 </template>
@@ -52,12 +57,22 @@ page {
   background: #f5f5f7;
 }
 
-.article-section {
-  margin: 24rpx 32rpx 160rpx;
+.index-page__carousel {
+  position: relative;
+  z-index: 2;
+  margin-top: -136rpx;
+}
+
+.index-page__content {
+  margin: 16rpx 24rpx 160rpx;
   overflow: hidden;
   border: 1rpx solid #f0f0f0;
-  border-radius: 16rpx;
+  border-radius: 22rpx;
   background: #fff;
-  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.03);
+  box-shadow: 0 10rpx 32rpx rgba(20, 20, 20, 0.04);
+}
+
+.article-section {
+  border-top: 1rpx solid #f4e8e1;
 }
 </style>

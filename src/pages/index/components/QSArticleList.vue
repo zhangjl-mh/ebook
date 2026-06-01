@@ -1,27 +1,28 @@
 <template>
   <view class="article-list">
     <view v-if="store.isArticlesLoading" class="article-list__state">加载中...</view>
-    <view v-else-if="!articles.length" class="article-list__state">暂无符合条件的文章</view>
+    <view v-else-if="!articles.length" class="article-list__state">{{ emptyText }}</view>
 
-    <view
-      v-else
-      v-for="(article, index) in articles"
-      :key="article.id"
-      class="article-item"
-      :class="{ 'article-item--bordered': index !== articles.length - 1 }"
-      @tap="openArticle(article)"
-    >
-      <view class="article-item__body">
-        <text class="article-item__title">{{ article.title }}</text>
-        <text class="article-item__subtitle">{{ article.subtitle }}</text>
+    <template v-else>
+      <view
+        v-for="(article, index) in articles"
+        :key="article.id"
+        class="article-item"
+        :class="{ 'article-item--bordered': index !== articles.length - 1 }"
+        @tap="openArticle(article)"
+      >
+        <view class="article-item__body">
+          <text class="article-item__title">{{ article.title }}</text>
+          <text class="article-item__subtitle">{{ article.subtitle }}</text>
 
-        <view class="article-item__tags">
-          <text v-for="tag in article.tags" :key="tag" class="article-item__tag">{{ tag }}</text>
+          <view class="article-item__tags">
+            <text v-for="tag in article.tags" :key="tag" class="article-item__tag">{{ tag }}</text>
+          </view>
         </view>
-      </view>
 
-      <image :src="article.thumbnail" mode="aspectFill" class="article-item__image" />
-    </view>
+        <image :src="article.thumbnail" mode="aspectFill" class="article-item__image" />
+      </view>
+    </template>
   </view>
 </template>
 
@@ -32,6 +33,7 @@ import type { Article } from '@/types/magazine';
 
 const store = useMagazineStore();
 const articles = computed(() => store.filteredArticles);
+const emptyText = computed(() => store.errorMessage || '暂无符合条件的文章');
 
 const openArticle = (article: Article) => {
   store.openWebview(article.linkUrl, article.title);
@@ -40,7 +42,7 @@ const openArticle = (article: Article) => {
 
 <style lang="scss" scoped>
 .article-list {
-  padding: 0 32rpx 24rpx;
+  padding: 0 32rpx 26rpx;
   background: #fff;
 }
 

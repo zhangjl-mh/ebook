@@ -1,8 +1,8 @@
 import type { MagazineConfig } from '@/types/magazine';
 
 export const magazineConfig: MagazineConfig = {
-  headerLogo: 'https://www.qstheory.cn/qs/images/index_logo.png',
-  headerTitle: '求是数字刊',
+  headerLogo: '/static/brand/header_logo_original.png',
+  headerBackground: '/static/brand/header_bg.png',
   swiperIssues: [
     {
       id: 'issue-10',
@@ -41,7 +41,7 @@ export const magazineConfig: MagazineConfig = {
   subscription: {
     title: '订阅《求是》数字刊',
     description: '第一时间获取最新期刊内容，支持按期阅读、专题学习和文章收藏',
-    bellIcon: 'https://img.icons8.com/isometric/100/null/bell.png',
+    bellIcon: '/static/brand/subscribe_icon.png',
     btnText: '立即订阅'
   },
   tabCategories: [

@@ -32,7 +32,7 @@ export interface TabCategory {
 
 export interface MagazineConfig {
   headerLogo: string;
-  headerTitle: string;
+  headerBackground: string;
   swiperIssues: MagazineIssue[];
   subscription: {
     title: string;

@@ -27,17 +27,15 @@ const store = useMagazineStore();
 .subscription-banner {
   display: flex;
   align-items: center;
-  gap: 20rpx;
-  margin: 24rpx 32rpx;
-  padding: 24rpx;
-  border: 1rpx solid #ffe0c4;
-  border-radius: 16rpx;
-  background: #fff7ed;
+  gap: 18rpx;
+  padding: 26rpx 28rpx;
+  border-bottom: 1rpx solid #f7e3d4;
+  background: linear-gradient(90deg, #fff8ef 0%, #fffdf9 100%);
 }
 
 .subscription-banner__icon {
-  width: 72rpx;
-  height: 72rpx;
+  width: 68rpx;
+  height: 68rpx;
   flex-shrink: 0;
 }
 
@@ -66,9 +64,9 @@ const store = useMagazineStore();
 }
 
 .subscription-banner__button {
-  height: 64rpx;
+  height: 60rpx;
   margin: 0;
-  padding: 0 28rpx;
+  padding: 0 26rpx;
   border: none;
   border-radius: 999rpx;
   background: #c8161d;

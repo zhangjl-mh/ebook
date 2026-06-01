@@ -4,8 +4,8 @@
       v-if="store.issuesList.length"
       class="magazine-swiper__body"
       circular
-      previous-margin="72rpx"
-      next-margin="72rpx"
+      previous-margin="58rpx"
+      next-margin="58rpx"
       :current="currentIndex"
       @change="onSwiperChange"
     >
@@ -71,11 +71,11 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
 
 <style lang="scss" scoped>
 .magazine-swiper {
-  padding: 0 16rpx 8rpx;
+  padding: 0 10rpx 6rpx;
 }
 
 .magazine-swiper__body {
-  height: 420rpx;
+  height: 392rpx;
 }
 
 .magazine-swiper__item {
@@ -89,12 +89,12 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
 .magazine-card {
   display: flex;
   width: 100%;
-  min-height: 340rpx;
-  padding: 28rpx;
-  border-radius: 16rpx;
+  min-height: 318rpx;
+  padding: 26rpx;
+  border-radius: 18rpx;
   background: #fff;
   box-sizing: border-box;
-  box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.1);
+  box-shadow: 0 18rpx 44rpx rgba(70, 10, 10, 0.12);
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
@@ -104,10 +104,13 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
 }
 
 .magazine-card__cover {
-  width: 212rpx;
-  height: 284rpx;
+  width: 184rpx;
+  height: 246rpx;
   flex-shrink: 0;
-  margin-right: 24rpx;
+  margin-right: 26rpx;
+  border: 1rpx solid #f1d8d8;
+  border-radius: 8rpx;
+  background: #fff;
 }
 
 .magazine-card__content {
@@ -119,20 +122,20 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
 
 .magazine-card__title {
   color: #333;
-  font-size: 32rpx;
+  font-size: 30rpx;
   font-weight: 700;
   line-height: 1.3;
 }
 
 .magazine-card__count {
-  margin-top: 12rpx;
+  margin-top: 10rpx;
   color: #999;
   font-size: 22rpx;
 }
 
 .magazine-card__recommend {
   display: -webkit-box;
-  margin-top: 28rpx;
+  margin-top: 22rpx;
   overflow: hidden;
   color: #333;
   font-size: 24rpx;
@@ -183,7 +186,7 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
   display: flex;
   justify-content: center;
   gap: 12rpx;
-  margin-top: 20rpx;
+  margin-top: 14rpx;
 }
 
 .magazine-swiper__dot {

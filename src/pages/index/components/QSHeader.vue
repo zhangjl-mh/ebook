@@ -1,18 +1,12 @@
 <template>
   <view class="qs-header" :style="{ paddingTop: `${safeArea.statusBarHeight}px` }">
-    <view class="qs-header__bar" :style="barStyle">
-      <image :src="store.config.headerLogo" mode="aspectFit" class="qs-header__logo" />
-      <text class="qs-header__title">{{ store.config.headerTitle }}</text>
+
+    <view class="qs-header__brand" :style="barStyle">
+      <image :src="store.config.headerLogo" mode="heightFix" class="qs-header__wordmark" />
     </view>
 
-    <input
-      type="text"
-      :value="store.searchQuery"
-      placeholder="搜索文章、作者、关键词"
-      placeholder-class="qs-header__placeholder"
-      class="qs-header__search"
-      @input="onSearchInput"
-    />
+    <input type="text" :value="store.searchQuery" placeholder="搜索文章、作者、关键词" placeholder-class="qs-header__placeholder"
+      class="qs-header__search" @input="onSearchInput" />
   </view>
 </template>
 
@@ -46,34 +40,36 @@ const onSearchInput = (event: unknown) => {
 
 <style lang="scss" scoped>
 .qs-header {
+  position: relative;
+  overflow: hidden;
   padding-right: 32rpx;
   padding-left: 32rpx;
-  padding-bottom: 40rpx;
+  padding-bottom: 168rpx;
   background: #c8161d;
 }
 
-.qs-header__bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16rpx;
+.qs-header__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.qs-header__logo {
-  width: 58rpx;
-  height: 58rpx;
-}
+.qs-header__brand {}
 
-.qs-header__title {
-  color: #fff;
-  font-size: 36rpx;
-  font-weight: 700;
-  line-height: 1;
+.qs-header__wordmark {
+  display: block;
+  height: 100%;
+  width: auto;
+  background: #fff;
+  border-radius: 50rpx;
 }
 
 .qs-header__search {
+  position: relative;
+  z-index: 1;
   height: 72rpx;
-  margin-top: 28rpx;
+  margin-top: 34rpx;
   padding: 0 28rpx;
   border-radius: 999rpx;
   background: #fff;
