@@ -1,82 +1,97 @@
 <template>
-  <view class="magazine-swiper-wrapper my-4 relative">
-    <!-- 3D Stack Swiper showing both left and right side cards -->
-    <swiper 
-      class="swiper-box h-[400rpx]"
+  <view class="magazine-swiper-wrapper mt-4 mb-2 relative">
+    <!-- Swiper 轮播 -->
+    <swiper
+      class="swiper-box"
       :circular="true"
-      previous-margin="80rpx"
-      next-margin="80rpx"
+      previous-margin="60rpx"
+      next-margin="60rpx"
       :current="currentIndex"
       @change="onSwiperChange"
     >
-      <swiper-item 
-        v-for="(item, index) in store.issuesList" 
+      <swiper-item
+        v-for="(item, index) in store.issuesList"
         :key="item.id"
         class="swiper-item-box flex items-center justify-center"
       >
-        <!-- The Magazine Card with scale & opacity transitions for a premium 3D stack effect -->
-        <view 
-          class="magazine-card flex items-center bg-white rounded-2xl p-4 border border-gray-100 transition-all duration-300 w-full mx-2 h-[340rpx]"
+        <!-- 杂志卡片 -->
+        <view
+          class="magazine-card flex items-stretch bg-white rounded-2xl overflow-hidden border border-gray-100 transition-all duration-300 w-full mx-2"
           :class="[
-            currentIndex === index 
-              ? 'scale-100 opacity-100 shadow-xl translate-y-0' 
-              : 'scale-[0.88] opacity-40 translate-y-1'
+            currentIndex === index
+              ? 'scale-100 opacity-100 shadow-card-active'
+              : 'scale-[0.88] opacity-40'
           ]"
         >
-          <!-- Left: Book Cover Graphic -->
-          <view class="cover-container relative w-[200rpx] h-[280rpx] bg-[#c8161d] rounded-lg p-1.5 flex flex-col justify-between shadow-md border-r-4 border-black/15 shrink-0">
-            <!-- inner white border -->
-            <view class="absolute inset-1 border border-white/30 rounded flex flex-col justify-between p-1.5">
-              <view class="flex justify-between items-start">
-                <text class="text-[9rpx] text-white/70 font-light leading-none">求是</text>
-                <text class="text-[9rpx] text-white/70 font-light leading-none">{{ item.year }}</text>
+          <!-- 左侧：封面 -->
+          <view class="cover-container relative w-[240rpx] bg-[#c8161d] flex flex-col shrink-0">
+            <!-- 封面内容区 -->
+            <view class="flex-1 flex flex-col justify-between p-3 relative">
+              <!-- 内框白色虚线边框 -->
+              <view class="absolute inset-2 border border-white/25 rounded-sm pointer-events-none"></view>
+
+              <!-- 顶部信息 -->
+              <view class="relative z-10 flex justify-between items-start px-1 pt-0.5">
+                <text class="text-[8rpx] text-white/50 leading-none">中共中央机关刊</text>
               </view>
 
-              <!-- Center Big Title -->
-              <view class="flex flex-col items-center justify-center my-auto">
-                <text class="text-white font-serif text-2xl font-black tracking-widest leading-none">求是</text>
-                <text class="text-[#ffd700] text-[12rpx] tracking-wider font-semibold mt-1">QIUSHI</text>
+              <!-- 中间：大号 "求是" 书法字 -->
+              <view class="relative z-10 flex flex-col items-center justify-center flex-1 my-2">
+                <text class="cover-title-text text-white text-3xl font-black tracking-widest leading-none">求是</text>
+                <text class="text-[#ffd700] text-[14rpx] tracking-[4rpx] font-semibold mt-2 uppercase">QIUSHI</text>
               </view>
 
-              <view class="flex justify-between items-end">
-                <text class="text-[9rpx] text-[#ffd700] leading-none">第{{ item.issueNum }}期</text>
-                <text class="text-[8rpx] text-white/40 leading-none">机关理论刊</text>
+              <!-- 底部信息 -->
+              <view class="relative z-10 flex justify-between items-end px-1 pb-0.5">
+                <view class="flex flex-col">
+                  <text class="text-[8rpx] text-white/40 leading-tight">中共中央主管主办权威理论文选</text>
+                  <text class="text-[8rpx] text-white/40 leading-tight">全国公开发行半月刊</text>
+                </view>
               </view>
+            </view>
+
+            <!-- 底部红色期号条 -->
+            <view class="bg-[#a80e14] py-2 flex items-center justify-center">
+              <text class="text-white/90 text-sm font-bold tracking-wider">{{ item.year }}</text>
+              <text class="text-[#ffd700] text-xs font-bold mx-1">·</text>
+              <text class="text-white text-xl font-black">{{ item.issueNum }}</text>
             </view>
           </view>
 
-          <!-- Right: Book Metadata -->
-          <view class="flex-1 flex flex-col justify-between ml-3.5 h-[280rpx]">
+          <!-- 右侧：信息区 -->
+          <view class="flex-1 flex flex-col justify-between p-4">
             <view>
-              <!-- Issue Title -->
-              <view class="text-base font-bold text-gray-800 flex items-center">
-                {{ item.year }}年第<text class="text-[#c8161d] text-xl font-extrabold px-0.5">{{ item.issueNum }}</text>期
+              <!-- 期号标题 -->
+              <view class="flex items-baseline">
+                <text class="text-base font-bold text-gray-800">{{ item.year }}年第</text>
+                <text class="text-[#c8161d] text-2xl font-black px-0.5">{{ item.issueNum }}</text>
+                <text class="text-base font-bold text-gray-800">期</text>
               </view>
 
-              <!-- Article count -->
-              <view class="text-[10px] text-gray-400 mt-0.5">
+              <!-- 文章数量 -->
+              <view class="text-[10px] text-gray-400 mt-1">
                 本期收录 <text class="text-[#c8161d] font-bold">{{ item.articleCount }}</text> 篇文章
               </view>
 
-              <!-- Key recommendations -->
-              <view class="mt-2">
-                <text class="text-[10px] font-bold text-[#b8860b] block">重点推荐：</text>
-                <text class="text-[10px] text-gray-500 font-medium leading-relaxed line-clamp-2 mt-0.5">
+              <!-- 重点推荐 -->
+              <view class="mt-3">
+                <text class="text-[11px] font-bold text-[#c8161d] block">重点推荐：</text>
+                <text class="text-[10px] text-gray-600 font-medium leading-relaxed line-clamp-2 mt-1">
                   {{ item.recommendationTitle }}
                 </text>
               </view>
             </view>
 
-            <!-- Buttons -->
-            <view class="flex gap-1.5 mt-auto">
-              <button 
-                class="flex-1 text-[10px] py-1.5 px-0 rounded-full border border-[#c8161d] text-[#c8161d] bg-white font-semibold flex items-center justify-center active:bg-red-50 transition-colors h-7"
+            <!-- 按钮组 -->
+            <view class="flex gap-2 mt-3">
+              <button
+                class="btn-outline flex-1 text-[10px] py-1.5 px-0 rounded-full border border-[#c8161d] text-[#c8161d] bg-white font-semibold flex items-center justify-center h-8"
                 @tap.stop="store.enterCatalog(item)"
               >
                 进入目录
               </button>
-              <button 
-                class="flex-1 text-[10px] py-1.5 px-0 rounded-full bg-[#c8161d] text-white font-semibold flex items-center justify-center active:bg-[#a61016] transition-colors h-7"
+              <button
+                class="btn-primary flex-1 text-[10px] py-1.5 px-0 rounded-full bg-[#c8161d] text-white font-semibold flex items-center justify-center h-8"
                 @tap.stop="store.readOriginal(item)"
               >
                 阅读原刊
@@ -87,12 +102,12 @@
       </swiper-item>
     </swiper>
 
-    <!-- Swiper Dots -->
-    <view class="flex items-center justify-center gap-1.5 mt-1">
-      <view 
-        v-for="(item, index) in store.issuesList" 
+    <!-- 圆点指示器 -->
+    <view class="flex items-center justify-center gap-1.5 mt-2">
+      <view
+        v-for="(item, index) in store.issuesList"
         :key="item.id"
-        class="h-1.5 rounded-full transition-all duration-300"
+        class="h-[6px] rounded-full transition-all duration-300"
         :class="[
           currentIndex === index ? 'w-4 bg-[#c8161d]' : 'w-1.5 bg-gray-300'
         ]"
@@ -106,7 +121,7 @@ import { ref } from 'vue';
 import { useMagazineStore } from '../store/magazineStore';
 
 const store = useMagazineStore();
-const currentIndex = ref(0); // Starts with 2026 Issue 10 centered
+const currentIndex = ref(0);
 
 const onSwiperChange = (e: any) => {
   currentIndex.value = e.detail.current;
@@ -120,9 +135,17 @@ const onSwiperChange = (e: any) => {
 <style lang="scss" scoped>
 .swiper-box {
   width: 100%;
+  height: 440rpx;
 }
 .magazine-card {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  height: 400rpx;
+}
+.shadow-card-active {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+}
+.cover-title-text {
+  font-family: 'STKaiti', 'KaiTi', 'Kaiti SC', serif;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 .line-clamp-2 {
   display: -webkit-box;
@@ -130,8 +153,19 @@ const onSwiperChange = (e: any) => {
   -webkit-line-clamp: 2;
   overflow: hidden;
 }
-button {
+.btn-outline,
+.btn-primary {
   line-height: 1;
   border-radius: 9999px;
+  &:active {
+    opacity: 0.8;
+    transform: scale(0.97);
+  }
+}
+.btn-outline:active {
+  background-color: #fff5f5;
+}
+.btn-primary:active {
+  background-color: #a61016;
 }
 </style>
