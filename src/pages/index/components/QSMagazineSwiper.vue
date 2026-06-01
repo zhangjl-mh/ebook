@@ -1,14 +1,7 @@
 <template>
   <view class="magazine-swiper">
-    <swiper
-      v-if="store.issuesList.length"
-      class="magazine-swiper__body"
-      circular
-      previous-margin="58rpx"
-      next-margin="58rpx"
-      :current="currentIndex"
-      @change="onSwiperChange"
-    >
+    <swiper v-if="store.issuesList.length" class="magazine-swiper__body" circular previous-margin="58rpx"
+      next-margin="58rpx" :current="currentIndex" @change="onSwiperChange">
       <swiper-item v-for="(item, index) in store.issuesList" :key="item.id" class="magazine-swiper__item">
         <view class="magazine-card" :class="{ 'magazine-card--inactive': currentIndex !== index }">
           <image :src="item.coverImage" mode="aspectFit" class="magazine-card__cover" />
@@ -34,12 +27,8 @@
     <view v-else class="magazine-swiper__empty">暂无期刊</view>
 
     <view v-if="store.issuesList.length > 1" class="magazine-swiper__indicator">
-      <view
-        v-for="(item, index) in store.issuesList"
-        :key="item.id"
-        class="magazine-swiper__dot"
-        :class="{ 'magazine-swiper__dot--active': currentIndex === index }"
-      />
+      <view v-for="(item, index) in store.issuesList" :key="item.id" class="magazine-swiper__dot"
+        :class="{ 'magazine-swiper__dot--active': currentIndex === index }" />
     </view>
   </view>
 </template>
@@ -70,10 +59,6 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
 </script>
 
 <style lang="scss" scoped>
-.magazine-swiper {
-  padding: 0 10rpx 6rpx;
-}
-
 .magazine-swiper__body {
   height: 392rpx;
 }
@@ -94,7 +79,7 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
   border-radius: 18rpx;
   background: #fff;
   box-sizing: border-box;
-  box-shadow: 0 18rpx 44rpx rgba(70, 10, 10, 0.12);
+  box-shadow: 0 6rpx 18rpx rgba(70, 10, 10, 0.06);
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
@@ -108,9 +93,7 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
   height: 246rpx;
   flex-shrink: 0;
   margin-right: 26rpx;
-  border: 1rpx solid #f1d8d8;
-  border-radius: 8rpx;
-  background: #fff;
+  border-radius: 3rpx;
 }
 
 .magazine-card__content {

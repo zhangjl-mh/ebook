@@ -4,13 +4,8 @@
     <view v-else-if="!articles.length" class="article-list__state">{{ emptyText }}</view>
 
     <template v-else>
-      <view
-        v-for="(article, index) in articles"
-        :key="article.id"
-        class="article-item"
-        :class="{ 'article-item--bordered': index !== articles.length - 1 }"
-        @tap="openArticle(article)"
-      >
+      <view v-for="(article, index) in articles" :key="article.id" class="article-item"
+        :class="{ 'article-item--bordered': index !== articles.length - 1 }" @tap="openArticle(article)">
         <view class="article-item__body">
           <text class="article-item__title">{{ article.title }}</text>
           <text class="article-item__subtitle">{{ article.subtitle }}</text>
@@ -66,9 +61,10 @@ const openArticle = (article: Article) => {
 .article-item__body {
   display: flex;
   min-width: 0;
-  min-height: 180rpx;
+  min-height: 130rpx;
   flex: 1;
   flex-direction: column;
+  gap: 15rpx;
 }
 
 .article-item__title {
@@ -83,7 +79,6 @@ const openArticle = (article: Article) => {
 }
 
 .article-item__subtitle {
-  margin-top: 8rpx;
   color: #9ca3af;
   font-size: 20rpx;
   line-height: 1.4;
@@ -93,7 +88,6 @@ const openArticle = (article: Article) => {
   display: flex;
   flex-wrap: wrap;
   gap: 8rpx;
-  margin-top: auto;
 }
 
 .article-item__tag {
@@ -107,8 +101,8 @@ const openArticle = (article: Article) => {
 }
 
 .article-item__image {
-  width: 180rpx;
-  height: 180rpx;
+  width: 130rpx;
+  height: 130rpx;
   flex-shrink: 0;
   border-radius: 12rpx;
   background: #f3f4f6;

@@ -42,16 +42,6 @@ const normalizeImageUrl = (publishDomain = DEFAULT_DOMAIN, imageUrl = '') => {
   return `${domain}/${path}`;
 };
 
-const buildSubtitle = (item: RemoteDataItem, categoryName = '') => {
-  const source = item.sourceText?.trim();
-  const author = item.author?.trim();
-
-  if (source && author) return `${source} | ${author}`;
-  if (source) return source;
-  if (author) return `${categoryName || DEFAULT_SOURCE} | ${author}`;
-
-  return categoryName || DEFAULT_SOURCE;
-};
 
 const buildSummary = (item: RemoteDataItem, categoryName = '') => {
   const text = stripHtml(item.summary || item.content || '');
@@ -64,7 +54,7 @@ const mapRemoteArticles = (key: ArticleTabKey, payload: RemoteCategoryPayload): 
   return (payload.datasource || []).map((item, index) => ({
     id: item.contentId || `${key}-${index}`,
     title: stripHtml(item.title || item.showTitle || '未命名文章'),
-    subtitle: buildSubtitle(item, categoryName),
+    subtitle: item.author || "",
     summary: buildSummary(item, categoryName),
     tags: [item.sourceText?.trim() || payload.terminalName || DEFAULT_SOURCE],
     thumbnail: normalizeImageUrl(payload.publishDomain, item.titleImages?.[0]?.imageUrl || ''),
