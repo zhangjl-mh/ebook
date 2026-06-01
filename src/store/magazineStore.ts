@@ -82,7 +82,7 @@ const mapRemoteArticles = (key: ArticleTabKey, payload: RemoteCategoryPayload): 
       title,
       subtitle: buildSubtitle(item, categoryName),
       summary: buildSummary(item, categoryName),
-      tags: [categoryName, sourceText].filter(Boolean),
+      tags: [sourceText].filter(Boolean),
       thumbnail,
       publishDate,
       linkUrl
