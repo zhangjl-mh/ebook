@@ -41,37 +41,37 @@ export const magazineConfig: ConfigData = {
   headerTitle: '求是数字刊',
   swiperIssues: [
     {
-      id: 'issue-1731',
+      id: 'issue-10',
       year: '2026',
       issueNum: '10',
       fullTitle: '2026年第10期',
       articleCount: 12,
-      recommendationTitle: '深入学习贯彻习近平新时代中国特色社会主义思想',
-      coverImage: 'https://ebook.qstheory.cn/elecPublish/bookshelfdetail?id=1731&openMode=0&curAdr=1', // 示意，实际通过CSS或存本地占位，也可以渲染红白求是典型封皮
-      catalogUrl: 'https://ebook.qstheory.cn/elecPublish/bookshelfdetail?id=1731&openMode=0&curAdr=1',
-      originalUrl: 'https://ebook.qstheory.cn/elecPublish/bookshelfdetail?id=1731&openMode=0&curAdr=1'
+      recommendationTitle: '习近平：做强做优做大实体经济',
+      coverImage: 'https://img2.founderfx.cn/TQMS/ebook/202605/28/5701514591b94ddf8d3d13726a5a25dd/1.jpg',
+      catalogUrl: 'https://www.qstheory.cn/20260515/d6673e307b8d460593dc24bf874a327c/c.html',
+      originalUrl: 'https://ebook.qstheory.cn/elecPublish/content?id=43073&form=bookshelfdetai&shelfId=1731&openMode=0'
     },
     {
-      id: 'issue-1730',
+      id: 'issue-09',
       year: '2026',
       issueNum: '09',
       fullTitle: '2026年第09期',
       articleCount: 14,
-      recommendationTitle: '全面推进乡村振兴 奋力谱写农业强国新篇章',
-      coverImage: '',
-      catalogUrl: 'https://ebook.qstheory.cn/elecPublish/bookshelfdetail?id=1730',
-      originalUrl: ''
+      recommendationTitle: '习近平：在省部级主要领导干部学习贯彻党的二十届四中全会精神专题研讨班上的讲话',
+      coverImage: 'https://img2.founderfx.cn/TQMS/ebook/202605/13/35990c9923384895a08985afb3747f7c/1.jpg',
+      catalogUrl: 'https://www.qstheory.cn/20260430/d5058736dadf46cdb8ee3b386cb61229/c.html',
+      originalUrl: 'https://ebook.qstheory.cn/elecPublish/bookshelfdetail?id=1731&openMode=0&curAdr=1'
     },
     {
-      id: 'issue-1729',
+      id: 'issue-08',
       year: '2026',
       issueNum: '08',
       fullTitle: '2026年第08期',
       articleCount: 11,
-      recommendationTitle: '坚持以高水平安全保障高质量发展',
-      coverImage: '',
-      catalogUrl: 'https://ebook.qstheory.cn/elecPublish/bookshelfdetail?id=1729',
-      originalUrl: ''
+      recommendationTitle: '习近平：推动全民阅读，建设书香社会',
+      coverImage: 'https://img2.founderfx.cn/TQMS/ebook/202605/13/35990c9923384895a08985afb3747f7c/1.jpg',
+      catalogUrl: 'https://www.qstheory.cn/20260415/94280df5956349b0954c44d728bb75a1/c.html',
+      originalUrl: 'https://ebook.qstheory.cn/elecPublish/content?id=42431&form=bookshelfdetai&shelfId=1731&openMode=0'
     }
   ],
   subscription: {

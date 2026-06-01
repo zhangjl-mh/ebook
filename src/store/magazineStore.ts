@@ -95,7 +95,7 @@ export const useMagazineStore = defineStore('magazineStore', {
     // 所有配置数据
     config: magazineConfig,
     // 当前选中的杂志期刊ID，默认第10期
-    activeIssueId: 'issue-1731',
+    activeIssueId: 'issue-10',
     // 当前激活的文章栏目类别，默认 'recommend'
     activeTab: 'recommend',
     // 搜索词
@@ -153,22 +153,20 @@ export const useMagazineStore = defineStore('magazineStore', {
         duration: 2000
       });
     },
-    // 模拟进入目录
-    enterCatalog(issue: MagazineIssue) {
-      uni.showToast({
-        title: `打开 ${issue.fullTitle} 目录`,
-        icon: 'none'
+    openWebview(url: string, title: string) {
+      if (!url) {
+        uni.showToast({ title: '链接不可用', icon: 'none' });
+        return;
+      }
+      uni.navigateTo({
+        url: `/pages/webview/index?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`
       });
-      // 纯前端环境可在H5模式下模拟跳转或者输出日志
-      console.log('Navigate to catalog:', issue.catalogUrl);
     },
-    // 模拟阅读原刊
+    enterCatalog(issue: MagazineIssue) {
+      this.openWebview(issue.catalogUrl, `${issue.fullTitle} 目录`);
+    },
     readOriginal(issue: MagazineIssue) {
-      uni.showToast({
-        title: `加载原刊中...`,
-        icon: 'loading'
-      });
-      console.log('Read original paper:', issue.originalUrl);
+      this.openWebview(issue.originalUrl, issue.fullTitle);
     },
     // 拉取推荐/要闻/思想真实数据
     async fetchArticles() {
