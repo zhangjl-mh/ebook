@@ -45,7 +45,6 @@ const onSearchInput = (event: unknown) => {
   padding-right: 32rpx;
   padding-left: 32rpx;
   padding-bottom: 168rpx;
-  background: #c8161d;
 }
 
 .qs-header__bg {
