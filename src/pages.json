@@ -1,61 +1,62 @@
 {
-	"pages": [
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "首页",
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/magazine/index",
-			"style": {
-				"navigationBarTitleText": "电子刊"
-			}
-		},
-		{
-			"path": "pages/my/index",
-			"style": {
-				"navigationBarTitleText": "我的"
-			}
-		},
-		{
-			"path": "pages/webview/index",
-			"style": {
-				"navigationBarTitleText": "详情"
-			}
-		}
-	],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "应用",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
-	},
-	"tabBar": {
-		"color": "#999999",
-		"selectedColor": "#ffc373",
-		"backgroundColor": "#FFFFFF",
-		"borderStyle": "white",
-		"list": [
-			{
-				"pagePath": "pages/index/index",
-				"text": "首页",
-				"iconPath": "static/tabs/index.png",
-				"selectedIconPath": "static/tabs/index_active.png"
-			},
-			{
-				"pagePath": "pages/magazine/index",
-				"text": "书刊",
-				"iconPath": "static/tabs/magazine.png",
-				"selectedIconPath": "static/tabs/magazine_active.png"
-			},
-			{
-				"pagePath": "pages/my/index",
-				"text": "我的",
-				"iconPath": "static/tabs/my.png",
-				"selectedIconPath": "static/tabs/my_active.png"
-			}
-		]
-	}
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/magazine/index",
+      "style": {
+        "navigationBarTitleText": "电子刊"
+      }
+    },
+    {
+      "path": "pages/my/index",
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    },
+    {
+      "path": "pages/webview/index",
+      "style": {
+        "navigationBarTitleText": "详情"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "应用",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#ffc373",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/tabs/index.png",
+        "selectedIconPath": "static/tabs/index_active.png"
+      },
+      {
+        "pagePath": "pages/magazine/index",
+        "text": "书刊",
+        "iconPath": "static/tabs/magazine.png",
+        "selectedIconPath": "static/tabs/magazine_active.png"
+      },
+      {
+        "pagePath": "pages/my/index",
+        "text": "我的",
+        "iconPath": "static/tabs/my.png",
+        "selectedIconPath": "static/tabs/my_active.png"
+      }
+    ]
+  }
 }

@@ -1,9 +1,7 @@
 <template>
   <view class="webview-page">
     <web-view v-if="url" :src="url" />
-    <view v-else class="empty-wrap">
-      <text class="empty-text">链接无效</text>
-    </view>
+    <view v-else class="webview-page__empty">链接无效</view>
   </view>
 </template>
 
@@ -11,32 +9,41 @@
 import { ref } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
 
+type WebviewQuery = Record<string, string | undefined>;
+
 const url = ref('');
 
-onLoad((query) => {
-  const rawUrl = decodeURIComponent((query?.url as string) || '');
-  const title = decodeURIComponent((query?.title as string) || '详情');
-  if (title) {
-    uni.setNavigationBarTitle({ title });
+const safeDecode = (value = '') => {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
   }
+};
+
+onLoad((query?: WebviewQuery) => {
+  const rawUrl = safeDecode(query?.url);
+  const title = safeDecode(query?.title || '详情');
+
+  uni.setNavigationBarTitle({ title });
+
   if (/^https?:\/\//.test(rawUrl)) {
     url.value = rawUrl;
   }
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .webview-page {
+  min-height: 100vh;
   width: 100%;
-  min-height: 100vh;
 }
-.empty-wrap {
-  min-height: 100vh;
+
+.webview-page__empty {
   display: flex;
+  min-height: 100vh;
   align-items: center;
   justify-content: center;
-}
-.empty-text {
   color: #999;
   font-size: 28rpx;
 }

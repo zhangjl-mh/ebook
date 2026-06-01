@@ -1,42 +1,6 @@
-// 《求是》数字刊静态数据配置
-export interface Article {
-  id: string;
-  title: string;
-  subtitle: string;
-  summary: string;
-  tags: string[];
-  thumbnail: string;
-  publishDate: string;
-  linkUrl: string;
-}
+import type { MagazineConfig } from '@/types/magazine';
 
-export interface MagazineIssue {
-  id: string;
-  year: string;
-  issueNum: string; // 例如: "10"
-  fullTitle: string; // 例如: "2026年第10期"
-  articleCount: number;
-  recommendationTitle: string;
-  coverImage: string;
-  catalogUrl: string;
-  originalUrl: string;
-}
-
-export interface ConfigData {
-  headerLogo: string;
-  headerTitle: string;
-  swiperIssues: MagazineIssue[];
-  subscription: {
-    title: string;
-    description: string;
-    bellIcon: string;
-    btnText: string;
-  };
-  tabCategories: { key: string; name: string }[];
-  articles: Record<string, Article[]>;
-}
-
-export const magazineConfig: ConfigData = {
+export const magazineConfig: MagazineConfig = {
   headerLogo: 'https://www.qstheory.cn/qs/images/index_logo.png',
   headerTitle: '求是数字刊',
   swiperIssues: [
@@ -77,7 +41,7 @@ export const magazineConfig: ConfigData = {
   subscription: {
     title: '订阅《求是》数字刊',
     description: '第一时间获取最新期刊内容，支持按期阅读、专题学习和文章收藏',
-    bellIcon: 'https://img.icons8.com/isometric/100/null/bell.png', // 3D金铃铛拟真图标
+    bellIcon: 'https://img.icons8.com/isometric/100/null/bell.png',
     btnText: '立即订阅'
   },
   tabCategories: [
