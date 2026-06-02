@@ -1,5 +1,5 @@
 <template>
-  <view class="magazine-header" :style="{ paddingTop: `${safeArea.statusBarHeight}px` }">
+  <view class="magazine-header">
     <image src="/static/issues/magazine_header.png" mode="aspectFit" class="magazine-header__bg" />
 
     <view class="magazine-header__bar" :style="barStyle">
@@ -38,7 +38,7 @@ const { safeArea } = useSafeArea();
 
 const barStyle = computed(() => ({
   height: `${safeArea.value.capsuleHeight}px`,
-  marginTop: `${safeArea.value.capsuleTop - safeArea.value.statusBarHeight}px`
+  marginTop: `${safeArea.value.capsuleTop}px`
 }));
 
 const onInput = (event: unknown) => {

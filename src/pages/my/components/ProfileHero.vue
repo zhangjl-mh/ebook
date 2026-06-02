@@ -1,5 +1,5 @@
 <template>
-  <view class="profile-hero" :style="{ paddingTop: `${safeArea.statusBarHeight}px` }">
+  <view class="profile-hero">
     <image :src="profile.headerBg" mode="aspectFill" class="profile-hero__bg" />
     <image :src="profile.logo" mode="aspectFit" class="profile-hero__watermark" />
 
@@ -36,7 +36,7 @@ const { safeArea } = useSafeArea();
 
 const barStyle = computed(() => ({
   height: `${safeArea.value.capsuleHeight}px`,
-  marginTop: `${safeArea.value.capsuleTop - safeArea.value.statusBarHeight}px`
+  marginTop: `${safeArea.value.capsuleTop}px`
 }));
 </script>
 

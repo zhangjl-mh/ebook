@@ -68,6 +68,7 @@ const onSearchInput = (event: unknown) => {
 .qs-header__wordmark {
   display: block;
   height: 100%;
+  width: auto;
 }
 
 .qs-header__search {

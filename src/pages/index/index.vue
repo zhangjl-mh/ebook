@@ -71,7 +71,7 @@ page {
 
 .article-section {
   overflow: hidden;
-  margin-top: 12rpx;
+  margin-top: 8rpx;
   border: 1rpx solid #f0f0f0;
   border-radius: 18rpx;
   background: #fff;
