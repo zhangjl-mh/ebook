@@ -86,14 +86,16 @@ export const useMagazineStore = defineStore('magazineStore', {
       }
 
       uni.navigateTo({
-        url: `/pages/webview/index?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`
+        url: `/subPages/webview/index?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`
       });
     },
     enterCatalog(issue: MagazineIssue) {
       this.openWebview(issue.catalogUrl, `${issue.fullTitle} 目录`);
     },
     readOriginal(issue: MagazineIssue) {
-      this.openWebview(issue.originalUrl, issue.fullTitle);
+      uni.navigateTo({
+        url: `/subPages/book/index?title = ${encodeURIComponent(issue.fullTitle)}`
+      })
     },
     async fetchArticles() {
       if (this.isArticlesLoading) return;
