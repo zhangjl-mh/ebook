@@ -7,9 +7,7 @@
         <view class="issue-card__cover">
           <view class="issue-card__cover-inner">
             <text class="issue-card__publisher">中国共产党中央委员会主办</text>
-            <view class="issue-card__wordmark">
-              <image :src="logoSrc" mode="heightFix" class="issue-card__logo" />
-            </view>
+            <text class="issue-card__wordmark">求是</text>
             <text class="issue-card__roman">QIUSHI</text>
             <view class="issue-card__issue-no">
               <text>{{ issue.year }}</text>
@@ -31,7 +29,6 @@ import type { IssueCatalogItem } from '@/types/pageData';
 
 interface Props {
   issues: IssueCatalogItem[];
-  logoSrc: string;
 }
 
 defineProps<Props>();
@@ -41,8 +38,8 @@ defineProps<Props>();
 .issue-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 26rpx 24rpx;
-  padding: 0 28rpx 44rpx;
+  gap: 26rpx 25rpx;
+  padding: 0 29rpx 44rpx;
 }
 
 .issue-grid__empty {
@@ -54,12 +51,12 @@ defineProps<Props>();
 }
 
 .issue-card {
-  width: calc((100% - 48rpx) / 3);
+  width: calc((100% - 50rpx) / 3);
   overflow: hidden;
   padding: 20rpx 20rpx 18rpx;
-  border-radius: 16rpx;
+  border-radius: 14rpx;
   background: #fff;
-  box-shadow: 0 14rpx 34rpx rgba(33, 33, 33, 0.06);
+  box-shadow: 0 12rpx 32rpx rgba(27, 27, 27, 0.055);
   box-sizing: border-box;
 }
 
@@ -75,14 +72,15 @@ defineProps<Props>();
   inset: 0;
   border: 6rpx solid #e3000b;
   background:
-    radial-gradient(circle at 24% 38%, rgba(210, 0, 8, 0.04) 0, rgba(210, 0, 8, 0) 36%),
+    linear-gradient(115deg, rgba(243, 243, 243, 0) 0 44%, rgba(242, 242, 242, 0.55) 45%, rgba(255, 255, 255, 0) 62%),
+    radial-gradient(circle at 24% 38%, rgba(210, 0, 8, 0.035) 0, rgba(210, 0, 8, 0) 36%),
     #fff;
   box-sizing: border-box;
 }
 
 .issue-card__publisher {
   display: block;
-  margin: 12rpx 12rpx 0;
+  margin: 11rpx 12rpx 0;
   overflow: hidden;
   color: #e3000b;
   font-size: 10rpx;
@@ -92,22 +90,21 @@ defineProps<Props>();
 }
 
 .issue-card__wordmark {
-  width: 126rpx;
-  height: 76rpx;
-  margin: 40rpx auto 0;
-  overflow: hidden;
-}
-
-.issue-card__logo {
   display: block;
-  height: 76rpx;
-  width: auto;
-  transform: translateX(-10rpx);
+  margin-top: 33rpx;
+  color: #e3000b;
+  font-family: STXingkai, FZShuTi, KaiTi, STKaiti, serif;
+  font-size: 66rpx;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 2rpx 1rpx rgba(227, 0, 11, 0.08);
+  transform: skewX(-6deg);
 }
 
 .issue-card__roman {
   display: block;
-  margin-top: 2rpx;
+  margin-top: 5rpx;
   color: #323232;
   font-family: Georgia, 'Times New Roman', serif;
   font-size: 22rpx;
@@ -119,7 +116,7 @@ defineProps<Props>();
 .issue-card__issue-no {
   position: absolute;
   right: 12rpx;
-  bottom: 12rpx;
+  bottom: 11rpx;
   display: flex;
   align-items: baseline;
   gap: 5rpx;

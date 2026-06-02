@@ -36,32 +36,57 @@ const emit = defineEmits<{
 .year-tabs {
   display: flex;
   align-items: center;
-  gap: 24rpx;
-  padding: 24rpx 28rpx;
+  gap: 22rpx;
+  padding: 12rpx 29rpx 20rpx;
 }
 
 .year-tabs__scroller {
   min-width: 0;
   flex: 1;
+  scrollbar-width: none;
   white-space: nowrap;
+
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  :deep(.uni-scroll-view),
+  :deep(.uni-scroll-view-content) {
+    scrollbar-width: none;
+  }
+
+  :deep(.uni-scroll-view::-webkit-scrollbar),
+  :deep(.uni-scroll-view-content::-webkit-scrollbar) {
+    display: none;
+    width: 0;
+    height: 0;
+  }
 }
 
 .year-tabs__scroller-inner {
   display: flex;
   align-items: center;
-  gap: 24rpx;
+  gap: 23rpx;
 }
 
 .year-tabs__item {
+  display: flex;
+  width: 98rpx;
   flex-shrink: 0;
-  height: 62rpx;
-  padding: 0 30rpx;
-  border: 1rpx solid rgba(216, 25, 32, 0.26);
+  height: 56rpx;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1rpx solid rgba(215, 25, 32, 0.24);
   border-radius: 28rpx;
-  background: rgba(255, 255, 255, 0.86);
+  background: rgba(255, 255, 255, 0.82);
+  box-sizing: border-box;
   color: #d71920;
-  font-size: 28rpx;
-  line-height: 62rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  line-height: 1;
   box-shadow: none;
 
   &::after {
@@ -71,27 +96,26 @@ const emit = defineEmits<{
 
 .year-tabs__item--active {
   border-color: transparent;
-  background: linear-gradient(135deg, #e01d22, #bd0710);
-  box-shadow: 0 10rpx 22rpx rgba(210, 22, 29, 0.22);
+  background: #e71922;
+  box-shadow: 0 10rpx 22rpx rgba(210, 22, 29, 0.2);
   color: #fff;
-  font-weight: 600;
 }
 
 .year-tabs__filter {
   display: flex;
-  width: 92rpx;
-  height: 62rpx;
+  width: 82rpx;
+  height: 56rpx;
   flex-shrink: 0;
   align-items: center;
   justify-content: flex-end;
-  gap: 10rpx;
+  gap: 7rpx;
   margin: 0;
   padding: 0;
   border: 0;
   background: transparent;
   color: #3f3f3f;
-  font-size: 26rpx;
-  line-height: 62rpx;
+  font-size: 24rpx;
+  line-height: 1;
 
   &::after {
     border: none;
@@ -100,28 +124,29 @@ const emit = defineEmits<{
 
 .year-tabs__filter-icon {
   position: relative;
-  width: 30rpx;
+  width: 26rpx;
   height: 28rpx;
   flex-shrink: 0;
 
   &::before {
     position: absolute;
-    top: 2rpx;
-    left: 0;
-    width: 0;
-    height: 0;
-    border-right: 15rpx solid transparent;
-    border-left: 15rpx solid transparent;
-    border-top: 17rpx solid #343434;
+    top: 4rpx;
+    left: 1rpx;
+    width: 21rpx;
+    height: 13rpx;
+    border: 3rpx solid #333;
+    border-bottom: 0;
+    border-radius: 3rpx 3rpx 0 0;
     content: '';
+    transform: perspective(30rpx) rotateX(-32deg);
   }
 
   &::after {
     position: absolute;
-    top: 17rpx;
-    left: 12rpx;
+    top: 16rpx;
+    left: 11rpx;
     width: 6rpx;
-    height: 10rpx;
+    height: 9rpx;
     border-radius: 2rpx;
     background: #343434;
     content: '';

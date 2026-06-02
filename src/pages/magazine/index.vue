@@ -2,8 +2,9 @@
   <view class="magazine-page">
     <MagazineHeader :query="searchQuery" @search="setSearchQuery" />
     <view class="magazine-page__content">
-      <IssueYearTabs :options="issueYearOptions" :active-year="activeYear" @change="setActiveYear" @filter="showFilterTips" />
-      <IssueGrid :issues="filteredIssues" :logo-src="logoSrc" />
+      <IssueYearTabs :options="issueYearOptions" :active-year="activeYear" @change="setActiveYear"
+        @filter="showFilterTips" />
+      <IssueGrid :issues="filteredIssues" />
     </view>
   </view>
 </template>
@@ -18,7 +19,6 @@ import type { IssueYearFilter } from '@/types/pageData';
 
 const activeYear = ref<IssueYearFilter>('all');
 const searchQuery = ref('');
-const logoSrc = '/static/brand/header_logo_original.png';
 
 const filteredIssues = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
@@ -50,19 +50,19 @@ const showFilterTips = () => {
 
 <style lang="scss">
 page {
-  background: #f7f7f7;
+  background: #f8f8f8;
 }
 
 .magazine-page {
   min-height: 100vh;
   overflow-x: hidden;
-  background: #f7f7f7;
+  background: linear-gradient(180deg, #fff6f5 0, #f8f8f8 330rpx);
 }
 
 .magazine-page__content {
   position: relative;
   z-index: 2;
-  margin-top: -78rpx;
+  margin-top: -95rpx;
   padding-bottom: 154rpx;
 }
 </style>
