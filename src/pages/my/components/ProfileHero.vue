@@ -105,7 +105,6 @@ const barStyle = computed<Record<string, string>>(() => ({
   width: 150rpx;
   height: 150rpx;
   flex-shrink: 0;
-  border: 12rpx solid #fff;
   border-radius: 50%;
   background: linear-gradient(180deg, #ffe2a4 0%, #ffd17e 100%);
   box-shadow: 0 14rpx 28rpx rgba(216, 28, 34, 0.12);
