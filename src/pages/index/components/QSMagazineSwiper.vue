@@ -60,7 +60,7 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
 
 <style lang="scss" scoped>
 .magazine-swiper__body {
-  height: 392rpx;
+  height: 360rpx;
 }
 
 .magazine-swiper__item {
@@ -169,7 +169,7 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
   display: flex;
   justify-content: center;
   gap: 12rpx;
-  margin-top: 14rpx;
+  margin-top: 5rpx;
 }
 
 .magazine-swiper__dot {

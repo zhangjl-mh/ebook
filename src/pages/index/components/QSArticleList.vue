@@ -37,7 +37,7 @@ const openArticle = (article: Article) => {
 
 <style lang="scss" scoped>
 .article-list {
-  padding: 0 32rpx 26rpx;
+  padding: 0 38rpx 28rpx;
   background: #fff;
 }
 
@@ -50,8 +50,8 @@ const openArticle = (article: Article) => {
 
 .article-item {
   display: flex;
-  gap: 24rpx;
-  padding: 32rpx 0;
+  gap: 26rpx;
+  padding: 34rpx 0;
 }
 
 .article-item--bordered {
@@ -61,50 +61,49 @@ const openArticle = (article: Article) => {
 .article-item__body {
   display: flex;
   min-width: 0;
-  min-height: 130rpx;
+  min-height: 138rpx;
   flex: 1;
   flex-direction: column;
-  gap: 15rpx;
+  gap: 16rpx;
 }
 
 .article-item__title {
   display: -webkit-box;
   overflow: hidden;
-  color: #111827;
-  font-size: 28rpx;
+  color: #17191d;
+  font-size: 31rpx;
   font-weight: 700;
-  line-height: 1.45;
+  line-height: 1.35;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
 
 .article-item__subtitle {
-  color: #9ca3af;
-  font-size: 20rpx;
+  color: #8d9299;
+  font-size: 24rpx;
   line-height: 1.4;
 }
 
 .article-item__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8rpx;
+  gap: 10rpx;
 }
 
 .article-item__tag {
-  padding: 6rpx 10rpx;
-  border: 1rpx solid #ffdbdb;
-  border-radius: 6rpx;
-  background: #fff0f0;
+  padding: 8rpx 16rpx;
+  border-radius: 7rpx;
+  background: #fde8ea;
   color: #c8161d;
-  font-size: 20rpx;
+  font-size: 22rpx;
   line-height: 1;
 }
 
 .article-item__image {
-  width: 130rpx;
-  height: 130rpx;
+  width: 150rpx;
+  height: 138rpx;
   flex-shrink: 0;
-  border-radius: 12rpx;
+  border-radius: 10rpx;
   background: #f3f4f6;
 }
 </style>

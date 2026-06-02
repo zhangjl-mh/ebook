@@ -1,7 +1,7 @@
 import type { MagazineConfig } from '@/types/magazine';
 
 export const magazineConfig: MagazineConfig = {
-  headerLogo: '/static/brand/header_logo_original.png',
+  headerLogo: '/static/brand/header_logo_white.png',
   headerBackground: '/static/brand/header_bg.jpg',
   swiperIssues: [
     {
@@ -10,7 +10,7 @@ export const magazineConfig: MagazineConfig = {
       issueNum: '10',
       fullTitle: '2026年第10期',
       articleCount: 12,
-      recommendationTitle: '习近平：做强做优做大实体经济',
+      recommendationTitle: '习近平：构建高水平社会主义市场经济体制',
       coverImage: 'https://img2.founderfx.cn/TQMS/ebook/202605/28/5701514591b94ddf8d3d13726a5a25dd/1.jpg',
       catalogUrl: 'https://www.qstheory.cn/20260515/d6673e307b8d460593dc24bf874a327c/c.html',
       originalUrl: 'https://ebook.qstheory.cn/elecPublish/content?id=43073&form=bookshelfdetai&shelfId=1731&openMode=0'

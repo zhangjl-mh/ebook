@@ -47,32 +47,35 @@ onPullDownRefresh(async () => {
 
 <style lang="scss">
 page {
-  background-color: #f5f5f7;
+  background-color: #f5f6f8;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .index-page {
   min-height: 100vh;
   overflow-x: hidden;
-  background: #f5f5f7;
+  background: #f5f6f8;
 }
 
 .index-page__carousel {
   position: relative;
   z-index: 2;
-  margin-top: -136rpx;
+  margin-top: -148rpx;
 }
 
 .index-page__content {
-  margin: 16rpx 24rpx 160rpx;
-  overflow: hidden;
-  border: 1rpx solid #f0f0f0;
-  border-radius: 22rpx;
-  background: #fff;
-  box-shadow: 0 10rpx 32rpx rgba(20, 20, 20, 0.04);
+  position: relative;
+  z-index: 1;
+  margin: 20rpx 32rpx 160rpx;
 }
 
 .article-section {
-  border-top: 1rpx solid #f4e8e1;
+  overflow: hidden;
+  margin-top: 12rpx;
+  border: 1rpx solid #f0f0f0;
+  border-radius: 18rpx;
+  background: #fff;
+  box-shadow: 0 10rpx 30rpx rgba(25, 28, 34, 0.04);
+  margin-top: 40rpx;
 }
 </style>

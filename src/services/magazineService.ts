@@ -42,10 +42,14 @@ const normalizeImageUrl = (publishDomain = DEFAULT_DOMAIN, imageUrl = '') => {
   return `${domain}/${path}`;
 };
 
-
 const buildSummary = (item: RemoteDataItem, categoryName = '') => {
   const text = stripHtml(item.summary || item.content || '');
   return text || `来源：${categoryName || DEFAULT_SOURCE}，点击查看原文。`;
+};
+
+const normalizeSourceTag = (sourceText = '', fallback = DEFAULT_SOURCE) => {
+  const text = sourceText.trim() || fallback;
+  return text.replace(/(》)(\d)/, '$1 $2');
 };
 
 const mapRemoteArticles = (key: ArticleTabKey, payload: RemoteCategoryPayload): Article[] => {
@@ -54,9 +58,9 @@ const mapRemoteArticles = (key: ArticleTabKey, payload: RemoteCategoryPayload): 
   return (payload.datasource || []).map((item, index) => ({
     id: item.contentId || `${key}-${index}`,
     title: stripHtml(item.title || item.showTitle || '未命名文章'),
-    subtitle: item.author || "",
+    subtitle: item.author || '',
     summary: buildSummary(item, categoryName),
-    tags: [item.sourceText?.trim() || payload.terminalName || DEFAULT_SOURCE],
+    tags: [normalizeSourceTag(item.sourceText, payload.terminalName)],
     thumbnail: normalizeImageUrl(payload.publishDomain, item.titleImages?.[0]?.imageUrl || ''),
     publishDate: (item.publishTime || '').slice(0, 10) || '1970-01-01',
     linkUrl: item.publishUrl || item.linkUrls?.[0]?.linkUrl || ''
