@@ -108,7 +108,7 @@ const getProgressStyle = (progress: number) => ({
 
 .recent__cover {
   position: relative;
-  width: 105rpx;
+  width: 95rpx;
   flex-shrink: 0;
   overflow: hidden;
 }
