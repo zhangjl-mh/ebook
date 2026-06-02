@@ -5,27 +5,36 @@
       <text class="recent__more">查看全部 ›</text>
     </view>
 
-    <view class="recent__card">
+    <view v-if="items.length" class="recent__list">
       <view v-for="item in items" :key="item.id" class="recent__item">
         <view class="recent__cover">
-          <image :src="item.coverBg" mode="aspectFill" class="recent__cover-bg" />
-          <image src="/static/brand/header_logo_original.png" mode="aspectFit" class="recent__cover-logo" />
+          <image v-if="item.coverImage && !failedCoverIds.includes(item.id)" :src="item.coverImage" mode="widthFix"
+            class="recent__cover-image" @error="markCoverFailed(item.id)" />
+          <view v-else class="recent__cover-fallback">
+            <text class="recent__cover-title">{{ item.title }}</text>
+            <text class="recent__cover-issue">{{ item.issueNo }}</text>
+          </view>
         </view>
 
         <view class="recent__body">
           <text class="recent__name">{{ item.title }}</text>
           <text class="recent__issue">{{ item.issueTitle }}</text>
-          <text class="recent__progress-text">阅读进度 {{ item.progress }}%</text>
+          <text class="recent__progress-text">阅读进度 {{ clampProgress(item.progress) }}%</text>
           <view class="recent__progress">
             <view class="recent__progress-bar" :style="getProgressStyle(item.progress)"></view>
           </view>
         </view>
       </view>
     </view>
+
+    <view v-else class="recent__empty">
+      <text class="recent__empty-text">暂无阅读记录</text>
+    </view>
   </view>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import type { RecentReadItem } from '@/types/pageData';
 
 interface Props {
@@ -34,17 +43,28 @@ interface Props {
 
 defineProps<Props>();
 
-const getProgressStyle = (progress: number) => {
-  const safeProgress = Math.min(100, Math.max(0, progress));
-  return { width: `${safeProgress}%` };
+const failedCoverIds = ref<string[]>([]);
+
+const clampProgress = (progress: number) => Math.min(100, Math.max(0, Math.round(progress)));
+
+const markCoverFailed = (id: string) => {
+  if (failedCoverIds.value.includes(id)) {
+    return;
+  }
+
+  failedCoverIds.value = [...failedCoverIds.value, id];
 };
+
+const getProgressStyle = (progress: number) => ({
+  width: `${clampProgress(progress)}%`
+});
 </script>
 
 <style lang="scss" scoped>
 .recent {
   position: relative;
   z-index: 2;
-  margin: -42rpx 24rpx 24rpx;
+  margin: 24rpx 36rpx 24rpx;
 }
 
 .recent__header {
@@ -55,90 +75,127 @@ const getProgressStyle = (progress: number) => {
 }
 
 .recent__title {
-  color: #222;
-  font-size: 32rpx;
-  font-weight: 600;
+  color: #202124;
+  font-size: 34rpx;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .recent__more {
-  color: #868b92;
+  color: #8d8f94;
   font-size: 26rpx;
+  line-height: 1;
 }
 
-.recent__card {
+.recent__list {
   display: flex;
-  overflow: hidden;
-  border: 1rpx solid #ededf0;
-  border-radius: 22rpx;
-  background: #fff;
-  box-shadow: 0 14rpx 34rpx rgba(24, 24, 24, 0.05);
 }
 
 .recent__item {
   display: flex;
   flex: 1;
   min-width: 0;
-  padding: 22rpx;
+  padding: 22rpx 22rpx 20rpx;
+  box-sizing: border-box;
+  border-radius: 20rpx;
+  background: #fff;
+  box-shadow: 0 14rpx 36rpx rgba(25, 28, 34, 0.06);
 }
 
-.recent__item + .recent__item {
-  border-left: 1rpx solid #ededf0;
+.recent__item+.recent__item {
+  margin-left: 22rpx;
 }
 
 .recent__cover {
   position: relative;
-  width: 106rpx;
-  height: 136rpx;
+  width: 105rpx;
   flex-shrink: 0;
   overflow: hidden;
-  border-radius: 8rpx;
 }
 
-.recent__cover-bg,
-.recent__cover-logo {
+.recent__cover-image {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
 
-.recent__cover-logo {
-  height: 58rpx;
-  margin-top: 24rpx;
+.recent__cover-fallback {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #fff 0%, #fff6f2 100%);
+}
+
+.recent__cover-title {
+  color: #df151f;
+  font-family: KaiTi, STKaiti, serif;
+  font-size: 36rpx;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.recent__cover-issue {
+  margin-top: 16rpx;
+  color: #df151f;
+  font-size: 18rpx;
+  line-height: 1;
 }
 
 .recent__body {
   min-width: 0;
-  margin-left: 16rpx;
+  margin-left: 22rpx;
+  padding-top: 4rpx;
+  flex: 1;
 }
 
 .recent__name {
   display: block;
-  color: #222;
+  color: #1d1d1f;
   font-size: 30rpx;
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1.15;
 }
 
 .recent__issue,
 .recent__progress-text {
   display: block;
-  margin-top: 14rpx;
-  color: #666b72;
+  margin-top: 18rpx;
+  color: #62666d;
   font-size: 24rpx;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .recent__progress {
   width: 100%;
-  height: 7rpx;
-  margin-top: 12rpx;
+  height: 8rpx;
+  margin-top: 16rpx;
   overflow: hidden;
   border-radius: 999rpx;
-  background: #e1e3e6;
+  background: #e3e5e8;
 }
 
 .recent__progress-bar {
   height: 100%;
   border-radius: 999rpx;
-  background: #d2161d;
+  background: #df151f;
+}
+
+.recent__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 172rpx;
+  border-radius: 20rpx;
+  background: #fff;
+  box-shadow: 0 14rpx 36rpx rgba(25, 28, 34, 0.06);
+}
+
+.recent__empty-text {
+  color: #8b8d92;
+  font-size: 26rpx;
 }
 </style>

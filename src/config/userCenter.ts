@@ -1,10 +1,8 @@
 import type { MemberBanner, ProfileInfo, ProfileMenuItem, RecentReadItem } from '@/types/pageData';
+import { magazineConfig } from '@/config/magazineData';
 
 export const profileInfo: ProfileInfo = {
   name: '华华',
-  avatar: '/static/profile/avatar.png',
-  headerBg: '/static/profile/profile_header.png',
-  logo: '/static/brand/header_logo_original.png',
   badges: [
     { text: '求是数字刊年度会员', type: 'gold' },
     { text: '已认证用户', type: 'gray' },
@@ -13,34 +11,31 @@ export const profileInfo: ProfileInfo = {
 };
 
 export const profileMenuItems: ProfileMenuItem[] = [
-  { id: 'orders', label: '我的订单', icon: '/static/profile/icon_order.png' },
-  { id: 'verify', label: '单位认证', icon: '/static/profile/icon_verify.png' },
-  { id: 'invoice', label: '补开发票', icon: '/static/profile/icon_invoice.png' },
-  { id: 'favorite', label: '我的收藏', icon: '/static/profile/icon_favorite.png' },
-  { id: 'service', label: '联系客服', icon: '/static/profile/icon_service.png' }
+  { id: 'orders', label: '我的订单', icon: 'order' },
+  { id: 'verify', label: '单位认证', icon: 'verify' },
+  { id: 'invoice', label: '补开发票', icon: 'invoice' },
+  { id: 'favorite', label: '我的收藏', icon: 'favorite' },
+  { id: 'service', label: '联系客服', icon: 'service' }
 ];
 
-export const recentReadItems: RecentReadItem[] = [
-  {
-    id: 'recent-2024-09',
+const recentIssueProgress: Record<string, number> = {
+  'issue-09': 68,
+  'issue-08': 32
+};
+
+export const recentReadItems: RecentReadItem[] = magazineConfig.swiperIssues
+  .filter((issue) => Object.prototype.hasOwnProperty.call(recentIssueProgress, issue.id))
+  .map((issue) => ({
+    id: `recent-${issue.id}`,
     title: '求是',
-    issueTitle: '2024年第09期',
-    progress: 68,
-    coverBg: '/static/issues/cover_cream.png'
-  },
-  {
-    id: 'recent-2024-08',
-    title: '求是',
-    issueTitle: '2024年第08期',
-    progress: 32,
-    coverBg: '/static/issues/cover_wall.png'
-  }
-];
+    issueTitle: issue.fullTitle,
+    issueNo: issue.issueNum.padStart(2, '0'),
+    progress: recentIssueProgress[issue.id],
+    coverImage: issue.coverImage
+  }));
 
 export const memberBanner: MemberBanner = {
   title: '求是数字刊会员',
-  desc: '畅读权威内容  领略思想之光',
-  buttonText: '会员中心',
-  bg: '/static/profile/member_banner.png'
+  desc: '畅读权威内容 领略思想之光',
+  buttonText: '会员中心'
 };
-

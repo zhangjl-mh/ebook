@@ -23,29 +23,28 @@ export interface ProfileBadge {
 
 export interface ProfileInfo {
   name: string;
-  avatar: string;
-  headerBg: string;
-  logo: string;
   badges: ProfileBadge[];
 }
+
+export type ProfileMenuIcon = 'order' | 'verify' | 'invoice' | 'favorite' | 'service';
 
 export interface ProfileMenuItem {
   id: string;
   label: string;
-  icon: string;
+  icon: ProfileMenuIcon;
 }
 
 export interface RecentReadItem {
   id: string;
   title: string;
   issueTitle: string;
+  issueNo: string;
   progress: number;
-  coverBg: string;
+  coverImage: string;
 }
 
 export interface MemberBanner {
   title: string;
   desc: string;
   buttonText: string;
-  bg: string;
 }

@@ -17,12 +17,13 @@ import { memberBanner, profileInfo, profileMenuItems, recentReadItems } from '@/
 
 <style lang="scss">
 page {
-  background: #f5f5f7;
+  background: #f5f6f8;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .my-page {
   min-height: 100vh;
   overflow-x: hidden;
-  background: #f5f5f7;
+  background: #f5f6f8;
 }
 </style>
