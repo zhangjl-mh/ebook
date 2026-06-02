@@ -60,7 +60,7 @@ page {
 .index-page__carousel {
   position: relative;
   z-index: 2;
-  margin-top: -148rpx;
+  margin-top: -110rpx;
 }
 
 .index-page__content {
