@@ -1,8 +1,18 @@
 <template>
   <view class="profile-menu">
-    <view v-for="item in items" :key="item.id" class="profile-menu__item" hover-class="profile-menu__item--pressed" hover-stay-time="120">
-      <view class="profile-menu__icon" :class="`profile-menu__icon--${item.icon}`"></view>
+    <view v-for="item in items" :key="item.id" class="profile-menu__item" hover-class="profile-menu__item--pressed"
+      hover-stay-time="120">
+      <view class="profile-menu__icon">
+        <view class="profile-menu__icon-dot"></view>
+        <view class="profile-menu__icon-lines">
+          <view></view>
+          <view></view>
+          <view></view>
+        </view>
+      </view>
+
       <text class="profile-menu__label">{{ item.label }}</text>
+
       <view class="profile-menu__arrow"></view>
     </view>
   </view>
@@ -47,122 +57,53 @@ defineProps<Props>();
   border-bottom: none;
 }
 
+/* 左侧列表图标 */
 .profile-menu__icon {
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 58rpx;
   height: 58rpx;
   flex-shrink: 0;
   margin-right: 30rpx;
-  box-sizing: border-box;
   border: 1rpx solid rgba(223, 21, 31, 0.12);
   border-radius: 16rpx;
   background: linear-gradient(145deg, #fff7f7 0%, #fff0f0 100%);
-  color: #df151f;
 }
 
-.profile-menu__icon::before,
-.profile-menu__icon::after {
-  position: absolute;
-  box-sizing: border-box;
+.profile-menu__icon-dot {
+  display: flex;
+  flex-direction: column;
+  gap: 7rpx;
+  margin-right: 7rpx;
+}
+
+.profile-menu__icon-dot::before,
+.profile-menu__icon-dot::after,
+.profile-menu__icon-dot {
+  width: 6rpx;
+  height: 6rpx;
+  border-radius: 50%;
+  background: #df151f;
+}
+
+.profile-menu__icon-dot::before,
+.profile-menu__icon-dot::after {
+  display: block;
   content: '';
 }
 
-.profile-menu__icon--order::before,
-.profile-menu__icon--invoice::before {
-  top: 12rpx;
-  left: 17rpx;
+.profile-menu__icon-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 7rpx;
+}
+
+.profile-menu__icon-lines view {
   width: 24rpx;
-  height: 34rpx;
-  border: 3rpx solid currentColor;
-  border-radius: 5rpx;
-}
-
-.profile-menu__icon--order::before,
-.profile-menu__icon--invoice::before {
-  background: #fff;
-}
-
-.profile-menu__icon--order::after,
-.profile-menu__icon--invoice::after {
-  position: absolute;
-  top: 23rpx;
-  left: 24rpx;
-  width: 10rpx;
-  height: 3rpx;
+  height: 5rpx;
   border-radius: 999rpx;
-  background: currentColor;
-  box-shadow: 0 9rpx 0 currentColor, 0 18rpx 0 currentColor;
-  content: '';
-}
-
-.profile-menu__icon--invoice::after {
-  top: 22rpx;
-  left: 22rpx;
-  width: 14rpx;
-  box-shadow: 0 9rpx 0 currentColor;
-}
-
-.profile-menu__icon--invoice::before {
-  border-bottom-style: dashed;
-  border-radius: 5rpx 5rpx 2rpx 2rpx;
-}
-
-.profile-menu__icon--verify::before {
-  top: 11rpx;
-  left: 15rpx;
-  width: 28rpx;
-  height: 34rpx;
-  border: 3rpx solid currentColor;
-  border-radius: 9rpx 9rpx 16rpx 16rpx;
-  background: #fff;
-}
-
-.profile-menu__icon--verify::after {
-  top: 24rpx;
-  left: 25rpx;
-  width: 11rpx;
-  height: 17rpx;
-  border-right: 4rpx solid currentColor;
-  border-bottom: 4rpx solid currentColor;
-  transform: rotate(42deg);
-}
-
-.profile-menu__icon--favorite::before {
-  top: 2rpx;
-  left: 10rpx;
-  color: currentColor;
-  font-size: 40rpx;
-  line-height: 1;
-  content: '☆';
-}
-
-.profile-menu__icon--favorite::after {
-  right: 13rpx;
-  bottom: 12rpx;
-  width: 20rpx;
-  height: 3rpx;
-  border-radius: 999rpx;
-  background: currentColor;
-}
-
-.profile-menu__icon--service::before {
-  top: 15rpx;
-  left: 15rpx;
-  width: 28rpx;
-  height: 26rpx;
-  border: 3rpx solid currentColor;
-  border-bottom-color: transparent;
-  border-radius: 18rpx 18rpx 8rpx 8rpx;
-}
-
-.profile-menu__icon--service::after {
-  top: 28rpx;
-  left: 11rpx;
-  width: 7rpx;
-  height: 15rpx;
-  border-radius: 999rpx;
-  background: currentColor;
-  box-shadow: 40rpx 0 0 currentColor, 24rpx 13rpx 0 -1rpx currentColor;
+  background: #df151f;
 }
 
 .profile-menu__label {
