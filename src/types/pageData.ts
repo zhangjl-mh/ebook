@@ -1,4 +1,5 @@
 export type IssueYearFilter = 'all' | '2026' | '2025' | '2024' | '2023';
+export type IssueYear = Exclude<IssueYearFilter, 'all'>;
 
 export interface IssueYearOption {
   label: string;
@@ -7,14 +8,12 @@ export interface IssueYearOption {
 
 export interface IssueCatalogItem {
   id: string;
-  year: IssueYearFilter;
+  year: IssueYear;
   issueNo: string;
   issueTitle: string;
   title: string;
   subtitle: string;
   subscriberCount: number;
-  coverBg: string;
-  tone: 'red' | 'dark' | 'blue';
 }
 
 export interface ProfileBadge {
@@ -50,4 +49,3 @@ export interface MemberBanner {
   buttonText: string;
   bg: string;
 }
-

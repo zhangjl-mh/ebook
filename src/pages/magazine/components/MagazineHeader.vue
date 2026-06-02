@@ -1,21 +1,15 @@
 <template>
   <view class="magazine-header">
-    <image src="/static/issues/magazine_header.png" mode="aspectFit" class="magazine-header__bg" />
+    <image src="/static/brand/header_bg.jpg" mode="widthFix" class="magazine-header__bg" />
 
     <view class="magazine-header__bar" :style="barStyle">
-      <text class="magazine-header__title">全部期刊</text>
+      <text class="magazine-header__title">全部书刊</text>
     </view>
 
     <view class="magazine-header__search">
-      <text class="magazine-header__search-icon">⌕</text>
-      <input
-        type="text"
-        :value="query"
-        placeholder="请搜索您感兴趣的期刊"
-        placeholder-class="magazine-header__placeholder"
-        class="magazine-header__input"
-        @input="onInput"
-      />
+      <view class="magazine-header__search-icon"></view>
+      <input type="text" :value="query" placeholder="请搜索您感兴趣的期刊" placeholder-class="magazine-header__placeholder"
+        class="magazine-header__input" @input="onInput" />
     </view>
   </view>
 </template>
@@ -50,16 +44,24 @@ const onInput = (event: unknown) => {
 .magazine-header {
   position: relative;
   overflow: hidden;
-  padding: 0 32rpx 64rpx;
-  background: #f5f5f7;
+  padding: 0 32rpx 122rpx;
+  background: #d71920;
+
+  &::after {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      linear-gradient(180deg, rgba(207, 14, 20, 0.98) 0%, rgba(219, 23, 28, 0.94) 45%, rgba(232, 53, 55, 0.62) 70%, rgba(247, 247, 247, 0) 100%),
+      radial-gradient(circle at 16% 66%, rgba(255, 255, 255, 0.28) 0, rgba(255, 255, 255, 0) 34%);
+    content: '';
+  }
 }
 
 .magazine-header__bg {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
-  height: 190rpx;
 }
 
 .magazine-header__bar {
@@ -72,11 +74,12 @@ const onInput = (event: unknown) => {
 }
 
 .magazine-header__title {
-  color: #8d1114;
-  font-size: 38rpx;
+  color: #fff;
+  font-size: 34rpx;
   font-weight: 700;
   letter-spacing: 0;
-  text-shadow: 0 6rpx 18rpx rgba(255, 255, 255, 0.82);
+  line-height: 1;
+  text-shadow: 0 4rpx 14rpx rgba(132, 0, 0, 0.2);
 }
 
 .magazine-header__search {
@@ -85,28 +88,46 @@ const onInput = (event: unknown) => {
   display: flex;
   align-items: center;
   height: 76rpx;
-  margin-top: 42rpx;
+  margin-top: 48rpx;
   padding: 0 30rpx;
   border-radius: 999rpx;
   border: 1rpx solid rgba(255, 255, 255, 0.76);
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 12rpx 34rpx rgba(72, 50, 34, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 14rpx 32rpx rgba(156, 0, 0, 0.12);
 }
 
 .magazine-header__search-icon {
-  margin-right: 14rpx;
-  color: #9a918a;
-  font-size: 36rpx;
-  line-height: 1;
+  position: relative;
+  width: 30rpx;
+  height: 30rpx;
+  flex-shrink: 0;
+  margin-right: 24rpx;
+  border: 4rpx solid #5f6469;
+  border-radius: 50%;
+  box-sizing: border-box;
+
+  &::after {
+    position: absolute;
+    right: -10rpx;
+    bottom: -7rpx;
+    width: 16rpx;
+    height: 4rpx;
+    border-radius: 999rpx;
+    background: #5f6469;
+    content: '';
+    transform: rotate(45deg);
+    transform-origin: left center;
+  }
 }
 
 .magazine-header__input {
+  min-width: 0;
   flex: 1;
   color: #333;
   font-size: 28rpx;
 }
 
 .magazine-header__placeholder {
-  color: #a79d98;
+  color: #8a8f96;
 }
 </style>

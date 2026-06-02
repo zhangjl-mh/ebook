@@ -2,7 +2,7 @@
   <view class="magazine-page">
     <MagazineHeader :query="searchQuery" @search="setSearchQuery" />
     <view class="magazine-page__content">
-      <IssueYearTabs :options="issueYearOptions" :active-year="activeYear" @change="setActiveYear" />
+      <IssueYearTabs :options="issueYearOptions" :active-year="activeYear" @change="setActiveYear" @filter="showFilterTips" />
       <IssueGrid :issues="filteredIssues" :logo-src="logoSrc" />
     </view>
   </view>
@@ -38,27 +38,31 @@ const setActiveYear = (year: IssueYearFilter) => {
 const setSearchQuery = (query: string) => {
   searchQuery.value = query;
 };
+
+const showFilterTips = () => {
+  uni.showToast({
+    title: '暂无更多筛选',
+    icon: 'none',
+    duration: 1200
+  });
+};
 </script>
 
 <style lang="scss">
 page {
-  background: #f5f5f7;
+  background: #f7f7f7;
 }
 
 .magazine-page {
   min-height: 100vh;
   overflow-x: hidden;
-  background: #f5f5f7;
+  background: #f7f7f7;
 }
 
 .magazine-page__content {
   position: relative;
   z-index: 2;
-  overflow: hidden;
-  margin: -22rpx 24rpx 154rpx;
-  border: 1rpx solid #f0eee9;
-  border-radius: 24rpx;
-  background: #fff;
-  box-shadow: 0 16rpx 38rpx rgba(65, 46, 34, 0.06);
+  margin-top: -78rpx;
+  padding-bottom: 154rpx;
 }
 </style>
