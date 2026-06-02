@@ -2,7 +2,7 @@ import type { MagazineConfig } from '@/types/magazine';
 
 export const magazineConfig: MagazineConfig = {
   headerLogo: '/static/brand/header_logo_original.png',
-  headerBackground: '/static/brand/header_bg.png',
+  headerBackground: '/static/brand/header_bg.jpg',
   swiperIssues: [
     {
       id: 'issue-10',

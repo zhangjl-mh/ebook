@@ -14,6 +14,7 @@
 import { computed } from 'vue';
 import { useSafeArea } from '@/hooks/useSafeArea';
 import { useMagazineStore } from '@/store/magazineStore';
+import { getUniInputValue } from '@/utils/events';
 
 const store = useMagazineStore();
 const { safeArea } = useSafeArea();
@@ -23,18 +24,8 @@ const barStyle = computed(() => ({
   marginTop: `${safeArea.value.capsuleTop - safeArea.value.statusBarHeight}px`
 }));
 
-const getInputValue = (event: unknown) => {
-  if (!event || typeof event !== 'object' || !('detail' in event)) return '';
-
-  const detail = (event as { detail?: unknown }).detail;
-  if (!detail || typeof detail !== 'object' || !('value' in detail)) return '';
-
-  const value = (detail as { value?: unknown }).value;
-  return typeof value === 'string' ? value : String(value || '');
-};
-
 const onSearchInput = (event: unknown) => {
-  store.setSearchQuery(getInputValue(event));
+  store.setSearchQuery(getUniInputValue(event));
 };
 </script>
 
@@ -46,15 +37,6 @@ const onSearchInput = (event: unknown) => {
   padding-left: 32rpx;
   padding-bottom: 168rpx;
 }
-
-.qs-header__bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.qs-header__brand {}
 
 .qs-header__wordmark {
   display: block;
