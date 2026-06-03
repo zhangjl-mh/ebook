@@ -1,4 +1,5 @@
 import type { IssueCatalogItem, IssueYearOption } from '@/types/pageData';
+import { magazineConfig } from '@/config/magazineData';
 
 export const issueYearOptions: IssueYearOption[] = [
   { label: '全部', value: 'all' },
@@ -8,7 +9,21 @@ export const issueYearOptions: IssueYearOption[] = [
   { label: '2023', value: '2023' }
 ];
 
-export const issueCatalogItems: IssueCatalogItem[] = [
+type IssueCatalogSourceItem = Omit<IssueCatalogItem, 'coverImage'>;
+
+const fallbackCoverImage = magazineConfig.swiperIssues[0]?.coverImage || '';
+
+const normalizeIssueNo = (issueNo: string) => String(Number(issueNo));
+
+const getSwiperCoverImage = (item: IssueCatalogSourceItem) => {
+  const matchedIssue = magazineConfig.swiperIssues.find((issue) => {
+    return issue.year === item.year && normalizeIssueNo(issue.issueNum) === normalizeIssueNo(item.issueNo);
+  });
+
+  return matchedIssue?.coverImage || fallbackCoverImage;
+};
+
+const issueCatalogSourceItems: IssueCatalogSourceItem[] = [
   {
     id: '2026-10',
     year: '2026',
@@ -136,3 +151,8 @@ export const issueCatalogItems: IssueCatalogItem[] = [
     subscriberCount: 29
   }
 ];
+
+export const issueCatalogItems: IssueCatalogItem[] = issueCatalogSourceItems.map((item) => ({
+  ...item,
+  coverImage: getSwiperCoverImage(item)
+}));

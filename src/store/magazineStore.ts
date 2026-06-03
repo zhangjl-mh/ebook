@@ -11,6 +11,7 @@ interface MagazineState {
   isSubscribed: boolean;
   isArticlesLoading: boolean;
   errorMessage: string;
+  openingIssueId: string;
 }
 
 const createMagazineConfig = (): MagazineConfig => ({
@@ -32,7 +33,8 @@ export const useMagazineStore = defineStore('magazineStore', {
     searchQuery: '',
     isSubscribed: false,
     isArticlesLoading: false,
-    errorMessage: ''
+    errorMessage: '',
+    openingIssueId: ''
   }),
 
   getters: {
@@ -93,8 +95,29 @@ export const useMagazineStore = defineStore('magazineStore', {
       this.openWebview(issue.catalogUrl, `${issue.fullTitle} 目录`);
     },
     readOriginal(issue: MagazineIssue) {
+      if (this.openingIssueId) return;
+
+      const title = issue.fullTitle.trim();
+
+      if (!title) {
+        uni.showToast({ title: '期刊信息不可用', icon: 'none' });
+        return;
+      }
+
+      this.openingIssueId = issue.id;
+
       uni.navigateTo({
-        url: `/subPages/book/index?title = ${encodeURIComponent(issue.fullTitle)}`
+        url: `/subPages/book/index?title=${encodeURIComponent(title)}`,
+        fail: () => {
+          uni.showToast({ title: '打开电子刊失败', icon: 'none' });
+        },
+        complete: () => {
+          setTimeout(() => {
+            if (this.openingIssueId === issue.id) {
+              this.openingIssueId = '';
+            }
+          }, 500);
+        }
       })
     },
     async fetchArticles() {

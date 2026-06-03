@@ -4,7 +4,7 @@
     <view class="magazine-page__content">
       <IssueYearTabs :options="issueYearOptions" :active-year="activeYear" @change="setActiveYear"
         @filter="showFilterTips" />
-      <IssueGrid :issues="filteredIssues" />
+      <IssueGrid :issues="filteredIssues" @select="openIssueDetail" />
     </view>
   </view>
 </template>
@@ -15,10 +15,11 @@ import MagazineHeader from './components/MagazineHeader.vue';
 import IssueGrid from './components/IssueGrid.vue';
 import IssueYearTabs from './components/IssueYearTabs.vue';
 import { issueCatalogItems, issueYearOptions } from '@/config/issueCatalog';
-import type { IssueYearFilter } from '@/types/pageData';
+import type { IssueCatalogItem, IssueYearFilter } from '@/types/pageData';
 
 const activeYear = ref<IssueYearFilter>('all');
 const searchQuery = ref('');
+const openingIssueId = ref('');
 
 const filteredIssues = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
@@ -37,6 +38,39 @@ const setActiveYear = (year: IssueYearFilter) => {
 
 const setSearchQuery = (query: string) => {
   searchQuery.value = query;
+};
+
+const openIssueDetail = (issue: IssueCatalogItem) => {
+  if (openingIssueId.value) return;
+
+  const title = issue.issueTitle.trim();
+
+  if (!title) {
+    uni.showToast({
+      title: '期刊信息不可用',
+      icon: 'none'
+    });
+    return;
+  }
+
+  openingIssueId.value = issue.id;
+
+  uni.navigateTo({
+    url: `/subPages/book/index?title=${encodeURIComponent(title)}`,
+    fail: () => {
+      uni.showToast({
+        title: '打开电子刊失败',
+        icon: 'none'
+      });
+    },
+    complete: () => {
+      setTimeout(() => {
+        if (openingIssueId.value === issue.id) {
+          openingIssueId.value = '';
+        }
+      }, 500);
+    }
+  });
 };
 
 const showFilterTips = () => {

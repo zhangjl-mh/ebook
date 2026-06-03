@@ -22,17 +22,17 @@
             <view v-if="turnDirection === 'next' && hasNext" class="reader-sheet reader-sheet--under">
                 <view class="book-page__paper">
                     <scroll-view class="book-page__scroll" scroll-y :show-scrollbar="false">
-                        <image class="book-page__image" :src="pages[nextIndex]" mode="widthFix" lazy-load
-                            show-menu-by-longpress @error="onImageError(nextIndex)" />
+                        <image class="book-page__image" :src="pages[nextSheetIndex]" mode="widthFix"
+                            show-menu-by-longpress @error="onImageError(nextSheetIndex)" />
                     </scroll-view>
 
                     <view class="book-page__spine"></view>
                     <view class="book-page__right-curl"></view>
                     <view class="book-page__shine"></view>
 
-                    <view v-if="failedMap[nextIndex]" class="page-error">
+                    <view v-if="failedMap[nextSheetIndex]" class="page-error">
                         <text class="page-error__title">图片加载失败</text>
-                        <text class="page-error__text">{{ pages[nextIndex] }}</text>
+                        <text class="page-error__text">{{ pages[nextSheetIndex] }}</text>
                     </view>
                 </view>
             </view>
@@ -41,8 +41,8 @@
             <view class="reader-sheet reader-sheet--current" :style="currentSheetStyle">
                 <view class="book-page__paper">
                     <scroll-view class="book-page__scroll" scroll-y :show-scrollbar="false">
-                        <image class="book-page__image" :src="pages[current]" mode="widthFix" lazy-load
-                            show-menu-by-longpress @error="onImageError(current)" />
+                        <image class="book-page__image" :src="pages[currentSheetIndex]" mode="widthFix"
+                            show-menu-by-longpress @error="onImageError(currentSheetIndex)" />
                     </scroll-view>
 
                     <view class="book-page__spine"></view>
@@ -50,9 +50,9 @@
                     <view class="book-page__right-curl"></view>
                     <view class="book-page__shine"></view>
 
-                    <view v-if="failedMap[current]" class="page-error">
+                    <view v-if="failedMap[currentSheetIndex]" class="page-error">
                         <text class="page-error__title">图片加载失败</text>
-                        <text class="page-error__text">{{ pages[current] }}</text>
+                        <text class="page-error__text">{{ pages[currentSheetIndex] }}</text>
                     </view>
                 </view>
             </view>
@@ -62,8 +62,8 @@
                 :style="prevSheetStyle">
                 <view class="book-page__paper">
                     <scroll-view class="book-page__scroll" scroll-y :show-scrollbar="false">
-                        <image class="book-page__image" :src="pages[prevIndex]" mode="widthFix" lazy-load
-                            show-menu-by-longpress @error="onImageError(prevIndex)" />
+                        <image class="book-page__image" :src="pages[prevSheetIndex]" mode="widthFix"
+                            show-menu-by-longpress @error="onImageError(prevSheetIndex)" />
                     </scroll-view>
 
                     <view class="book-page__spine"></view>
@@ -71,11 +71,16 @@
                     <view class="book-page__right-curl"></view>
                     <view class="book-page__shine"></view>
 
-                    <view v-if="failedMap[prevIndex]" class="page-error">
+                    <view v-if="failedMap[prevSheetIndex]" class="page-error">
                         <text class="page-error__title">图片加载失败</text>
-                        <text class="page-error__text">{{ pages[prevIndex] }}</text>
+                        <text class="page-error__text">{{ pages[prevSheetIndex] }}</text>
                     </view>
                 </view>
+            </view>
+
+            <view class="reader-preload">
+                <image v-for="page in preloadPages" :key="page.src" class="reader-preload__image" :src="page.src"
+                    mode="aspectFit" @error="onImageError(page.index)" />
             </view>
         </view>
 
@@ -106,6 +111,7 @@ import { onLoad, onReady } from '@dcloudio/uni-app';
 
 type ReaderQuery = Record<string, string | undefined>;
 type TurnDirection = 'next' | 'prev' | '';
+type ActiveTurnDirection = Exclude<TurnDirection, ''>;
 
 const MAX_ROTATE = 88;
 const FINISH_THRESHOLD = 0.22;
@@ -155,6 +161,8 @@ const hasMoved = ref(false);
 const animating = ref(false);
 const turnDirection = ref<TurnDirection>('');
 const turnProgress = ref(0);
+const turnFromIndex = ref(0);
+const turnToIndex = ref(0);
 
 const pages = computed(() => {
     return Array.from({ length: pageCount.value }, (_, index) => {
@@ -171,6 +179,37 @@ const prevIndex = computed(() => {
 
 const nextIndex = computed(() => {
     return hasNext.value ? current.value + 1 : current.value;
+});
+
+const currentSheetIndex = computed(() => {
+    return turnDirection.value ? turnFromIndex.value : current.value;
+});
+
+const nextSheetIndex = computed(() => {
+    return turnDirection.value === 'next' ? turnToIndex.value : nextIndex.value;
+});
+
+const prevSheetIndex = computed(() => {
+    return turnDirection.value === 'prev' ? turnToIndex.value : prevIndex.value;
+});
+
+const preloadPages = computed(() => {
+    const indexes = new Set([
+        current.value - 2,
+        current.value - 1,
+        current.value,
+        current.value + 1,
+        current.value + 2,
+        turnFromIndex.value,
+        turnToIndex.value
+    ]);
+
+    return Array.from(indexes)
+        .filter((index) => index >= 0 && index < pages.value.length)
+        .map((index) => ({
+            index,
+            src: pages.value[index]
+        }));
 });
 
 const progressPercent = computed(() => {
@@ -238,6 +277,8 @@ onLoad((query?: ReaderQuery) => {
 
     const startPage = toNumber(query?.page, 1);
     current.value = clamp(startPage - 1, 0, pageCount.value - 1);
+    turnFromIndex.value = current.value;
+    turnToIndex.value = current.value;
 
     uni.setNavigationBarTitle({
         title: title.value
@@ -284,7 +325,7 @@ function onTouchMove(e: any) {
     hasMoved.value = true;
 
     if (dx < 0) {
-        turnDirection.value = 'next';
+        beginTurn('next');
 
         if (!hasNext.value) {
             turnProgress.value = clamp(Math.abs(dx) / windowWidth.value, 0, 0.1);
@@ -296,7 +337,7 @@ function onTouchMove(e: any) {
     }
 
     if (dx > 0) {
-        turnDirection.value = 'prev';
+        beginTurn('prev');
 
         if (!hasPrev.value) {
             turnProgress.value = clamp(dx / windowWidth.value, 0, 0.1);
@@ -305,6 +346,14 @@ function onTouchMove(e: any) {
 
         turnProgress.value = clamp((dx / windowWidth.value) * 1.15, 0, 1);
     }
+}
+
+function beginTurn(direction: ActiveTurnDirection) {
+    if (turnDirection.value === direction) return;
+
+    turnFromIndex.value = current.value;
+    turnToIndex.value = direction === 'next' ? nextIndex.value : prevIndex.value;
+    turnDirection.value = direction;
 }
 
 function onTouchEnd() {
@@ -340,16 +389,18 @@ function rollbackFlip() {
 function finishFlip(direction: TurnDirection) {
     if (!direction) return;
 
+    const targetIndex = turnToIndex.value;
+
     animating.value = true;
     turnProgress.value = 1;
 
     setTimeout(() => {
         if (direction === 'next' && hasNext.value) {
-            current.value += 1;
+            current.value = clamp(targetIndex, 0, pages.value.length - 1);
         }
 
         if (direction === 'prev' && hasPrev.value) {
-            current.value -= 1;
+            current.value = clamp(targetIndex, 0, pages.value.length - 1);
         }
 
         resetFlipState();
@@ -361,6 +412,8 @@ function resetFlipState() {
     dragging.value = false;
     turnDirection.value = '';
     turnProgress.value = 0;
+    turnFromIndex.value = current.value;
+    turnToIndex.value = current.value;
 
     setTimeout(() => {
         hasMoved.value = false;
@@ -373,7 +426,7 @@ async function playFlip(direction: 'next' | 'prev') {
     if (direction === 'next' && !hasNext.value) return;
     if (direction === 'prev' && !hasPrev.value) return;
 
-    turnDirection.value = direction;
+    beginTurn(direction);
     turnProgress.value = 0;
     animating.value = true;
 
@@ -531,6 +584,7 @@ $theme: #e03e2d;
     height: 100%;
     transform-origin: left center;
     transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     will-change: transform, opacity;
     transition: none;
@@ -587,6 +641,24 @@ $theme: #e03e2d;
     display: block;
     background: #fff;
     border-radius: 0 28rpx 28rpx 0;
+    transform: translateZ(0);
+}
+
+.reader-preload {
+    position: absolute;
+    left: -9999rpx;
+    top: -9999rpx;
+    z-index: -1;
+    width: 1rpx;
+    height: 1rpx;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.reader-preload__image {
+    width: 1rpx;
+    height: 1rpx;
 }
 
 /* 左侧装订阴影 */

@@ -14,6 +14,7 @@ export interface IssueCatalogItem {
   title: string;
   subtitle: string;
   subscriberCount: number;
+  coverImage: string;
 }
 
 export interface ProfileBadge {

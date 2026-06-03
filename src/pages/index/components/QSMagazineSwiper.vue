@@ -3,7 +3,8 @@
     <swiper v-if="store.issuesList.length" class="magazine-swiper__body" circular previous-margin="58rpx"
       next-margin="58rpx" :current="currentIndex" @change="onSwiperChange">
       <swiper-item v-for="(item, index) in store.issuesList" :key="item.id" class="magazine-swiper__item">
-        <view class="magazine-card" :class="{ 'magazine-card--inactive': currentIndex !== index }">
+        <view class="magazine-card" :class="{ 'magazine-card--inactive': currentIndex !== index }"
+          @tap="store.readOriginal(item)">
           <image :src="item.coverImage" mode="aspectFit" class="magazine-card__cover" />
 
           <view class="magazine-card__content">
