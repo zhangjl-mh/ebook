@@ -1,10 +1,10 @@
 <template>
     <view class="book-reader">
         <!-- 顶部悬浮栏 -->
-        <view class="reader-header" v-show="toolbarVisible">
+        <view class="reader-header" v-show="toolbarVisible" @tap.stop>
             <view class="reader-header__main">
                 <text class="reader-title">{{ title }}</text>
-                <text class="reader-desc">左右拖动翻页</text>
+                <text class="reader-desc">左右滑动翻页</text>
             </view>
 
             <view class="reader-page-pill">
@@ -18,69 +18,51 @@
         <view class="reader-book" :class="{ 'reader-book--animating': animating }"
             :style="{ height: readerHeight + 'px' }" @touchstart="onTouchStart" @touchmove="onTouchMove"
             @touchend="onTouchEnd" @touchcancel="onTouchEnd" @tap="toggleToolbar">
-            <!-- 下一页：放在当前页下面 -->
-            <view v-if="turnDirection === 'next' && hasNext" class="reader-sheet reader-sheet--under">
+            <!-- 下一页 -->
+            <view class="reader-sheet reader-sheet--under" v-show="showUnderSheet">
                 <view class="book-page__paper">
-                    <scroll-view class="book-page__scroll" scroll-y :show-scrollbar="false">
-                        <image class="book-page__image" :src="pages[nextSheetIndex]" mode="widthFix"
-                            show-menu-by-longpress @error="onImageError(nextSheetIndex)" />
+                    <scroll-view class="book-page__scroll" scroll-y enhanced :bounces="false" :show-scrollbar="false"
+                        :scroll-with-animation="false">
+                        <view class="book-page__image-wrap">
+                            <image class="book-page__image" :src="pages[underSheetIndex]" mode="widthFix"
+                                :fade-show="false" show-menu-by-longpress @load="onImageLoad(underSheetIndex)" />
+                        </view>
                     </scroll-view>
 
                     <view class="book-page__spine"></view>
-                    <view class="book-page__right-curl"></view>
-                    <view class="book-page__shine"></view>
-
-                    <view v-if="failedMap[nextSheetIndex]" class="page-error">
-                        <text class="page-error__title">图片加载失败</text>
-                        <text class="page-error__text">{{ pages[nextSheetIndex] }}</text>
-                    </view>
                 </view>
             </view>
 
             <!-- 当前页 -->
             <view class="reader-sheet reader-sheet--current" :style="currentSheetStyle">
                 <view class="book-page__paper">
-                    <scroll-view class="book-page__scroll" scroll-y :show-scrollbar="false">
-                        <image class="book-page__image" :src="pages[currentSheetIndex]" mode="widthFix"
-                            show-menu-by-longpress @error="onImageError(currentSheetIndex)" />
+                    <scroll-view class="book-page__scroll" scroll-y enhanced :bounces="false" :show-scrollbar="false"
+                        :scroll-with-animation="false">
+                        <view class="book-page__image-wrap">
+                            <image class="book-page__image" :src="pages[currentSheetIndex]" mode="widthFix"
+                                :fade-show="false" show-menu-by-longpress @load="onImageLoad(currentSheetIndex)" />
+                        </view>
                     </scroll-view>
 
                     <view class="book-page__spine"></view>
                     <view class="book-page__turn-shadow" :style="{ opacity: shadowOpacity }"></view>
-                    <view class="book-page__right-curl"></view>
-                    <view class="book-page__shine"></view>
-
-                    <view v-if="failedMap[currentSheetIndex]" class="page-error">
-                        <text class="page-error__title">图片加载失败</text>
-                        <text class="page-error__text">{{ pages[currentSheetIndex] }}</text>
-                    </view>
                 </view>
             </view>
 
-            <!-- 上一页：从左侧翻回来 -->
-            <view v-if="turnDirection === 'prev' && hasPrev" class="reader-sheet reader-sheet--turn"
-                :style="prevSheetStyle">
+            <!-- 上一页 -->
+            <view class="reader-sheet reader-sheet--turn" v-show="showTurnSheet" :style="prevSheetStyle">
                 <view class="book-page__paper">
-                    <scroll-view class="book-page__scroll" scroll-y :show-scrollbar="false">
-                        <image class="book-page__image" :src="pages[prevSheetIndex]" mode="widthFix"
-                            show-menu-by-longpress @error="onImageError(prevSheetIndex)" />
+                    <scroll-view class="book-page__scroll" scroll-y enhanced :bounces="false" :show-scrollbar="false"
+                        :scroll-with-animation="false">
+                        <view class="book-page__image-wrap">
+                            <image class="book-page__image" :src="pages[turnSheetIndex]" mode="widthFix"
+                                :fade-show="false" show-menu-by-longpress @load="onImageLoad(turnSheetIndex)" />
+                        </view>
                     </scroll-view>
 
                     <view class="book-page__spine"></view>
                     <view class="book-page__turn-shadow" :style="{ opacity: shadowOpacity }"></view>
-                    <view class="book-page__right-curl"></view>
-                    <view class="book-page__shine"></view>
-
-                    <view v-if="failedMap[prevSheetIndex]" class="page-error">
-                        <text class="page-error__title">图片加载失败</text>
-                        <text class="page-error__text">{{ pages[prevSheetIndex] }}</text>
-                    </view>
                 </view>
-            </view>
-
-            <view class="reader-preload">
-                <image v-for="page in preloadPages" :key="page.src" class="reader-preload__image" :src="page.src"
-                    mode="aspectFit" @error="onImageError(page.index)" />
             </view>
         </view>
 
@@ -106,16 +88,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { onLoad, onReady } from '@dcloudio/uni-app';
 
 type ReaderQuery = Record<string, string | undefined>;
 type TurnDirection = 'next' | 'prev' | '';
 type ActiveTurnDirection = Exclude<TurnDirection, ''>;
+type GestureDirection = 'horizontal' | 'vertical' | '';
 
 const MAX_ROTATE = 88;
 const FINISH_THRESHOLD = 0.22;
 const ANIMATION_DURATION = 430;
+const PRELOAD_RANGE = 2;
 
 const safeDecode = (value = '') => {
     try {
@@ -136,12 +120,6 @@ const clamp = (value: number, min: number, max: number) => {
 
 const title = ref('2026 第 10 期');
 
-/**
- * 图片地址规则：
- * https://www.qstheory.cn/ebooks/202610/0.jpg
- * https://www.qstheory.cn/ebooks/202610/1.jpg
- * https://www.qstheory.cn/ebooks/202610/2.jpg
- */
 const imageBaseUrl = ref('https://www.qstheory.cn/ebooks/202610');
 const pageCount = ref(12);
 const ext = ref('jpg');
@@ -152,17 +130,22 @@ const readerHeight = ref(700);
 const windowWidth = ref(375);
 
 const toolbarVisible = ref(true);
-const failedMap = ref<Record<number, boolean>>({});
+const loadedMap = ref<Record<number, boolean>>({});
 
 const touchStartX = ref(0);
 const touchStartY = ref(0);
 const dragging = ref(false);
 const hasMoved = ref(false);
 const animating = ref(false);
+const gestureDirection = ref<GestureDirection>('');
+
 const turnDirection = ref<TurnDirection>('');
 const turnProgress = ref(0);
 const turnFromIndex = ref(0);
 const turnToIndex = ref(0);
+
+let flipTimer: ReturnType<typeof setTimeout> | null = null;
+const preloadingSet = new Set<number>();
 
 const pages = computed(() => {
     return Array.from({ length: pageCount.value }, (_, index) => {
@@ -174,7 +157,7 @@ const hasPrev = computed(() => current.value > 0);
 const hasNext = computed(() => current.value < pages.value.length - 1);
 
 const prevIndex = computed(() => {
-    return hasPrev.value ? current.value - 1 : 0;
+    return hasPrev.value ? current.value - 1 : current.value;
 });
 
 const nextIndex = computed(() => {
@@ -185,31 +168,20 @@ const currentSheetIndex = computed(() => {
     return turnDirection.value ? turnFromIndex.value : current.value;
 });
 
-const nextSheetIndex = computed(() => {
+const underSheetIndex = computed(() => {
     return turnDirection.value === 'next' ? turnToIndex.value : nextIndex.value;
 });
 
-const prevSheetIndex = computed(() => {
+const turnSheetIndex = computed(() => {
     return turnDirection.value === 'prev' ? turnToIndex.value : prevIndex.value;
 });
 
-const preloadPages = computed(() => {
-    const indexes = new Set([
-        current.value - 2,
-        current.value - 1,
-        current.value,
-        current.value + 1,
-        current.value + 2,
-        turnFromIndex.value,
-        turnToIndex.value
-    ]);
+const showUnderSheet = computed(() => {
+    return turnDirection.value === 'next' && hasNext.value;
+});
 
-    return Array.from(indexes)
-        .filter((index) => index >= 0 && index < pages.value.length)
-        .map((index) => ({
-            index,
-            src: pages.value[index]
-        }));
+const showTurnSheet = computed(() => {
+    return turnDirection.value === 'prev' && hasPrev.value;
 });
 
 const progressPercent = computed(() => {
@@ -218,47 +190,34 @@ const progressPercent = computed(() => {
 });
 
 const shadowOpacity = computed(() => {
-    if (!turnDirection.value) return '0.22';
-    return String(0.2 + turnProgress.value * 0.38);
+    if (!turnDirection.value) return '0';
+    return String(0.16 + turnProgress.value * 0.32);
 });
 
 const currentSheetStyle = computed(() => {
     if (turnDirection.value === 'next') {
         const rotate = -MAX_ROTATE * turnProgress.value;
-        const translateX = -18 * turnProgress.value;
-        const opacity = 1 - turnProgress.value * 0.18;
+        const translateX = -14 * turnProgress.value;
 
         return {
             zIndex: 8,
-            opacity,
-            transform: `translateX(${translateX}rpx) rotateY(${rotate}deg)`
-        };
-    }
-
-    if (turnDirection.value === 'prev') {
-        return {
-            zIndex: 2,
-            opacity: 1,
-            transform: 'rotateY(0deg)'
+            transform: `translate3d(${translateX}rpx, 0, 0) rotateY(${rotate}deg)`
         };
     }
 
     return {
         zIndex: 5,
-        opacity: 1,
-        transform: 'rotateY(0deg)'
+        transform: 'translate3d(0, 0, 0) rotateY(0deg)'
     };
 });
 
 const prevSheetStyle = computed(() => {
     const rotate = -MAX_ROTATE + MAX_ROTATE * turnProgress.value;
-    const translateX = -20 + 20 * turnProgress.value;
-    const opacity = 0.46 + turnProgress.value * 0.54;
+    const translateX = -18 + 18 * turnProgress.value;
 
     return {
         zIndex: 9,
-        opacity,
-        transform: `translateX(${translateX}rpx) rotateY(${rotate}deg)`
+        transform: `translate3d(${translateX}rpx, 0, 0) rotateY(${rotate}deg)`
     };
 });
 
@@ -277,6 +236,7 @@ onLoad((query?: ReaderQuery) => {
 
     const startPage = toNumber(query?.page, 1);
     current.value = clamp(startPage - 1, 0, pageCount.value - 1);
+
     turnFromIndex.value = current.value;
     turnToIndex.value = current.value;
 
@@ -287,6 +247,17 @@ onLoad((query?: ReaderQuery) => {
 
 onReady(() => {
     initLayout();
+    preloadAround(current.value);
+});
+
+watch(current, (index) => {
+    preloadAround(index);
+});
+
+watch(pages, () => {
+    loadedMap.value = {};
+    preloadingSet.clear();
+    preloadAround(current.value);
 });
 
 function initLayout() {
@@ -302,10 +273,14 @@ function onTouchStart(e: any) {
     const touch = e.touches?.[0];
     if (!touch) return;
 
+    clearFlipTimer();
+
     touchStartX.value = touch.clientX;
     touchStartY.value = touch.clientY;
+
     dragging.value = true;
     hasMoved.value = false;
+    gestureDirection.value = '';
 }
 
 function onTouchMove(e: any) {
@@ -317,51 +292,38 @@ function onTouchMove(e: any) {
     const dx = touch.clientX - touchStartX.value;
     const dy = touch.clientY - touchStartY.value;
 
-    if (Math.abs(dx) < 8) return;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
 
-    // 纵向滚动更明显时，不触发翻页
-    if (Math.abs(dy) > Math.abs(dx) * 1.2) return;
+    if (!gestureDirection.value) {
+        if (absX < 8 && absY < 8) return;
+        gestureDirection.value = absX > absY * 1.15 ? 'horizontal' : 'vertical';
+    }
+
+    if (gestureDirection.value === 'vertical') return;
 
     hasMoved.value = true;
 
     if (dx < 0) {
-        beginTurn('next');
-
-        if (!hasNext.value) {
-            turnProgress.value = clamp(Math.abs(dx) / windowWidth.value, 0, 0.1);
-            return;
-        }
-
-        turnProgress.value = clamp((Math.abs(dx) / windowWidth.value) * 1.15, 0, 1);
+        if (!beginTurn('next')) return;
+        turnProgress.value = clamp((absX / windowWidth.value) * 1.15, 0, 1);
         return;
     }
 
     if (dx > 0) {
-        beginTurn('prev');
-
-        if (!hasPrev.value) {
-            turnProgress.value = clamp(dx / windowWidth.value, 0, 0.1);
-            return;
-        }
-
+        if (!beginTurn('prev')) return;
         turnProgress.value = clamp((dx / windowWidth.value) * 1.15, 0, 1);
     }
-}
-
-function beginTurn(direction: ActiveTurnDirection) {
-    if (turnDirection.value === direction) return;
-
-    turnFromIndex.value = current.value;
-    turnToIndex.value = direction === 'next' ? nextIndex.value : prevIndex.value;
-    turnDirection.value = direction;
 }
 
 function onTouchEnd() {
     if (!dragging.value) return;
 
     dragging.value = false;
+    gestureDirection.value = '';
 
     const direction = turnDirection.value;
+
     const canTurn =
         direction === 'next'
             ? hasNext.value
@@ -377,13 +339,36 @@ function onTouchEnd() {
     finishFlip(direction);
 }
 
-function rollbackFlip() {
-    animating.value = true;
-    turnProgress.value = 0;
+function beginTurn(direction: ActiveTurnDirection) {
+    if (direction === 'next' && !hasNext.value) return false;
+    if (direction === 'prev' && !hasPrev.value) return false;
 
-    setTimeout(() => {
+    if (turnDirection.value === direction) return true;
+
+    turnFromIndex.value = current.value;
+    turnToIndex.value = direction === 'next' ? nextIndex.value : prevIndex.value;
+    turnDirection.value = direction;
+
+    preloadImage(turnToIndex.value);
+
+    return true;
+}
+
+function rollbackFlip() {
+    if (!turnDirection.value) {
         resetFlipState();
-    }, ANIMATION_DURATION);
+        return;
+    }
+
+    animating.value = true;
+
+    nextTick(() => {
+        turnProgress.value = 0;
+    });
+
+    flipTimer = setTimeout(() => {
+        resetFlipState();
+    }, ANIMATION_DURATION + 30);
 }
 
 function finishFlip(direction: TurnDirection) {
@@ -392,41 +377,21 @@ function finishFlip(direction: TurnDirection) {
     const targetIndex = turnToIndex.value;
 
     animating.value = true;
-    turnProgress.value = 1;
 
-    setTimeout(() => {
-        if (direction === 'next' && hasNext.value) {
-            current.value = clamp(targetIndex, 0, pages.value.length - 1);
-        }
+    nextTick(() => {
+        turnProgress.value = 1;
+    });
 
-        if (direction === 'prev' && hasPrev.value) {
-            current.value = clamp(targetIndex, 0, pages.value.length - 1);
-        }
-
+    flipTimer = setTimeout(() => {
+        current.value = clamp(targetIndex, 0, pages.value.length - 1);
         resetFlipState();
-    }, ANIMATION_DURATION);
+    }, ANIMATION_DURATION + 30);
 }
 
-function resetFlipState() {
-    animating.value = false;
-    dragging.value = false;
-    turnDirection.value = '';
-    turnProgress.value = 0;
-    turnFromIndex.value = current.value;
-    turnToIndex.value = current.value;
-
-    setTimeout(() => {
-        hasMoved.value = false;
-    }, 80);
-}
-
-async function playFlip(direction: 'next' | 'prev') {
+async function playFlip(direction: ActiveTurnDirection) {
     if (animating.value) return;
+    if (!beginTurn(direction)) return;
 
-    if (direction === 'next' && !hasNext.value) return;
-    if (direction === 'prev' && !hasPrev.value) return;
-
-    beginTurn(direction);
     turnProgress.value = 0;
     animating.value = true;
 
@@ -434,17 +399,16 @@ async function playFlip(direction: 'next' | 'prev') {
 
     setTimeout(() => {
         turnProgress.value = 1;
-    }, 20);
+    }, 30);
 
-    setTimeout(() => {
-        if (direction === 'next') {
-            current.value += 1;
-        } else {
-            current.value -= 1;
-        }
+    flipTimer = setTimeout(() => {
+        current.value =
+            direction === 'next'
+                ? clamp(current.value + 1, 0, pages.value.length - 1)
+                : clamp(current.value - 1, 0, pages.value.length - 1);
 
         resetFlipState();
-    }, ANIMATION_DURATION + 40);
+    }, ANIMATION_DURATION + 60);
 }
 
 function prevPage() {
@@ -461,7 +425,6 @@ function onSliderChange(e: any) {
 
     if (nextPageIndex === current.value) return;
 
-    // 相邻页播放翻页动画；跨多页直接跳转
     if (Math.abs(nextPageIndex - current.value) === 1) {
         playFlip(nextPageIndex > current.value ? 'next' : 'prev');
         return;
@@ -476,9 +439,61 @@ function toggleToolbar() {
     toolbarVisible.value = !toolbarVisible.value;
 }
 
-function onImageError(index: number) {
-    failedMap.value = {
-        ...failedMap.value,
+function resetFlipState() {
+    clearFlipTimer();
+
+    animating.value = false;
+    dragging.value = false;
+    gestureDirection.value = '';
+    turnDirection.value = '';
+    turnProgress.value = 0;
+    turnFromIndex.value = current.value;
+    turnToIndex.value = current.value;
+
+    setTimeout(() => {
+        hasMoved.value = false;
+    }, 80);
+}
+
+function clearFlipTimer() {
+    if (!flipTimer) return;
+
+    clearTimeout(flipTimer);
+    flipTimer = null;
+}
+
+function preloadAround(centerIndex: number) {
+    for (let offset = -PRELOAD_RANGE; offset <= PRELOAD_RANGE; offset += 1) {
+        preloadImage(centerIndex + offset);
+    }
+}
+
+function preloadImage(index: number) {
+    if (index < 0 || index >= pages.value.length) return;
+    if (loadedMap.value[index] || preloadingSet.has(index)) return;
+
+    const src = pages.value[index];
+    if (!src) return;
+
+    preloadingSet.add(index);
+
+    uni.getImageInfo({
+        src,
+        success: () => {
+            loadedMap.value = {
+                ...loadedMap.value,
+                [index]: true
+            };
+        },
+        complete: () => {
+            preloadingSet.delete(index);
+        }
+    });
+}
+
+function onImageLoad(index: number) {
+    loadedMap.value = {
+        ...loadedMap.value,
         [index]: true
     };
 }
@@ -492,12 +507,11 @@ $theme: #e03e2d;
     min-height: 100vh;
     overflow: hidden;
     background:
-        radial-gradient(circle at 50% -10%, rgba(224, 62, 45, 0.18) 0, rgba(224, 62, 45, 0) 42%),
+        radial-gradient(circle at 50% -10%, rgba(224, 62, 45, 0.14) 0, rgba(224, 62, 45, 0) 42%),
         linear-gradient(180deg, #fff5f1 0%, #faebe6 42%, #f7f1ee 100%);
     box-sizing: border-box;
 }
 
-/* 顶部悬浮栏 */
 .reader-header {
     position: fixed;
     left: 24rpx;
@@ -507,13 +521,13 @@ $theme: #e03e2d;
     height: 88rpx;
     padding: 0 24rpx;
     border-radius: 999rpx;
-    background: rgba(255, 255, 255, 0.86);
-    box-shadow: 0 16rpx 42rpx rgba(112, 38, 28, 0.14);
-    backdrop-filter: blur(18rpx);
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 16rpx 42rpx rgba(112, 38, 28, 0.12);
     display: flex;
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
+    transform: translate3d(0, 0, 0);
 }
 
 .reader-header__main {
@@ -563,7 +577,6 @@ $theme: #e03e2d;
     opacity: 0.42;
 }
 
-/* 翻书区域 */
 .reader-book {
     position: relative;
     z-index: 2;
@@ -571,8 +584,9 @@ $theme: #e03e2d;
     overflow: hidden;
     perspective: 1800rpx;
     transform-style: preserve-3d;
+    transform: translate3d(0, 0, 0);
     background:
-        linear-gradient(90deg, rgba(94, 32, 22, 0.08), rgba(255, 255, 255, 0) 16%),
+        linear-gradient(90deg, rgba(94, 32, 22, 0.06), rgba(255, 255, 255, 0) 16%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
 }
 
@@ -586,14 +600,13 @@ $theme: #e03e2d;
     transform-style: preserve-3d;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    will-change: transform, opacity;
+    will-change: transform;
     transition: none;
+    transform: translate3d(0, 0, 0);
 }
 
 .reader-book--animating .reader-sheet {
-    transition:
-        transform 0.43s cubic-bezier(0.22, 1, 0.36, 1),
-        opacity 0.43s ease;
+    transition: transform 0.43s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .reader-sheet--under {
@@ -608,24 +621,20 @@ $theme: #e03e2d;
     z-index: 9;
 }
 
-/* 页面纸张 */
 .book-page__paper {
     position: relative;
     width: 100%;
     height: 100%;
     overflow: hidden;
-
-    /* 不要外边框，只保留右侧上下圆角 */
     border-radius: 0 28rpx 28rpx 0;
     background: #fff;
-
     box-shadow:
-        0 28rpx 70rpx rgba(111, 37, 28, 0.16),
-        0 8rpx 22rpx rgba(111, 37, 28, 0.08);
+        0 24rpx 60rpx rgba(111, 37, 28, 0.14),
+        0 8rpx 20rpx rgba(111, 37, 28, 0.07);
     box-sizing: border-box;
+    transform: translate3d(0, 0, 0);
 }
 
-/* 图片宽度撑满 */
 .book-page__scroll {
     position: relative;
     z-index: 1;
@@ -633,7 +642,17 @@ $theme: #e03e2d;
     height: 100%;
     overflow: hidden;
     background: #fff;
-    padding-top: 100rpx;
+    box-sizing: border-box;
+}
+
+.book-page__image-wrap {
+    min-height: 100%;
+    width: 100%;
+    padding: 100rpx 0 120rpx;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .book-page__image {
@@ -641,125 +660,39 @@ $theme: #e03e2d;
     display: block;
     background: #fff;
     border-radius: 0 28rpx 28rpx 0;
-    transform: translateZ(0);
+    transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
-.reader-preload {
-    position: absolute;
-    left: -9999rpx;
-    top: -9999rpx;
-    z-index: -1;
-    width: 1rpx;
-    height: 1rpx;
-    overflow: hidden;
-    opacity: 0;
-    pointer-events: none;
-}
-
-.reader-preload__image {
-    width: 1rpx;
-    height: 1rpx;
-}
-
-/* 左侧装订阴影 */
 .book-page__spine {
     position: absolute;
     z-index: 5;
     left: 0;
     top: 0;
     bottom: 0;
-    width: 46rpx;
+    width: 42rpx;
     background: linear-gradient(90deg,
-            rgba(48, 20, 14, 0.2) 0%,
-            rgba(48, 20, 14, 0.08) 34%,
-            rgba(255, 255, 255, 0.12) 70%,
+            rgba(48, 20, 14, 0.18) 0%,
+            rgba(48, 20, 14, 0.07) 42%,
             rgba(255, 255, 255, 0) 100%);
     pointer-events: none;
 }
 
-/* 翻页右侧阴影 */
 .book-page__turn-shadow {
     position: absolute;
     z-index: 6;
     right: 0;
     top: 0;
     bottom: 0;
-    width: 150rpx;
+    width: 132rpx;
     background: linear-gradient(270deg,
-            rgba(45, 14, 10, 0.3) 0%,
-            rgba(45, 14, 10, 0.12) 42%,
+            rgba(45, 14, 10, 0.28) 0%,
+            rgba(45, 14, 10, 0.1) 46%,
             rgba(45, 14, 10, 0) 100%);
     pointer-events: none;
-    transition: opacity 0.24s ease;
 }
 
-/* 右下角卷页 */
-.book-page__right-curl {
-    position: absolute;
-    z-index: 7;
-    right: 0;
-    bottom: 0;
-    width: 128rpx;
-    height: 128rpx;
-    border-bottom-right-radius: 28rpx;
-    background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0) 44%,
-            rgba(224, 62, 45, 0.08) 45%,
-            rgba(224, 62, 45, 0.22) 100%);
-    opacity: 0.58;
-    pointer-events: none;
-}
-
-/* 页面高光 */
-.book-page__shine {
-    position: absolute;
-    z-index: 8;
-    inset: 0;
-    border-radius: 0 28rpx 28rpx 0;
-    background:
-        linear-gradient(108deg,
-            rgba(255, 255, 255, 0.24) 0%,
-            rgba(255, 255, 255, 0.08) 24%,
-            rgba(255, 255, 255, 0) 48%),
-        linear-gradient(180deg,
-            rgba(255, 255, 255, 0.18),
-            rgba(255, 255, 255, 0) 18%);
-    pointer-events: none;
-}
-
-/* 图片错误 */
-.page-error {
-    position: absolute;
-    z-index: 40;
-    left: 40rpx;
-    right: 40rpx;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 36rpx 26rpx;
-    border-radius: 24rpx;
-    background: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 20rpx 50rpx rgba(111, 37, 28, 0.16);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12rpx;
-}
-
-.page-error__title {
-    color: $theme;
-    font-size: 30rpx;
-    font-weight: 800;
-}
-
-.page-error__text {
-    color: rgba(44, 21, 16, 0.62);
-    font-size: 23rpx;
-    text-align: center;
-    word-break: break-all;
-}
-
-/* 底部控制栏 */
 .reader-control {
     position: fixed;
     left: 24rpx;
@@ -768,13 +701,13 @@ $theme: #e03e2d;
     z-index: 30;
     padding: 14rpx;
     border-radius: 999rpx;
-    background: rgba(255, 255, 255, 0.86);
-    box-shadow: 0 18rpx 46rpx rgba(111, 37, 28, 0.16);
-    backdrop-filter: blur(18rpx);
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 18rpx 46rpx rgba(111, 37, 28, 0.14);
     display: flex;
     align-items: center;
     gap: 14rpx;
     box-sizing: border-box;
+    transform: translate3d(0, 0, 0);
 }
 
 .reader-control__btn {
@@ -798,7 +731,7 @@ $theme: #e03e2d;
 .reader-control__btn--primary {
     background: linear-gradient(135deg, #ff6a58 0%, $theme 100%);
     color: #fff;
-    box-shadow: 0 14rpx 30rpx rgba(224, 62, 45, 0.28);
+    box-shadow: 0 14rpx 30rpx rgba(224, 62, 45, 0.25);
 }
 
 .reader-control__btn--disabled {

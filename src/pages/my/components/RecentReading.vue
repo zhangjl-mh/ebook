@@ -6,7 +6,7 @@
     </view>
 
     <view v-if="items.length" class="recent__list">
-      <view v-for="item in items" :key="item.id" class="recent__item">
+      <view v-for="item in items" :key="item.id" class="recent__item" @tap="emit('select', item)">
         <view class="recent__cover">
           <image v-if="item.coverImage && !failedCoverIds.includes(item.id)" :src="item.coverImage" mode="widthFix"
             class="recent__cover-image" @error="markCoverFailed(item.id)" />
@@ -42,6 +42,10 @@ interface Props {
 }
 
 defineProps<Props>();
+
+const emit = defineEmits<{
+  select: [item: RecentReadItem];
+}>();
 
 const failedCoverIds = ref<string[]>([]);
 
