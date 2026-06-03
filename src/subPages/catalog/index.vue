@@ -1,16 +1,14 @@
 <template>
   <view class="catalog-page">
-    <view class="catalog-page__hero">
-      <QSSubPageHeader title="目录" />
-
-      <view class="catalog-page__issue">
-        <text class="catalog-page__issue-title">{{ directory.issueTitle }}</text>
-        <text class="catalog-page__issue-desc">《求是》 {{ directory.issueTitle.replace('第', ' 第') }}</text>
-      </view>
-    </view>
+    <QSSubPageHeader title="目录" />
 
     <view class="catalog-page__content">
       <view class="catalog-card">
+        <view class="catalog-card__issue">
+          <text class="catalog-card__issue-title">{{ directory.issueTitle }}</text>
+          <text class="catalog-card__issue-desc">《求是》 {{ directory.issueTitle.replace('第', ' 第') }}</text>
+        </view>
+
         <view class="catalog-card__header">
           <view class="catalog-card__mark"></view>
           <text class="catalog-card__title">{{ directory.guideTitle }}</text>
@@ -97,41 +95,10 @@ page {
   background: #f6f7f9;
 }
 
-.catalog-page__hero {
-  position: relative;
-  overflow: hidden;
-  padding-bottom: 120rpx;
-  background:
-    radial-gradient(circle at 16% 30%, rgba(255, 255, 255, 0.3) 0, rgba(255, 255, 255, 0) 34%),
-    linear-gradient(180deg, #e81822 0%, #d91019 100%);
-}
-
-.catalog-page__issue {
-  position: relative;
-  z-index: 2;
-  padding: 6rpx 40rpx 0;
-}
-
-.catalog-page__issue-title {
-  display: block;
-  color: #fff;
-  font-size: 42rpx;
-  font-weight: 800;
-  line-height: 1.25;
-}
-
-.catalog-page__issue-desc {
-  display: block;
-  margin-top: 14rpx;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 25rpx;
-  line-height: 1.4;
-}
-
 .catalog-page__content {
   position: relative;
   z-index: 3;
-  margin-top: -86rpx;
+  margin-top: -92rpx;
   padding: 0 30rpx 70rpx;
 }
 
@@ -142,11 +109,31 @@ page {
   box-shadow: 0 18rpx 42rpx rgba(56, 28, 28, 0.08);
 }
 
+.catalog-card__issue {
+  padding: 38rpx 34rpx 12rpx;
+}
+
+.catalog-card__issue-title {
+  display: block;
+  color: #202228;
+  font-size: 38rpx;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.catalog-card__issue-desc {
+  display: block;
+  margin-top: 12rpx;
+  color: #7b8088;
+  font-size: 25rpx;
+  line-height: 1.4;
+}
+
 .catalog-card__header {
   display: flex;
   align-items: center;
   gap: 14rpx;
-  padding: 34rpx 34rpx 22rpx;
+  padding: 22rpx 34rpx;
 }
 
 .catalog-card__mark {

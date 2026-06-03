@@ -1,6 +1,6 @@
 <template>
   <view class="qs-sub-page-header">
-    <view class="qs-sub-page-header__bar" :style="barStyle">
+    <view class="qs-sub-page-header__nav" :style="barStyle">
       <button class="qs-sub-page-header__back" @tap="goBack">
         <view class="qs-sub-page-header__back-icon"></view>
       </button>
@@ -41,21 +41,28 @@ const goBack = () => {
 <style lang="scss" scoped>
 .qs-sub-page-header {
   position: relative;
-  z-index: 4;
-  padding: 0 30rpx 28rpx;
+  overflow: hidden;
+  padding-bottom: 130rpx;
+  background:
+    radial-gradient(circle at 18% 28%, rgba(255, 255, 255, 0.3) 0, rgba(255, 255, 255, 0) 34%),
+    linear-gradient(180deg, #e81822 0%, #d70f19 100%);
   box-sizing: border-box;
 }
 
-.qs-sub-page-header__bar {
+.qs-sub-page-header__nav {
   position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 28rpx;
+  padding: 0 30rpx;
+  box-sizing: border-box;
 }
 
 .qs-sub-page-header__back {
   position: absolute;
-  left: 0;
+  left: 30rpx;
   top: 50%;
   display: flex;
   width: 68rpx;

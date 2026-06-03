@@ -47,9 +47,16 @@
           }
         },
         {
+          "path": "subscribe/index",
+          "style": {
+            "navigationBarTitleText": "会员",
+            "navigationStyle": "custom"
+          }
+        },
+        {
           "path": "article-detail/index",
           "style": {
-            "navigationBarTitleText": "文章详情",
+            "navigationBarTitleText": "详情",
             "navigationStyle": "custom"
           }
         }

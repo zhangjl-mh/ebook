@@ -68,7 +68,20 @@ export const useMagazineStore = defineStore('magazineStore', {
     setSearchQuery(query: string) {
       this.searchQuery = query;
     },
-    subscribe() {
+    openSubscriptionPage() {
+      if (this.isSubscribed) {
+        uni.showToast({ title: '已订阅', icon: 'none' });
+        return;
+      }
+
+      uni.navigateTo({
+        url: '/subPages/subscribe/index',
+        fail: () => {
+          uni.showToast({ title: '打开付费页失败', icon: 'none' });
+        }
+      });
+    },
+    completeSubscription() {
       if (this.isSubscribed) {
         uni.showToast({ title: '已订阅', icon: 'none' });
         return;

@@ -8,7 +8,7 @@
     </view>
 
     <button class="subscription-banner__button" :class="{ 'subscription-banner__button--done': store.isSubscribed }"
-      @tap="store.subscribe()">
+      @tap="store.openSubscriptionPage()">
       {{ store.isSubscribed ? '已订阅' : store.config.subscription.btnText }}
     </button>
   </view>

@@ -1,8 +1,6 @@
 <template>
   <view class="article-detail-page">
-    <view class="article-detail-page__hero">
-      <QSSubPageHeader title="文章详情" />
-    </view>
+    <QSSubPageHeader title="详情" />
 
     <view class="article-detail-page__content" :style="contentStyle">
       <view v-if="article" class="article-card">
@@ -144,15 +142,6 @@ page {
   min-height: 100vh;
   overflow-x: hidden;
   background: #f6f7f9;
-}
-
-.article-detail-page__hero {
-  position: relative;
-  overflow: hidden;
-  padding-bottom: 130rpx;
-  background:
-    radial-gradient(circle at 22% 20%, rgba(255, 255, 255, 0.28) 0, rgba(255, 255, 255, 0) 34%),
-    linear-gradient(180deg, #e81822 0%, #d70f19 100%);
 }
 
 .article-detail-page__content {
