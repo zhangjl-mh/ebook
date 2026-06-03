@@ -38,6 +38,20 @@
           "style": {
             "navigationBarTitleText": "数字刊"
           }
+        },
+        {
+          "path": "catalog/index",
+          "style": {
+            "navigationBarTitleText": "目录",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "article-detail/index",
+          "style": {
+            "navigationBarTitleText": "文章详情",
+            "navigationStyle": "custom"
+          }
         }
       ]
     }

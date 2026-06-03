@@ -1,0 +1,97 @@
+<template>
+  <view class="qs-sub-page-header">
+    <view class="qs-sub-page-header__bar" :style="barStyle">
+      <button class="qs-sub-page-header__back" @tap="goBack">
+        <view class="qs-sub-page-header__back-icon"></view>
+      </button>
+      <text class="qs-sub-page-header__title">{{ title }}</text>
+    </view>
+  </view>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useSafeArea } from '@/hooks/useSafeArea';
+
+interface Props {
+  title: string;
+}
+
+defineProps<Props>();
+
+const { safeArea } = useSafeArea();
+
+const barStyle = computed(() => ({
+  height: `${safeArea.value.capsuleHeight}px`,
+  marginTop: `${safeArea.value.capsuleTop}px`
+}));
+
+const goBack = () => {
+  if (getCurrentPages().length > 1) {
+    uni.navigateBack();
+    return;
+  }
+
+  uni.switchTab({
+    url: '/pages/index/index'
+  });
+};
+</script>
+
+<style lang="scss" scoped>
+.qs-sub-page-header {
+  position: relative;
+  z-index: 4;
+  padding: 0 30rpx 28rpx;
+  box-sizing: border-box;
+}
+
+.qs-sub-page-header__bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qs-sub-page-header__back {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  display: flex;
+  width: 68rpx;
+  height: 68rpx;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #fff;
+  line-height: 1;
+  transform: translateY(-50%);
+
+  &::after {
+    border: none;
+  }
+}
+
+.qs-sub-page-header__back-icon {
+  width: 25rpx;
+  height: 25rpx;
+  border-left: 6rpx solid currentColor;
+  border-bottom: 6rpx solid currentColor;
+  transform: rotate(45deg);
+}
+
+.qs-sub-page-header__title {
+  max-width: 420rpx;
+  overflow: hidden;
+  color: #fff;
+  font-size: 36rpx;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>

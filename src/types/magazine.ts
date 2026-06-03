@@ -21,7 +21,6 @@ export interface MagazineIssue {
   articleCount: number;
   recommendationTitle: string;
   coverImage: string;
-  catalogUrl: string;
   originalUrl: string;
 }
 

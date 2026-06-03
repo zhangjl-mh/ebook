@@ -7,6 +7,7 @@ export interface SafeAreaInfo {
   capsuleBottom: number;
   capsuleLeft: number;
   headerHeight: number;
+  bottomInset: number;
   isWeChat: boolean;
 }
 
@@ -18,6 +19,7 @@ export function useSafeArea() {
     capsuleBottom: 56,
     capsuleLeft: 280,
     headerHeight: 64,
+    bottomInset: 0,
     isWeChat: false
   });
 
@@ -25,6 +27,9 @@ export function useSafeArea() {
     try {
       const systemInfo = uni.getSystemInfoSync();
       const statusBarHeight = systemInfo.statusBarHeight || 20;
+      const screenHeight = systemInfo.screenHeight || systemInfo.windowHeight || 0;
+      const safeAreaBottom = systemInfo.safeArea?.bottom ?? screenHeight;
+      const bottomInset = screenHeight ? Math.max(screenHeight - safeAreaBottom, 0) : 0;
       let capsuleTop = statusBarHeight + 4;
       let capsuleHeight = 32;
       let capsuleBottom = statusBarHeight + 36;
@@ -50,6 +55,7 @@ export function useSafeArea() {
         capsuleBottom,
         capsuleLeft,
         headerHeight: capsuleBottom + 6,
+        bottomInset,
         isWeChat
       };
     } catch (error) {

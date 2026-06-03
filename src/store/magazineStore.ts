@@ -92,7 +92,23 @@ export const useMagazineStore = defineStore('magazineStore', {
       });
     },
     enterCatalog(issue: MagazineIssue) {
-      this.openWebview(issue.catalogUrl, `${issue.fullTitle} 目录`);
+      if (this.openingIssueId) return;
+
+      this.openingIssueId = issue.id;
+
+      uni.navigateTo({
+        url: `/subPages/catalog/index?issueId=${encodeURIComponent(issue.id)}`,
+        fail: () => {
+          uni.showToast({ title: '打开目录失败', icon: 'none' });
+        },
+        complete: () => {
+          setTimeout(() => {
+            if (this.openingIssueId === issue.id) {
+              this.openingIssueId = '';
+            }
+          }, 500);
+        }
+      });
     },
     readOriginal(issue: MagazineIssue) {
       if (this.openingIssueId) return;

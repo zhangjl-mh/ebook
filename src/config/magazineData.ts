@@ -12,7 +12,6 @@ export const magazineConfig: MagazineConfig = {
       articleCount: 12,
       recommendationTitle: '习近平：构建高水平社会主义市场经济体制',
       coverImage: 'https://img2.founderfx.cn/TQMS/ebook/202605/28/5701514591b94ddf8d3d13726a5a25dd/1.jpg',
-      catalogUrl: 'https://www.qstheory.cn/20260515/d6673e307b8d460593dc24bf874a327c/c.html',
       originalUrl: 'https://ebook.qstheory.cn/elecPublish/content?id=43073&form=bookshelfdetai&shelfId=1731&openMode=0'
     },
     {
@@ -23,7 +22,6 @@ export const magazineConfig: MagazineConfig = {
       articleCount: 14,
       recommendationTitle: '习近平：在省部级主要领导干部学习贯彻党的二十届四中全会精神专题研讨班上的讲话',
       coverImage: 'https://img2.founderfx.cn/TQMS/ebook/202605/13/35990c9923384895a08985afb3747f7c/1.jpg',
-      catalogUrl: 'https://www.qstheory.cn/20260430/d5058736dadf46cdb8ee3b386cb61229/c.html',
       originalUrl: 'https://ebook.qstheory.cn/elecPublish/bookshelfdetail?id=1731&openMode=0&curAdr=1'
     },
     {
@@ -34,7 +32,6 @@ export const magazineConfig: MagazineConfig = {
       articleCount: 11,
       recommendationTitle: '习近平：推动全民阅读，建设书香社会',
       coverImage: 'https://img2.founderfx.cn/TQMS/ebook/202605/13/35990c9923384895a08985afb3747f7c/1.jpg',
-      catalogUrl: 'https://www.qstheory.cn/20260415/94280df5956349b0954c44d728bb75a1/c.html',
       originalUrl: 'https://ebook.qstheory.cn/elecPublish/content?id=42431&form=bookshelfdetai&shelfId=1731&openMode=0'
     }
   ],
