@@ -136,7 +136,7 @@ export const useMagazineStore = defineStore('magazineStore', {
       this.openingIssueId = issue.id;
 
       uni.navigateTo({
-        url: `/subPages/book/index?title=${encodeURIComponent(title)}`,
+        url: `/subPages/book/index?title=${encodeURIComponent(title)}&issueId=${encodeURIComponent(issue.id)}`,
         fail: () => {
           uni.showToast({ title: '打开电子刊失败', icon: 'none' });
         },

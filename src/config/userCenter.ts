@@ -27,6 +27,7 @@ export const recentReadItems: RecentReadItem[] = magazineConfig.swiperIssues
   .filter((issue) => Object.prototype.hasOwnProperty.call(recentIssueProgress, issue.id))
   .map((issue) => ({
     id: `recent-${issue.id}`,
+    issueId: issue.id,
     title: '求是',
     issueTitle: issue.fullTitle,
     issueNo: issue.issueNum.padStart(2, '0'),

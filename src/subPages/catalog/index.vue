@@ -34,31 +34,40 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { onLoad } from '@dcloudio/uni-app';
 import QSSubPageHeader from '@/components/QSSubPageHeader.vue';
 import { issueDirectory } from '@/config/articleDetail';
-import { safeDecode } from '@/utils/text';
-
-type CatalogQuery = Record<string, string | undefined>;
+import { useMagazineStore } from '@/store/magazineStore';
 
 const directory = issueDirectory;
+const store = useMagazineStore();
 const openingItemId = ref('');
-
-onLoad((query?: CatalogQuery) => {
-  const issueId = safeDecode(query?.issueId);
-
-  if (issueId && issueId !== directory.issueId) {
-    uni.showToast({
-      title: '目录参数无效，已显示默认目录',
-      icon: 'none'
-    });
-  }
-});
+const promptingSubscribe = ref(false);
 
 const formatOrder = (index: number) => String(index + 1).padStart(2, '0');
 
 const openArticle = (itemId: string) => {
-  if (openingItemId.value) return;
+  if (openingItemId.value || promptingSubscribe.value) return;
+
+  if (!store.isSubscribed) {
+    promptingSubscribe.value = true;
+
+    uni.showModal({
+      title: '会员专享',
+      content: '开通会员后可阅读完整文章，是否前往开通？',
+      confirmText: '去开通',
+      cancelText: '暂不开通',
+      success: (res) => {
+        if (res.confirm) {
+          store.openSubscriptionPage();
+        }
+      },
+      complete: () => {
+        promptingSubscribe.value = false;
+      }
+    });
+
+    return;
+  }
 
   openingItemId.value = itemId;
 

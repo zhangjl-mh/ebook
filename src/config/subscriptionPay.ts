@@ -12,18 +12,18 @@ export const subscriptionPaymentConfig: SubscriptionPaymentConfig = {
       id: 'month',
       title: '单月订阅',
       validity: '有效期 30 天',
-      price: 11,
-      priceText: '￥11',
-      unitText: '11 元/月'
+      price: 22,
+      priceText: '￥22',
+      unitText: '22 元/月'
     },
     {
       id: 'year',
       title: '包年订阅',
       validity: '有效期 365 天',
-      price: 120,
-      priceText: '￥120',
+      price: 240,
+      priceText: '￥240',
       unitText: '10 元/月',
-      badge: '优惠 2 个月'
+      badge: '优惠 24 元'
     }
   ],
   benefits: [

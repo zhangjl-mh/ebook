@@ -12,13 +12,22 @@ export interface IssueDirectory {
   items: IssueDirectoryItem[];
 }
 
-export type ArticleBodyBlockType = 'heading' | 'author' | 'paragraph' | 'note' | 'caption';
+export type ArticleBodyBlockType = 'heading' | 'author' | 'paragraph' | 'note' | 'caption' | 'image';
 
-export interface ArticleBodyBlock {
+export interface ArticleTextBlock {
   id: string;
-  type: ArticleBodyBlockType;
+  type: Exclude<ArticleBodyBlockType, 'image'>;
   text: string;
 }
+
+export interface ArticleImageBlock {
+  id: string;
+  type: 'image';
+  src: string;
+  alt: string;
+}
+
+export type ArticleBodyBlock = ArticleTextBlock | ArticleImageBlock;
 
 export interface ArticleDetail {
   id: string;

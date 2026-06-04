@@ -18,7 +18,15 @@
         </view>
 
         <view class="article-body">
-          <text v-for="block in article.body" :key="block.id" :class="getBlockClass(block.type)">{{ block.text }}</text>
+          <template v-for="block in article.body" :key="block.id">
+            <view v-if="isImageBlock(block)" class="article-body__image-card">
+              <image v-if="!failedImageMap[block.id]" class="article-body__image" :src="getImageSrc(block)"
+                :alt="getImageAlt(block)" mode="widthFix" lazy-load show-menu-by-longpress
+                @error="markImageFailed(block.id)" />
+              <view v-else class="article-body__image-fallback">图片加载失败</view>
+            </view>
+            <text v-else :class="getBlockClass(block.type)">{{ getBlockText(block) }}</text>
+          </template>
         </view>
       </view>
 
@@ -45,7 +53,7 @@ import QSSubPageHeader from '@/components/QSSubPageHeader.vue';
 import { articleDetails } from '@/config/articleDetail';
 import { useSafeArea } from '@/hooks/useSafeArea';
 import { safeDecode } from '@/utils/text';
-import type { ArticleBodyBlockType, ArticleDetail } from '@/types/articleDetail';
+import type { ArticleBodyBlock, ArticleBodyBlockType, ArticleDetail } from '@/types/articleDetail';
 
 type ArticleQuery = Record<string, string | undefined>;
 
@@ -55,6 +63,7 @@ const article = ref<ArticleDetail | null>(fallbackArticle);
 const isFavorited = ref(false);
 const isLiked = ref(false);
 const likeCount = ref(fallbackArticle?.likeCount || 0);
+const failedImageMap = ref<Record<string, boolean>>({});
 
 const contentStyle = computed(() => ({
   paddingBottom: `calc(170rpx + ${safeArea.value.bottomInset}px)`
@@ -90,12 +99,28 @@ const setArticle = (nextArticle: ArticleDetail) => {
   likeCount.value = nextArticle.likeCount;
   isFavorited.value = false;
   isLiked.value = false;
+  failedImageMap.value = {};
 };
 
 const getBlockClass = (type: ArticleBodyBlockType) => [
   'article-body__block',
   `article-body__block--${type}`
 ];
+
+const isImageBlock = (block: ArticleBodyBlock) => block.type === 'image';
+
+const getImageSrc = (block: ArticleBodyBlock) => (block.type === 'image' ? block.src : '');
+
+const getImageAlt = (block: ArticleBodyBlock) => (block.type === 'image' ? block.alt : '');
+
+const getBlockText = (block: ArticleBodyBlock) => (block.type === 'image' ? '' : block.text);
+
+const markImageFailed = (blockId: string) => {
+  failedImageMap.value = {
+    ...failedImageMap.value,
+    [blockId]: true
+  };
+};
 
 const toggleFavorite = () => {
   isFavorited.value = !isFavorited.value;
@@ -199,6 +224,27 @@ page {
 
 .article-body__block {
   display: block;
+}
+
+.article-body__image-card {
+  overflow: hidden;
+  margin-top: 34rpx;
+  border-radius: 12rpx;
+  background: #f4f5f6;
+}
+
+.article-body__image {
+  display: block;
+  width: 100%;
+}
+
+.article-body__image-fallback {
+  display: flex;
+  min-height: 280rpx;
+  align-items: center;
+  justify-content: center;
+  color: #8b9098;
+  font-size: 25rpx;
 }
 
 .article-body__block--heading {

@@ -2,7 +2,7 @@
   <view class="qs-sub-page-header">
     <view class="qs-sub-page-header__nav" :style="barStyle">
       <button class="qs-sub-page-header__back" @tap="goBack">
-        <view class="qs-sub-page-header__back-icon"></view>
+        <uni-icons type="left" size="24" color="#ffffff" />
       </button>
       <text class="qs-sub-page-header__title">{{ title }}</text>
     </view>
@@ -80,14 +80,6 @@ const goBack = () => {
   &::after {
     border: none;
   }
-}
-
-.qs-sub-page-header__back-icon {
-  width: 25rpx;
-  height: 25rpx;
-  border-left: 6rpx solid currentColor;
-  border-bottom: 6rpx solid currentColor;
-  transform: rotate(45deg);
 }
 
 .qs-sub-page-header__title {

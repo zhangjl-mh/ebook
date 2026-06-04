@@ -34,7 +34,7 @@ const openRecentReading = (item: RecentReadItem) => {
   openingRecentId.value = item.id;
 
   uni.navigateTo({
-    url: `/subPages/book/index?title=${encodeURIComponent(title)}`,
+    url: `/subPages/book/index?title=${encodeURIComponent(title)}&issueId=${encodeURIComponent(item.issueId)}`,
     fail: () => {
       uni.showToast({
         title: '打开电子刊失败',

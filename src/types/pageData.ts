@@ -37,6 +37,7 @@ export interface ProfileMenuItem {
 
 export interface RecentReadItem {
   id: string;
+  issueId: string;
   title: string;
   issueTitle: string;
   issueNo: string;

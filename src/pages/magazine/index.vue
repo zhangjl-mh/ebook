@@ -55,8 +55,10 @@ const openIssueDetail = (issue: IssueCatalogItem) => {
 
   openingIssueId.value = issue.id;
 
+  const directoryIssueId = `issue-${issue.issueNo.padStart(2, '0')}`;
+
   uni.navigateTo({
-    url: `/subPages/book/index?title=${encodeURIComponent(title)}`,
+    url: `/subPages/book/index?title=${encodeURIComponent(title)}&issueId=${encodeURIComponent(directoryIssueId)}`,
     fail: () => {
       uni.showToast({
         title: '打开电子刊失败',
