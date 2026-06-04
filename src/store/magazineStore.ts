@@ -111,9 +111,6 @@ export const useMagazineStore = defineStore('magazineStore', {
 
       uni.navigateTo({
         url: `/subPages/catalog/index?issueId=${encodeURIComponent(issue.id)}`,
-        fail: () => {
-          uni.showToast({ title: '打开目录失败', icon: 'none' });
-        },
         complete: () => {
           setTimeout(() => {
             if (this.openingIssueId === issue.id) {

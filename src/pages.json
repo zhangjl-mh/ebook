@@ -42,7 +42,8 @@
         {
           "path": "book/index",
           "style": {
-            "navigationBarTitleText": "数字刊"
+            "navigationBarTitleText": "数字刊",
+            "navigationStyle": "custom"
           }
         },
         {

@@ -8,9 +8,7 @@
             </view>
 
             <view class="reader-page-pill">
-                <text class="reader-page-pill__current">{{ current + 1 }}</text>
-                <text class="reader-page-pill__split">/</text>
-                <text>{{ pages.length }}</text>
+                <text class="reader-page-pill__current" @tap="store.enterCatalog">阅读原刊</text>
             </view>
         </view>
 
@@ -90,6 +88,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue';
 import { onLoad, onReady } from '@dcloudio/uni-app';
+import { useMagazineStore } from '@/store/magazineStore';
 
 type ReaderQuery = Record<string, string | undefined>;
 type TurnDirection = 'next' | 'prev' | '';
@@ -100,6 +99,8 @@ const MAX_ROTATE = 88;
 const FINISH_THRESHOLD = 0.22;
 const ANIMATION_DURATION = 430;
 const PRELOAD_RANGE = 2;
+
+const store = useMagazineStore()
 
 const safeDecode = (value = '') => {
     try {
@@ -569,8 +570,8 @@ $theme: #e03e2d;
 
 .reader-page-pill__current {
     color: $theme;
-    font-size: 31rpx;
-    font-weight: 900;
+    font-size: 24rpx;
+    font-weight: 600;
 }
 
 .reader-page-pill__split {

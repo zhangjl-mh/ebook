@@ -1,5 +1,5 @@
 <template>
-  <view class="qs-sub-page-header">
+  <view class="qs-sub-page-header" :class="headerClass">
     <view class="qs-sub-page-header__nav" :style="barStyle">
       <button class="qs-sub-page-header__back" @tap="goBack">
         <uni-icons type="left" size="24" color="#ffffff" />
@@ -13,13 +13,18 @@
 import { computed } from 'vue';
 import { useSafeArea } from '@/hooks/useSafeArea';
 
+type HeaderMode = 'default' | 'compact';
+
 interface Props {
   title: string;
 }
 
 defineProps<Props>();
+const mode = defineModel<HeaderMode>('mode', { default: 'default' });
 
 const { safeArea } = useSafeArea();
+
+const headerClass = computed(() => `qs-sub-page-header--${mode.value}`);
 
 const barStyle = computed(() => ({
   height: `${safeArea.value.capsuleHeight}px`,
@@ -49,6 +54,13 @@ const goBack = () => {
   box-sizing: border-box;
 }
 
+.qs-sub-page-header--compact {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  padding-bottom: 6rpx;
+}
+
 .qs-sub-page-header__nav {
   position: relative;
   z-index: 2;
@@ -58,6 +70,10 @@ const goBack = () => {
   margin-bottom: 28rpx;
   padding: 0 30rpx;
   box-sizing: border-box;
+}
+
+.qs-sub-page-header--compact .qs-sub-page-header__nav {
+  margin-bottom: 8rpx;
 }
 
 .qs-sub-page-header__back {
