@@ -1,31 +1,31 @@
 <template>
     <view class="book-reader">
+        <QSSubPageHeader :title="title" mode="compact" />
         <!-- 顶部悬浮栏 -->
-        <view class="reader-header" v-show="toolbarVisible" @tap.stop>
+        <view class="reader-header" v-show="toolbarVisible" :style="headerFloatStyle" @tap.stop>
             <view class="reader-header__main">
                 <text class="reader-title">{{ title }}</text>
                 <text class="reader-desc">左右滑动翻页</text>
             </view>
 
-            <view class="reader-page-pill">
-                <text class="reader-page-pill__current" @tap="store.enterCatalog">阅读原刊</text>
-            </view>
+            <button class="reader-page-pill" :disabled="openingCatalog" @tap.stop="openCatalog">
+                <text class="reader-page-pill__current">阅读原刊</text>
+            </button>
         </view>
 
         <!-- 翻书主体 -->
-        <view class="reader-book" :class="{ 'reader-book--animating': animating }"
-            :style="{ height: readerHeight + 'px' }" @touchstart="onTouchStart" @touchmove="onTouchMove"
+        <view class="reader-book" :class="{ 'reader-book--animating': animating }" :style="readerBookStyle"
+            @touchstart="onTouchStart" @touchmove="onTouchMove"
             @touchend="onTouchEnd" @touchcancel="onTouchEnd" @tap="toggleToolbar">
             <!-- 下一页 -->
-            <view class="reader-sheet reader-sheet--under" v-show="showUnderSheet">
+            <view class="reader-sheet reader-sheet--under" v-show="showUnderSheet" :style="underSheetStyle">
                 <view class="book-page__paper">
-                    <scroll-view class="book-page__scroll" scroll-y enhanced :bounces="false" :show-scrollbar="false"
-                        :scroll-with-animation="false">
-                        <view class="book-page__image-wrap">
-                            <image class="book-page__image" :src="pages[underSheetIndex]" mode="widthFix"
+                    <view class="book-page__scroll">
+                        <view class="book-page__image-wrap" :style="imageWrapStyle">
+                            <image class="book-page__image" :src="pages[underSheetIndex]" mode="aspectFit"
                                 :fade-show="false" show-menu-by-longpress @load="onImageLoad(underSheetIndex)" />
                         </view>
-                    </scroll-view>
+                    </view>
 
                     <view class="book-page__spine"></view>
                 </view>
@@ -34,13 +34,12 @@
             <!-- 当前页 -->
             <view class="reader-sheet reader-sheet--current" :style="currentSheetStyle">
                 <view class="book-page__paper">
-                    <scroll-view class="book-page__scroll" scroll-y enhanced :bounces="false" :show-scrollbar="false"
-                        :scroll-with-animation="false">
-                        <view class="book-page__image-wrap">
-                            <image class="book-page__image" :src="pages[currentSheetIndex]" mode="widthFix"
+                    <view class="book-page__scroll">
+                        <view class="book-page__image-wrap" :style="imageWrapStyle">
+                            <image class="book-page__image" :src="pages[currentSheetIndex]" mode="aspectFit"
                                 :fade-show="false" show-menu-by-longpress @load="onImageLoad(currentSheetIndex)" />
                         </view>
-                    </scroll-view>
+                    </view>
 
                     <view class="book-page__spine"></view>
                     <view class="book-page__turn-shadow" :style="{ opacity: shadowOpacity }"></view>
@@ -50,13 +49,12 @@
             <!-- 上一页 -->
             <view class="reader-sheet reader-sheet--turn" v-show="showTurnSheet" :style="prevSheetStyle">
                 <view class="book-page__paper">
-                    <scroll-view class="book-page__scroll" scroll-y enhanced :bounces="false" :show-scrollbar="false"
-                        :scroll-with-animation="false">
-                        <view class="book-page__image-wrap">
-                            <image class="book-page__image" :src="pages[turnSheetIndex]" mode="widthFix"
+                    <view class="book-page__scroll">
+                        <view class="book-page__image-wrap" :style="imageWrapStyle">
+                            <image class="book-page__image" :src="pages[turnSheetIndex]" mode="aspectFit"
                                 :fade-show="false" show-menu-by-longpress @load="onImageLoad(turnSheetIndex)" />
                         </view>
-                    </scroll-view>
+                    </view>
 
                     <view class="book-page__spine"></view>
                     <view class="book-page__turn-shadow" :style="{ opacity: shadowOpacity }"></view>
@@ -65,7 +63,7 @@
         </view>
 
         <!-- 底部控制栏 -->
-        <view class="reader-control" v-show="toolbarVisible" @tap.stop>
+        <view class="reader-control" v-show="toolbarVisible" :style="controlFloatStyle" @tap.stop>
             <button class="reader-control__btn" :disabled="!hasPrev"
                 :class="{ 'reader-control__btn--disabled': !hasPrev }" @tap.stop="prevPage">
                 上一页
@@ -88,19 +86,28 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue';
 import { onLoad, onReady } from '@dcloudio/uni-app';
-import { useMagazineStore } from '@/store/magazineStore';
+import { useSafeArea } from '@/hooks/useSafeArea';
+import QSSubPageHeader from '@/components/QSSubPageHeader.vue';
 
 type ReaderQuery = Record<string, string | undefined>;
 type TurnDirection = 'next' | 'prev' | '';
 type ActiveTurnDirection = Exclude<TurnDirection, ''>;
 type GestureDirection = 'horizontal' | 'vertical' | '';
 
-const MAX_ROTATE = 88;
-const FINISH_THRESHOLD = 0.22;
-const ANIMATION_DURATION = 430;
+const MAX_ROTATE = 84;
+const FINISH_THRESHOLD = 0.18;
+const ANIMATION_DURATION = 520;
 const PRELOAD_RANGE = 2;
+const DRAG_PROGRESS_SCALE = 1.32;
+const HEADER_TOP_GAP_RPX = 20;
+const HEADER_HEIGHT_RPX = 88;
+const CONTROL_BOTTOM_GAP_RPX = 18;
+const CONTROL_HEIGHT_RPX = 92;
+const READER_VISIBLE_GAP_RPX = 22;
+const READER_HIDDEN_TOP_GAP_RPX = 24;
+const READER_HIDDEN_BOTTOM_GAP_RPX = 28;
 
-const store = useMagazineStore()
+const { safeArea } = useSafeArea();
 
 const safeDecode = (value = '') => {
     try {
@@ -125,12 +132,14 @@ const imageBaseUrl = ref('https://www.qstheory.cn/ebooks/202610');
 const pageCount = ref(12);
 const ext = ref('jpg');
 const pageStart = ref(0);
+const issueId = ref('');
 
 const current = ref(0);
 const readerHeight = ref(700);
 const windowWidth = ref(375);
 
 const toolbarVisible = ref(true);
+const openingCatalog = ref(false);
 const loadedMap = ref<Record<number, boolean>>({});
 
 const touchStartX = ref(0);
@@ -192,17 +201,32 @@ const progressPercent = computed(() => {
 
 const shadowOpacity = computed(() => {
     if (!turnDirection.value) return '0';
-    return String(0.16 + turnProgress.value * 0.32);
+
+    const foldShadow = Math.sin(turnProgress.value * Math.PI);
+    return String(0.12 + foldShadow * 0.36 + turnProgress.value * 0.08);
 });
 
 const currentSheetStyle = computed(() => {
     if (turnDirection.value === 'next') {
-        const rotate = -MAX_ROTATE * turnProgress.value;
-        const translateX = -14 * turnProgress.value;
+        const progress = turnProgress.value;
+        const rotate = -MAX_ROTATE * progress;
+        const translateX = -22 * progress;
+        const scale = 1 - 0.018 * progress;
 
         return {
             zIndex: 8,
-            transform: `translate3d(${translateX}rpx, 0, 0) rotateY(${rotate}deg)`
+            transform: `translate3d(${translateX}rpx, 0, 0) rotateY(${rotate}deg) scale(${scale})`
+        };
+    }
+
+    if (turnDirection.value === 'prev') {
+        const progress = turnProgress.value;
+        const translateX = 12 * (1 - progress);
+        const scale = 0.992 + 0.008 * progress;
+
+        return {
+            zIndex: 5,
+            transform: `translate3d(${translateX}rpx, 0, 0) scale(${scale})`
         };
     }
 
@@ -212,15 +236,75 @@ const currentSheetStyle = computed(() => {
     };
 });
 
+const underSheetStyle = computed(() => {
+    if (turnDirection.value !== 'next') {
+        return {
+            zIndex: 1,
+            opacity: 1,
+            transform: 'translate3d(0, 0, 0) scale(1)'
+        };
+    }
+
+    const progress = turnProgress.value;
+    const translateX = 28 * (1 - progress);
+    const scale = 0.985 + 0.015 * progress;
+
+    return {
+        zIndex: 1,
+        opacity: 0.88 + 0.12 * progress,
+        transform: `translate3d(${translateX}rpx, 0, 0) scale(${scale})`
+    };
+});
+
 const prevSheetStyle = computed(() => {
-    const rotate = -MAX_ROTATE + MAX_ROTATE * turnProgress.value;
-    const translateX = -18 + 18 * turnProgress.value;
+    const progress = turnProgress.value;
+    const rotate = -MAX_ROTATE + MAX_ROTATE * progress;
+    const translateX = -28 + 28 * progress;
+    const scale = 0.985 + 0.015 * progress;
 
     return {
         zIndex: 9,
-        transform: `translate3d(${translateX}rpx, 0, 0) rotateY(${rotate}deg)`
+        transform: `translate3d(${translateX}rpx, 0, 0) rotateY(${rotate}deg) scale(${scale})`
     };
 });
+
+const headerTop = computed(() => safeArea.value.capsuleBottom + uni.upx2px(HEADER_TOP_GAP_RPX));
+
+const controlBottom = computed(() => safeArea.value.bottomInset + uni.upx2px(CONTROL_BOTTOM_GAP_RPX));
+
+const readerAreaTop = computed(() => {
+    if (!toolbarVisible.value) {
+        return safeArea.value.headerHeight + uni.upx2px(READER_HIDDEN_TOP_GAP_RPX);
+    }
+
+    return headerTop.value + uni.upx2px(HEADER_HEIGHT_RPX + READER_VISIBLE_GAP_RPX);
+});
+
+const readerAreaHeight = computed(() => {
+    const bottomSpace = toolbarVisible.value
+        ? controlBottom.value + uni.upx2px(CONTROL_HEIGHT_RPX + READER_VISIBLE_GAP_RPX)
+        : safeArea.value.bottomInset + uni.upx2px(READER_HIDDEN_BOTTOM_GAP_RPX);
+    const bottomEdge = readerHeight.value - bottomSpace;
+
+    return Math.max(bottomEdge - readerAreaTop.value, 0);
+});
+
+const headerFloatStyle = computed(() => ({
+    top: `${headerTop.value}px`
+}));
+
+const controlFloatStyle = computed(() => ({
+    bottom: `${controlBottom.value}px`
+}));
+
+const readerBookStyle = computed(() => ({
+    top: `${readerAreaTop.value}px`,
+    height: `${readerAreaHeight.value}px`
+}));
+
+const imageWrapStyle = computed(() => ({
+    height: `${readerAreaHeight.value}px`,
+}));
 
 onLoad((query?: ReaderQuery) => {
     title.value = safeDecode(query?.title || '2026 第 10 期');
@@ -231,6 +315,7 @@ onLoad((query?: ReaderQuery) => {
 
     pageCount.value = toNumber(query?.pageCount, 12);
     ext.value = safeDecode(query?.ext || 'jpg');
+    issueId.value = safeDecode(query?.issueId || '');
 
     const start = Number(query?.pageStart ?? 0);
     pageStart.value = Number.isFinite(start) ? start : 0;
@@ -307,13 +392,13 @@ function onTouchMove(e: any) {
 
     if (dx < 0) {
         if (!beginTurn('next')) return;
-        turnProgress.value = clamp((absX / windowWidth.value) * 1.15, 0, 1);
+        turnProgress.value = clamp((absX / windowWidth.value) * DRAG_PROGRESS_SCALE, 0, 1);
         return;
     }
 
     if (dx > 0) {
         if (!beginTurn('prev')) return;
-        turnProgress.value = clamp((dx / windowWidth.value) * 1.15, 0, 1);
+        turnProgress.value = clamp((dx / windowWidth.value) * DRAG_PROGRESS_SCALE, 0, 1);
     }
 }
 
@@ -420,6 +505,29 @@ function nextPage() {
     playFlip('next');
 }
 
+function openCatalog() {
+    if (openingCatalog.value) return;
+
+    if (!issueId.value) {
+        uni.showToast({ title: '期刊信息不可用', icon: 'none' });
+        return;
+    }
+
+    openingCatalog.value = true;
+
+    uni.navigateTo({
+        url: `/subPages/catalog/index?issueId=${encodeURIComponent(issueId.value)}`,
+        fail: () => {
+            uni.showToast({ title: '打开目录失败', icon: 'none' });
+        },
+        complete: () => {
+            setTimeout(() => {
+                openingCatalog.value = false;
+            }, 500);
+        }
+    });
+}
+
 function onSliderChange(e: any) {
     const page = Number(e.detail.value);
     const nextPageIndex = clamp(page - 1, 0, pages.value.length - 1);
@@ -505,6 +613,7 @@ $theme: #e03e2d;
 
 .book-reader {
     position: relative;
+    height: 100vh;
     min-height: 100vh;
     overflow: hidden;
     background:
@@ -514,7 +623,7 @@ $theme: #e03e2d;
 }
 
 .reader-header {
-    position: fixed;
+    position: absolute;
     left: 24rpx;
     right: 24rpx;
     top: 24rpx;
@@ -557,7 +666,9 @@ $theme: #e03e2d;
 .reader-page-pill {
     height: 54rpx;
     min-width: 112rpx;
+    margin: 0;
     padding: 0 18rpx;
+    border: none;
     border-radius: 999rpx;
     background: rgba(224, 62, 45, 0.1);
     color: rgba(45, 23, 18, 0.58);
@@ -566,6 +677,11 @@ $theme: #e03e2d;
     align-items: center;
     justify-content: center;
     gap: 5rpx;
+    line-height: 54rpx;
+}
+
+.reader-page-pill::after {
+    border: none;
 }
 
 .reader-page-pill__current {
@@ -579,13 +695,16 @@ $theme: #e03e2d;
 }
 
 .reader-book {
-    position: relative;
+    position: absolute;
+    left: 0;
+    right: 0;
     z-index: 2;
     width: 100%;
     overflow: hidden;
-    perspective: 1800rpx;
+    perspective: 2200rpx;
     transform-style: preserve-3d;
     transform: translate3d(0, 0, 0);
+    transition: top 0.24s ease, height 0.24s ease;
     background:
         linear-gradient(90deg, rgba(94, 32, 22, 0.06), rgba(255, 255, 255, 0) 16%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
@@ -607,11 +726,23 @@ $theme: #e03e2d;
 }
 
 .reader-book--animating .reader-sheet {
-    transition: transform 0.43s cubic-bezier(0.22, 1, 0.36, 1);
+    transition:
+        transform 0.52s cubic-bezier(0.18, 0.82, 0.2, 1),
+        opacity 0.52s cubic-bezier(0.18, 0.82, 0.2, 1);
+}
+
+.reader-book--animating .book-page__turn-shadow {
+    transition: opacity 0.52s cubic-bezier(0.18, 0.82, 0.2, 1);
 }
 
 .reader-sheet--under {
     z-index: 1;
+}
+
+.reader-sheet--under .book-page__paper {
+    box-shadow:
+        0 18rpx 44rpx rgba(111, 37, 28, 0.1),
+        0 6rpx 18rpx rgba(111, 37, 28, 0.06);
 }
 
 .reader-sheet--current {
@@ -644,20 +775,19 @@ $theme: #e03e2d;
     overflow: hidden;
     background: #fff;
     box-sizing: border-box;
-}
-
-.book-page__image-wrap {
-    min-height: 100%;
-    width: 100%;
-    padding: 100rpx 0 120rpx;
-    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+.book-page__image-wrap {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .book-page__image {
     width: 100%;
+    height: 100%;
     display: block;
     background: #fff;
     border-radius: 0 28rpx 28rpx 0;
@@ -686,19 +816,18 @@ $theme: #e03e2d;
     right: 0;
     top: 0;
     bottom: 0;
-    width: 132rpx;
+    width: 168rpx;
     background: linear-gradient(270deg,
-            rgba(45, 14, 10, 0.28) 0%,
-            rgba(45, 14, 10, 0.1) 46%,
+            rgba(45, 14, 10, 0.34) 0%,
+            rgba(45, 14, 10, 0.14) 38%,
             rgba(45, 14, 10, 0) 100%);
     pointer-events: none;
 }
 
 .reader-control {
-    position: fixed;
+    position: absolute;
     left: 24rpx;
     right: 24rpx;
-    bottom: 28rpx;
     z-index: 30;
     padding: 14rpx;
     border-radius: 999rpx;
