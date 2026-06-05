@@ -1,3 +1,4 @@
+import { ArticleTabKey } from '@/types/enums';
 import type { MagazineConfig } from '@/types/magazine';
 
 export const magazineConfig: MagazineConfig = {
@@ -42,13 +43,13 @@ export const magazineConfig: MagazineConfig = {
     btnText: '立即订阅'
   },
   tabCategories: [
-    { key: 'recommend', name: '推荐' },
-    { key: 'news', name: '要闻' },
-    { key: 'theory', name: '思想' }
+    { key: ArticleTabKey.Recommend, name: '推荐' },
+    { key: ArticleTabKey.News, name: '要闻' },
+    { key: ArticleTabKey.Theory, name: '思想' }
   ],
   articles: {
-    recommend: [],
-    news: [],
-    theory: []
+    [ArticleTabKey.Recommend]: [],
+    [ArticleTabKey.News]: [],
+    [ArticleTabKey.Theory]: []
   }
 };

@@ -1,4 +1,5 @@
 import { magazineConfig } from '@/config/magazineData';
+import { PaymentMethodId, SubscriptionBenefitIcon, SubscriptionPlanId } from '@/types/enums';
 import type { SubscriptionPaymentConfig } from '@/types/subscription';
 
 export const subscriptionPaymentConfig: SubscriptionPaymentConfig = {
@@ -9,7 +10,7 @@ export const subscriptionPaymentConfig: SubscriptionPaymentConfig = {
   coverImage: magazineConfig.swiperIssues[0]?.coverImage || '',
   plans: [
     {
-      id: 'month',
+      id: SubscriptionPlanId.Month,
       title: '单月订阅',
       validity: '有效期 30 天',
       price: 22,
@@ -17,7 +18,7 @@ export const subscriptionPaymentConfig: SubscriptionPaymentConfig = {
       unitText: '22 元/月'
     },
     {
-      id: 'year',
+      id: SubscriptionPlanId.Year,
       title: '包年订阅',
       validity: '有效期 365 天',
       price: 240,
@@ -28,32 +29,32 @@ export const subscriptionPaymentConfig: SubscriptionPaymentConfig = {
   ],
   benefits: [
     {
-      id: 'video',
+      id: SubscriptionBenefitIcon.Video,
       title: '视频学习',
       desc: '专题课程随时看',
-      icon: 'video'
+      icon: SubscriptionBenefitIcon.Video
     },
     {
-      id: 'notes',
+      id: SubscriptionBenefitIcon.Notes,
       title: '收藏笔记',
       desc: '重点内容随时存',
-      icon: 'notes'
+      icon: SubscriptionBenefitIcon.Notes
     },
     {
-      id: 'audio',
+      id: SubscriptionBenefitIcon.Audio,
       title: '语音伴读',
       desc: '通勤学习更轻松',
-      icon: 'audio'
+      icon: SubscriptionBenefitIcon.Audio
     },
     {
-      id: 'knowledge',
+      id: SubscriptionBenefitIcon.Knowledge,
       title: '理论专题知识库',
       desc: '权威专题系统学',
-      icon: 'knowledge'
+      icon: SubscriptionBenefitIcon.Knowledge
     }
   ],
   paymentMethod: {
-    id: 'wechat',
+    id: PaymentMethodId.Wechat,
     title: '微信支付'
   }
 };

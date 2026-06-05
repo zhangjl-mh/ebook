@@ -1,6 +1,7 @@
-export const articleTabKeys = ['recommend', 'news', 'theory'] as const;
+import type { ArticleTabKey } from '@/types/enums';
 
-export type ArticleTabKey = (typeof articleTabKeys)[number];
+export { articleTabKeys } from '@/types/enums';
+export type { ArticleTabKey } from '@/types/enums';
 
 export interface Article {
   id: string;

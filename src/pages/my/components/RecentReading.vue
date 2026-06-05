@@ -79,14 +79,14 @@ const getProgressStyle = (progress: number) => ({
 }
 
 .recent__title {
-  color: #202124;
+  color: var(--qs-text-main);
   font-size: 34rpx;
   font-weight: 700;
   line-height: 1;
 }
 
 .recent__more {
-  color: #8d8f94;
+  color: var(--qs-text-muted);
   font-size: 26rpx;
   line-height: 1;
 }
@@ -102,8 +102,8 @@ const getProgressStyle = (progress: number) => ({
   padding: 22rpx 22rpx 20rpx;
   box-sizing: border-box;
   border-radius: 20rpx;
-  background: #fff;
-  box-shadow: 0 14rpx 36rpx rgba(25, 28, 34, 0.06);
+  background: $qs-card-bg;
+  box-shadow: $qs-shadow-card-soft;
 }
 
 .recent__item+.recent__item {
@@ -134,7 +134,7 @@ const getProgressStyle = (progress: number) => ({
 }
 
 .recent__cover-title {
-  color: #df151f;
+  color: $qs-color-primary;
   font-family: KaiTi, STKaiti, serif;
   font-size: 36rpx;
   font-weight: 700;
@@ -143,7 +143,7 @@ const getProgressStyle = (progress: number) => ({
 
 .recent__cover-issue {
   margin-top: 16rpx;
-  color: #df151f;
+  color: $qs-color-primary;
   font-size: 18rpx;
   line-height: 1;
 }
@@ -157,7 +157,7 @@ const getProgressStyle = (progress: number) => ({
 
 .recent__name {
   display: block;
-  color: #1d1d1f;
+  color: var(--qs-text-main);
   font-size: 30rpx;
   font-weight: 700;
   line-height: 1.15;
@@ -185,7 +185,7 @@ const getProgressStyle = (progress: number) => ({
 .recent__progress-bar {
   height: 100%;
   border-radius: 999rpx;
-  background: #df151f;
+  background: $qs-color-primary;
 }
 
 .recent__empty {
@@ -194,12 +194,12 @@ const getProgressStyle = (progress: number) => ({
   justify-content: center;
   height: 172rpx;
   border-radius: 20rpx;
-  background: #fff;
-  box-shadow: 0 14rpx 36rpx rgba(25, 28, 34, 0.06);
+  background: $qs-card-bg;
+  box-shadow: $qs-shadow-card-soft;
 }
 
 .recent__empty-text {
-  color: #8b8d92;
+  color: var(--qs-text-muted);
   font-size: 26rpx;
 }
 </style>

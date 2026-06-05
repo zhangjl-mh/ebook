@@ -38,13 +38,13 @@ const openArticle = (article: Article) => {
 <style lang="scss" scoped>
 .article-list {
   padding: 0 38rpx 28rpx;
-  background: #fff;
+  background: $qs-card-bg;
 }
 
 .article-list__state {
   padding: 72rpx 0;
   text-align: center;
-  color: #999;
+  color: var(--qs-text-placeholder);
   font-size: 24rpx;
 }
 
@@ -55,7 +55,7 @@ const openArticle = (article: Article) => {
 }
 
 .article-item--bordered {
-  border-bottom: 1rpx solid #f0f0f0;
+  border-bottom: 1rpx solid $qs-border-color-light;
 }
 
 .article-item__body {
@@ -70,7 +70,7 @@ const openArticle = (article: Article) => {
 .article-item__title {
   display: -webkit-box;
   overflow: hidden;
-  color: #17191d;
+  color: var(--qs-text-main);
   font-size: 31rpx;
   font-weight: 700;
   line-height: 1.35;
@@ -79,7 +79,7 @@ const openArticle = (article: Article) => {
 }
 
 .article-item__subtitle {
-  color: #8d9299;
+  color: var(--qs-text-muted);
   font-size: 24rpx;
   line-height: 1.4;
 }
@@ -94,7 +94,7 @@ const openArticle = (article: Article) => {
   padding: 8rpx 16rpx;
   border-radius: 7rpx;
   background: #fde8ea;
-  color: #c8161d;
+  color: $qs-color-primary;
   font-size: 22rpx;
   line-height: 1;
 }

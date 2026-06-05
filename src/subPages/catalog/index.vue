@@ -1,34 +1,38 @@
 <template>
   <view class="catalog-page">
-    <QSSubPageHeader title="目录" />
+    <scroll-view class="catalog-page__scroll qs-page-scroll" scroll-y enable-flex>
+      <view class="qs-page-scroll__inner">
+        <QSSubPageHeader title="目录" />
 
-    <view class="catalog-page__content">
-      <view class="catalog-card">
-        <view class="catalog-card__issue">
-          <text class="catalog-card__issue-title">{{ directory.issueTitle }}</text>
-          <text class="catalog-card__issue-desc">《求是》 {{ directory.issueTitle.replace('第', ' 第') }}</text>
-        </view>
-
-        <view class="catalog-card__header">
-          <view class="catalog-card__mark"></view>
-          <text class="catalog-card__title">{{ directory.guideTitle }}</text>
-        </view>
-
-        <view v-if="!directory.items.length" class="catalog-card__empty">暂无目录内容</view>
-
-        <view v-else class="catalog-list">
-          <view v-for="(item, index) in directory.items" :key="item.id" class="catalog-item"
-            @tap="openArticle(item.id)">
-            <text class="catalog-item__index">{{ formatOrder(index) }}</text>
-            <view class="catalog-item__body">
-              <text class="catalog-item__title">{{ item.title }}</text>
-              <text v-if="item.author" class="catalog-item__author">/{{ item.author }}</text>
+        <view class="catalog-page__content">
+          <view class="catalog-card">
+            <view class="catalog-card__issue">
+              <text class="catalog-card__issue-title">{{ directory.issueTitle }}</text>
+              <text class="catalog-card__issue-desc">《求是》 {{ directory.issueTitle.replace('第', ' 第') }}</text>
             </view>
-            <text class="catalog-item__arrow">›</text>
+
+            <view class="catalog-card__header">
+              <view class="catalog-card__mark"></view>
+              <text class="catalog-card__title">{{ directory.guideTitle }}</text>
+            </view>
+
+            <view v-if="!directory.items.length" class="catalog-card__empty">暂无目录内容</view>
+
+            <view v-else class="catalog-list">
+              <view v-for="(item, index) in directory.items" :key="item.id" class="catalog-item"
+                @tap="openArticle(item.id)">
+                <text class="catalog-item__index">{{ formatOrder(index) }}</text>
+                <view class="catalog-item__body">
+                  <text class="catalog-item__title">{{ item.title }}</text>
+                  <text v-if="item.author" class="catalog-item__author">/{{ item.author }}</text>
+                </view>
+                <text class="catalog-item__arrow">›</text>
+              </view>
+            </view>
           </view>
         </view>
       </view>
-    </view>
+    </scroll-view>
   </view>
 </template>
 
@@ -92,30 +96,33 @@ const openArticle = (itemId: string) => {
 
 <style lang="scss">
 page {
-  background: #f6f7f9;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--qs-page-bg-soft);
 }
 </style>
 
 <style lang="scss" scoped>
 .catalog-page {
-  min-height: 100vh;
-  overflow-x: hidden;
-  background: #f6f7f9;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--qs-page-bg-soft);
+}
+
+.catalog-page__scroll {
+  background: var(--qs-page-bg-soft);
 }
 
 .catalog-page__content {
   position: relative;
   z-index: 3;
   margin-top: -92rpx;
-  padding: 0 30rpx 70rpx;
+  padding: 0 $qs-page-padding-x 70rpx;
 }
 
 .catalog-card {
   overflow: hidden;
-  border-radius: 22rpx;
-  background: #fff;
-  box-shadow: 0 18rpx 42rpx rgba(56, 28, 28, 0.08);
+  border-radius: $qs-radius-card;
+  background: $qs-card-bg;
+  box-shadow: $qs-shadow-card;
 }
 
 .catalog-card__issue {
@@ -124,7 +131,7 @@ page {
 
 .catalog-card__issue-title {
   display: block;
-  color: #202228;
+  color: var(--qs-text-main);
   font-size: 38rpx;
   font-weight: 800;
   line-height: 1.25;
@@ -162,7 +169,7 @@ page {
 .catalog-card__empty {
   padding: 88rpx 0;
   text-align: center;
-  color: #999;
+  color: var(--qs-text-placeholder);
   font-size: 26rpx;
 }
 
@@ -175,13 +182,13 @@ page {
   align-items: flex-start;
   gap: 22rpx;
   padding: 28rpx 0;
-  border-top: 1rpx solid #f0f1f3;
+  border-top: 1rpx solid $qs-border-color-light;
 }
 
 .catalog-item__index {
   width: 46rpx;
   flex-shrink: 0;
-  color: #d71920;
+  color: var(--qs-color-primary);
   font-size: 24rpx;
   font-weight: 800;
   line-height: 1.7;

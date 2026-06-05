@@ -36,6 +36,14 @@ src/utils/*.ts                          # 纯工具函数
 - 微信小程序优先使用 `view`、`text`、`image`、`button`、`input` 等 uni 组件。
 - 避免浏览器 DOM API；平台专用逻辑使用条件编译。
 
+## 小程序枚举与 TypeScript
+
+- 跨页面、跨组件、跨 config/service/store 使用的有限取值必须收口到共享枚举入口，使用 `as const` 对象加同名 type，避免裸字符串散落。
+- 页面私有且只在单文件内使用的有限取值可留在页面内；一旦被第二处复用，必须上移到 `src/types/enums.ts`。
+- header mode、tab key、订阅套餐、支付方式、权益 icon、文章块类型、个人中心 badge/menu icon 等都按共享枚举管理。
+- 事件参数优先使用项目内事件类型；不稳定 payload 使用 `unknown` 加类型收窄，禁止为了省事写 `any`。
+- 只作为类型使用的导入必须使用 `import type`。
+
 ## Store / Service / Config
 
 - store 只保存业务状态、loading、error、active tab、选中项，并提供业务 action。
@@ -45,11 +53,23 @@ src/utils/*.ts                          # 纯工具函数
 
 ## 样式
 
+- 全局样式变量放 `src/uni.scss` 和 `src/App.vue`，优先复用项目变量，不在页面里重复写品牌色、页面底色、卡片色、边框色、阴影和通用间距。
+- `App.vue` 只放全局基础样式、CSS 变量和通用页面容器；页面私有结构与业务视觉仍写在对应页面或组件内。
+- 小程序自定义导航必须使用 `useSafeArea` 或 uni-app 系统变量处理状态栏、胶囊和底部安全区。
+- 固定底部栏必须叠加 `safeArea.bottomInset` 或全局底部安全变量，内容区必须预留底部空间，避免被 tabBar 或 Home Indicator 遮挡。
 - 组件样式默认 `scoped`。
 - 删除不用的 class；不要留下“以后可能用”的样式。
 - 能用一个 class 解决就不要多层容器配合。
 - 公共组件不能依赖父页面样式才能正常显示。
 - 中文文案统一 UTF-8，提交前检查乱码。
+
+## iOS 页面滚动与回弹
+
+- 首页保留原生下拉刷新时，不设置 `disableScroll`；必须设置页面底部背景和内容底部留白，避免底部回弹露白。
+- 不需要原生页面滚动或下拉刷新的页面，在 `pages.json` 的页面 `style` 中设置 `disableScroll: true`；该配置只在页面级有效，不写进 `globalStyle`。
+- 设置 `disableScroll` 后，长内容必须使用固定高度的内部 `scroll-view scroll-y` 承载，保证内容仍可滚动。
+- `scroll-view` 必须有稳定高度；需要 flex 布局时加 `enable-flex`。
+- 电子刊、沉浸式阅读、固定底部支付栏、文章详情等页面，默认按页面级禁止回弹加内部滚动处理。
 
 ## 每次修改后的强制流程
 
@@ -66,4 +86,3 @@ src/utils/*.ts                          # 纯工具函数
 - 小步修改：避免顺手重构无关代码。
 - 类型先行：共享数据结构先定义类型，再写实现。
 - 失败可预期：异步流程必须考虑失败和空结果。
-

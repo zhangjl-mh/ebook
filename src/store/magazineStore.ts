@@ -1,12 +1,14 @@
 import { defineStore } from 'pinia';
 import { magazineConfig } from '@/config/magazineData';
 import { fetchMagazineArticles } from '@/services/magazineService';
-import type { Article, ArticleTabKey, MagazineConfig, MagazineIssue } from '@/types/magazine';
+import { ArticleTabKey } from '@/types/enums';
+import type { Article, MagazineConfig, MagazineIssue } from '@/types/magazine';
+import type { ArticleTabKey as ArticleTabKeyType } from '@/types/enums';
 
 interface MagazineState {
   config: MagazineConfig;
   activeIssueId: string;
-  activeTab: ArticleTabKey;
+  activeTab: ArticleTabKeyType;
   searchQuery: string;
   isSubscribed: boolean;
   isArticlesLoading: boolean;
@@ -20,16 +22,16 @@ const createMagazineConfig = (): MagazineConfig => ({
   swiperIssues: magazineConfig.swiperIssues.map((issue) => ({ ...issue })),
   tabCategories: magazineConfig.tabCategories.map((tab) => ({ ...tab })),
   articles: {
-    recommend: [...magazineConfig.articles.recommend],
-    news: [...magazineConfig.articles.news],
-    theory: [...magazineConfig.articles.theory]
+    [ArticleTabKey.Recommend]: [...magazineConfig.articles[ArticleTabKey.Recommend]],
+    [ArticleTabKey.News]: [...magazineConfig.articles[ArticleTabKey.News]],
+    [ArticleTabKey.Theory]: [...magazineConfig.articles[ArticleTabKey.Theory]]
   }
 });
 export const useMagazineStore = defineStore('magazineStore', {
   state: (): MagazineState => ({
     config: createMagazineConfig(),
     activeIssueId: 'issue-10',
-    activeTab: 'recommend',
+    activeTab: ArticleTabKey.Recommend,
     searchQuery: '',
     isSubscribed: false,
     isArticlesLoading: false,
@@ -62,7 +64,7 @@ export const useMagazineStore = defineStore('magazineStore', {
     changeIssue(id: string) {
       this.activeIssueId = id;
     },
-    setActiveTab(tabKey: ArticleTabKey) {
+    setActiveTab(tabKey: ArticleTabKeyType) {
       this.activeTab = tabKey;
     },
     setSearchQuery(query: string) {

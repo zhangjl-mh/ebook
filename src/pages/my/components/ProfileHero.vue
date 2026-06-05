@@ -60,7 +60,7 @@ const barStyle = computed<Record<string, string>>(() => ({
   bottom: 0;
   left: 0;
   height: 168rpx;
-  background: linear-gradient(180deg, rgba(245, 246, 248, 0) 0%, rgba(245, 246, 248, 0.68) 64%, #f5f6f8 100%);
+  background: linear-gradient(180deg, rgba(245, 246, 248, 0) 0%, rgba(245, 246, 248, 0.68) 64%, $qs-page-bg 100%);
   content: '';
   pointer-events: none;
 }
@@ -167,7 +167,7 @@ const barStyle = computed<Record<string, string>>(() => ({
   left: 26rpx;
   height: 20rpx;
   border-radius: 999rpx;
-  background: #d91820;
+  background: $qs-color-primary;
 }
 
 .profile-hero__body {
@@ -204,7 +204,7 @@ const barStyle = computed<Record<string, string>>(() => ({
 .profile-hero__badge--gold,
 .profile-hero__badge--red {
   border: 1rpx solid rgba(222, 21, 31, 0.46);
-  color: #df151f;
+  color: $qs-color-primary;
 }
 
 .profile-hero__badge--gray {

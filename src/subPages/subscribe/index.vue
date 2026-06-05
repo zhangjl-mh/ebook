@@ -1,89 +1,93 @@
 <template>
   <view class="subscribe-page">
-    <QSSubPageHeader title="会员" />
+    <scroll-view class="subscribe-page__scroll qs-page-scroll" scroll-y enable-flex>
+      <view class="qs-page-scroll__inner">
+        <QSSubPageHeader title="会员" />
 
-    <view class="subscribe-page__content">
-      <view class="product-card">
-        <view class="product-card__cover">
-          <image v-if="coverImage && !coverFailed" :src="coverImage" mode="aspectFit"
-            class="product-card__cover-image" @error="markCoverFailed" />
-          <view v-else class="product-card__cover-fallback">
-            <text>求是</text>
-          </view>
-        </view>
-
-        <view class="product-card__info">
-          <view class="product-card__title-row">
-            <text class="product-card__title">{{ config.productName }}</text>
-            <text class="product-card__tag">{{ config.productTag }}</text>
-          </view>
-          <text class="product-card__desc">{{ config.description }}</text>
-          <text v-if="currentIssueTitle" class="product-card__issue">{{ currentIssueTitle }}</text>
-        </view>
-      </view>
-
-      <view class="subscribe-section">
-        <view class="subscribe-section__title">
-          <view class="subscribe-section__mark"></view>
-          <text>选择订阅套餐</text>
-        </view>
-
-        <view v-if="!config.plans.length" class="subscribe-empty">暂无可选套餐</view>
-        <view v-else class="plan-list">
-          <view v-for="plan in config.plans" :key="plan.id" class="plan-card"
-            :class="{ 'plan-card--active': selectedPlanId === plan.id }" @tap="selectPlan(plan.id)">
-            <view class="plan-card__radio">
-              <text v-if="selectedPlanId === plan.id">✓</text>
-            </view>
-            <view class="plan-card__body">
-              <text class="plan-card__title">{{ plan.title }}</text>
-              <text class="plan-card__validity">{{ plan.validity }}</text>
-            </view>
-            <view class="plan-card__price">
-              <view class="plan-card__price-main">
-                <text>{{ plan.priceText }}</text>
-                <text v-if="plan.badge" class="plan-card__badge">{{ plan.badge }}</text>
+        <view class="subscribe-page__content">
+          <view class="product-card">
+            <view class="product-card__cover">
+              <image v-if="coverImage && !coverFailed" :src="coverImage" mode="aspectFit"
+                class="product-card__cover-image" @error="markCoverFailed" />
+              <view v-else class="product-card__cover-fallback">
+                <text>求是</text>
               </view>
-              <text class="plan-card__unit">{{ plan.unitText }}</text>
+            </view>
+
+            <view class="product-card__info">
+              <view class="product-card__title-row">
+                <text class="product-card__title">{{ config.productName }}</text>
+                <text class="product-card__tag">{{ config.productTag }}</text>
+              </view>
+              <text class="product-card__desc">{{ config.description }}</text>
+              <text v-if="currentIssueTitle" class="product-card__issue">{{ currentIssueTitle }}</text>
+            </view>
+          </view>
+
+          <view class="subscribe-section">
+            <view class="subscribe-section__title">
+              <view class="subscribe-section__mark"></view>
+              <text>选择订阅套餐</text>
+            </view>
+
+            <view v-if="!config.plans.length" class="subscribe-empty">暂无可选套餐</view>
+            <view v-else class="plan-list">
+              <view v-for="plan in config.plans" :key="plan.id" class="plan-card"
+                :class="{ 'plan-card--active': selectedPlanId === plan.id }" @tap="selectPlan(plan.id)">
+                <view class="plan-card__radio">
+                  <text v-if="selectedPlanId === plan.id">✓</text>
+                </view>
+                <view class="plan-card__body">
+                  <text class="plan-card__title">{{ plan.title }}</text>
+                  <text class="plan-card__validity">{{ plan.validity }}</text>
+                </view>
+                <view class="plan-card__price">
+                  <view class="plan-card__price-main">
+                    <text>{{ plan.priceText }}</text>
+                    <text v-if="plan.badge" class="plan-card__badge">{{ plan.badge }}</text>
+                  </view>
+                  <text class="plan-card__unit">{{ plan.unitText }}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <view class="subscribe-section">
+            <view class="subscribe-section__title">
+              <view class="subscribe-section__mark"></view>
+              <text>会员权益</text>
+            </view>
+
+            <view v-if="!config.benefits.length" class="subscribe-empty">暂无会员权益</view>
+            <view v-else class="benefit-panel">
+              <view v-for="benefit in config.benefits" :key="benefit.id" class="benefit-item">
+                <view class="benefit-item__icon" :class="`benefit-item__icon--${benefit.icon}`">
+                  <view class="benefit-item__glyph"></view>
+                </view>
+                <text class="benefit-item__title">{{ benefit.title }}</text>
+                <text class="benefit-item__desc">{{ benefit.desc }}</text>
+              </view>
+            </view>
+          </view>
+
+          <view class="subscribe-section">
+            <view class="subscribe-section__title">
+              <view class="subscribe-section__mark"></view>
+              <text>支付方式</text>
+            </view>
+
+            <view class="payment-card">
+              <view class="wechat-icon">
+                <view class="wechat-icon__bubble wechat-icon__bubble--large"></view>
+                <view class="wechat-icon__bubble wechat-icon__bubble--small"></view>
+              </view>
+              <text class="payment-card__title">{{ config.paymentMethod.title }}</text>
+              <view class="payment-card__check">✓</view>
             </view>
           </view>
         </view>
       </view>
-
-      <view class="subscribe-section">
-        <view class="subscribe-section__title">
-          <view class="subscribe-section__mark"></view>
-          <text>会员权益</text>
-        </view>
-
-        <view v-if="!config.benefits.length" class="subscribe-empty">暂无会员权益</view>
-        <view v-else class="benefit-panel">
-          <view v-for="benefit in config.benefits" :key="benefit.id" class="benefit-item">
-            <view class="benefit-item__icon" :class="`benefit-item__icon--${benefit.icon}`">
-              <view class="benefit-item__glyph"></view>
-            </view>
-            <text class="benefit-item__title">{{ benefit.title }}</text>
-            <text class="benefit-item__desc">{{ benefit.desc }}</text>
-          </view>
-        </view>
-      </view>
-
-      <view class="subscribe-section">
-        <view class="subscribe-section__title">
-          <view class="subscribe-section__mark"></view>
-          <text>支付方式</text>
-        </view>
-
-        <view class="payment-card">
-          <view class="wechat-icon">
-            <view class="wechat-icon__bubble wechat-icon__bubble--large"></view>
-            <view class="wechat-icon__bubble wechat-icon__bubble--small"></view>
-          </view>
-          <text class="payment-card__title">{{ config.paymentMethod.title }}</text>
-          <view class="payment-card__check">✓</view>
-        </view>
-      </view>
-    </view>
+    </scroll-view>
 
     <view class="subscribe-footer" :style="footerStyle">
       <view class="subscribe-footer__amount">
@@ -163,14 +167,19 @@ const handlePay = () => {
 <style lang="scss">
 page {
   background: #f7f7f8;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 </style>
 
 <style lang="scss" scoped>
 .subscribe-page {
-  min-height: 100vh;
-  overflow-x: hidden;
+  height: 100vh;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(232, 24, 34, 0.06) 0, rgba(232, 24, 34, 0) 420rpx),
+    #f7f7f8;
+}
+
+.subscribe-page__scroll {
   background:
     linear-gradient(180deg, rgba(232, 24, 34, 0.06) 0, rgba(232, 24, 34, 0) 420rpx),
     #f7f7f8;
@@ -180,16 +189,16 @@ page {
   position: relative;
   z-index: 2;
   margin-top: -92rpx;
-  padding: 0 30rpx 190rpx;
+  padding: 0 $qs-page-padding-x 190rpx;
 }
 
 .product-card {
   display: flex;
   gap: 30rpx;
   padding: 30rpx;
-  border-radius: 24rpx;
-  background: #fff;
-  box-shadow: 0 18rpx 46rpx rgba(79, 22, 22, 0.08);
+  border-radius: $qs-radius-panel;
+  background: $qs-card-bg;
+  box-shadow: $qs-shadow-card;
   box-sizing: border-box;
 }
 
@@ -202,7 +211,7 @@ page {
   justify-content: center;
   overflow: hidden;
   border: 1rpx solid #f1d4d4;
-  background: #fffafa;
+  background: $qs-card-bg-warm;
 }
 
 .product-card__cover-image {
@@ -216,7 +225,7 @@ page {
   height: 100%;
   align-items: center;
   justify-content: center;
-  color: #d71920;
+  color: $qs-color-primary;
   font-size: 34rpx;
   font-weight: 800;
 }
@@ -234,7 +243,7 @@ page {
 }
 
 .product-card__title {
-  color: #202228;
+  color: var(--qs-text-main);
   font-size: 34rpx;
   font-weight: 800;
   line-height: 1.25;
@@ -243,7 +252,7 @@ page {
 .product-card__tag {
   padding: 5rpx 12rpx;
   border-radius: 8rpx;
-  background: #fff0f1;
+  background: $qs-color-primary-light;
   color: #df1b25;
   font-size: 22rpx;
   font-weight: 700;
@@ -263,7 +272,7 @@ page {
   padding: 8rpx 14rpx;
   border-radius: 999rpx;
   background: #fff5f5;
-  color: #d71920;
+  color: $qs-color-primary;
   font-size: 22rpx;
   font-weight: 700;
   line-height: 1.25;
@@ -277,7 +286,7 @@ page {
   display: flex;
   align-items: center;
   gap: 14rpx;
-  color: #24262b;
+  color: var(--qs-text-main);
   font-size: 34rpx;
   font-weight: 800;
   line-height: 1.2;
@@ -287,15 +296,15 @@ page {
   width: 8rpx;
   height: 34rpx;
   border-radius: 999rpx;
-  background: #e31822;
+  background: $qs-color-primary-strong;
 }
 
 .subscribe-empty {
   margin-top: 24rpx;
   padding: 44rpx 0;
   border-radius: 18rpx;
-  background: #fff;
-  color: #999;
+  background: $qs-card-bg;
+  color: var(--qs-text-placeholder);
   font-size: 26rpx;
   text-align: center;
 }
@@ -312,14 +321,14 @@ page {
   align-items: center;
   min-height: 146rpx;
   padding: 28rpx 28rpx;
-  border: 2rpx solid #eceef1;
+  border: 2rpx solid $qs-border-color;
   border-radius: 18rpx;
-  background: #fff;
+  background: $qs-card-bg;
   box-sizing: border-box;
 }
 
 .plan-card--active {
-  border-color: #e31822;
+  border-color: $qs-color-primary-strong;
   background: linear-gradient(90deg, #fff8f8 0%, #fff 100%);
 }
 
@@ -341,8 +350,8 @@ page {
 }
 
 .plan-card--active .plan-card__radio {
-  border-color: #e31822;
-  background: #e31822;
+  border-color: $qs-color-primary-strong;
+  background: $qs-color-primary-strong;
 }
 
 .plan-card__body {
@@ -377,7 +386,7 @@ page {
   align-items: center;
   justify-content: flex-end;
   gap: 12rpx;
-  color: #e31822;
+  color: $qs-color-primary-strong;
   font-size: 44rpx;
   font-weight: 800;
   line-height: 1.15;
@@ -386,7 +395,7 @@ page {
 .plan-card__badge {
   padding: 5rpx 10rpx;
   border-radius: 7rpx;
-  background: #fff0f1;
+  background: $qs-color-primary-light;
   color: #df1b25;
   font-size: 21rpx;
   font-weight: 700;
@@ -405,8 +414,8 @@ page {
   margin-top: 24rpx;
   padding: 26rpx 18rpx 24rpx;
   border-radius: 18rpx;
-  background: #fff;
-  box-shadow: 0 12rpx 34rpx rgba(31, 34, 40, 0.04);
+  background: $qs-card-bg;
+  box-shadow: $qs-shadow-soft;
   box-sizing: border-box;
 }
 
@@ -549,10 +558,10 @@ page {
   min-height: 104rpx;
   margin-top: 24rpx;
   padding: 0 26rpx;
-  border: 1rpx solid #eceef1;
+  border: 1rpx solid $qs-border-color;
   border-radius: 18rpx;
-  background: #fff;
-  box-shadow: 0 12rpx 34rpx rgba(31, 34, 40, 0.04);
+  background: $qs-card-bg;
+  box-shadow: $qs-shadow-soft;
   box-sizing: border-box;
 }
 
@@ -628,7 +637,7 @@ page {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #e31822;
+  background: $qs-color-primary-strong;
   color: #fff;
   font-size: 26rpx;
   font-weight: 800;
@@ -645,7 +654,7 @@ page {
   align-items: center;
   gap: 26rpx;
   padding: 22rpx 30rpx;
-  border-top: 1rpx solid #edeef1;
+  border-top: 1rpx solid $qs-border-color;
   background: rgba(255, 255, 255, 0.98);
   box-shadow: 0 -10rpx 34rpx rgba(31, 34, 40, 0.06);
   box-sizing: border-box;
@@ -654,14 +663,14 @@ page {
 .subscribe-footer__amount {
   min-width: 0;
   flex: 1;
-  color: #33363d;
+  color: var(--qs-text-regular);
   font-size: 27rpx;
   line-height: 1.3;
 }
 
 .subscribe-footer__price {
   margin-left: 8rpx;
-  color: #e31822;
+  color: $qs-color-primary-strong;
   font-size: 40rpx;
   font-weight: 900;
 }

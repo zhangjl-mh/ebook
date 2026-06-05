@@ -83,7 +83,7 @@ const emit = defineEmits<{
   border-radius: 28rpx;
   background: rgba(255, 255, 255, 0.82);
   box-sizing: border-box;
-  color: #d71920;
+  color: $qs-color-primary;
   font-size: 26rpx;
   font-weight: 600;
   line-height: 1;
@@ -96,9 +96,9 @@ const emit = defineEmits<{
 
 .year-tabs__item--active {
   border-color: transparent;
-  background: #e71922;
+  background: $qs-color-primary-strong;
   box-shadow: 0 10rpx 22rpx rgba(210, 22, 29, 0.2);
-  color: #fff;
+  color: $qs-text-inverse;
 }
 
 .year-tabs__filter {

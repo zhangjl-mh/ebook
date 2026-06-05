@@ -1,3 +1,7 @@
+import type { ArticleBodyBlockType } from '@/types/enums';
+
+export type { ArticleBodyBlockType } from '@/types/enums';
+
 export interface IssueDirectoryItem {
   id: string;
   title: string;
@@ -12,8 +16,6 @@ export interface IssueDirectory {
   items: IssueDirectoryItem[];
 }
 
-export type ArticleBodyBlockType = 'heading' | 'author' | 'paragraph' | 'note' | 'caption' | 'image';
-
 export interface ArticleTextBlock {
   id: string;
   type: Exclude<ArticleBodyBlockType, 'image'>;
@@ -22,7 +24,7 @@ export interface ArticleTextBlock {
 
 export interface ArticleImageBlock {
   id: string;
-  type: 'image';
+  type: Extract<ArticleBodyBlockType, 'image'>;
   src: string;
   alt: string;
 }

@@ -74,3 +74,40 @@ $uni-color-subtitle: #555; // 二级标题颜色
 $uni-font-size-subtitle: 18px;
 $uni-color-paragraph: #3f536e; // 文章段落颜色
 $uni-font-size-paragraph: 15px;
+
+/* 求是小程序项目变量 */
+$qs-color-primary: #d71920;
+$qs-color-primary-strong: #e31822;
+$qs-color-primary-light: #fff0f1;
+$qs-color-success: #14bd49;
+
+$qs-page-bg: #f5f6f8;
+$qs-page-bg-soft: #f6f7f9;
+$qs-card-bg: #fff;
+$qs-card-bg-warm: #fffafa;
+
+$qs-text-main: #202228;
+$qs-text-regular: #33363d;
+$qs-text-secondary: #70757e;
+$qs-text-muted: #8b9098;
+$qs-text-placeholder: #999;
+$qs-text-inverse: #fff;
+
+$qs-border-color: #eceef1;
+$qs-border-color-light: #f0f1f3;
+
+$qs-radius-sm: 8rpx;
+$qs-radius-base: 18rpx;
+$qs-radius-card: 22rpx;
+$qs-radius-panel: 24rpx;
+$qs-radius-pill: 999rpx;
+
+$qs-page-padding-x: 30rpx;
+$qs-page-bottom-space: 160rpx;
+$qs-tabbar-bottom-space: 160rpx;
+
+$qs-shadow-soft: 0 12rpx 34rpx rgba(31, 34, 40, 0.04);
+$qs-shadow-card: 0 18rpx 42rpx rgba(56, 28, 28, 0.08);
+$qs-shadow-card-soft: 0 10rpx 30rpx rgba(25, 28, 34, 0.04);
+
+$qs-font-family-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;

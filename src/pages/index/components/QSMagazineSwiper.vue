@@ -78,7 +78,7 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
   min-height: 318rpx;
   padding: 26rpx;
   border-radius: 18rpx;
-  background: #fff;
+  background: $qs-card-bg;
   box-sizing: border-box;
   box-shadow: 0 6rpx 18rpx rgba(70, 10, 10, 0.06);
   transition: transform 0.2s ease, opacity 0.2s ease;
@@ -105,7 +105,7 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
 }
 
 .magazine-card__title {
-  color: #333;
+  color: var(--qs-text-regular);
   font-size: 30rpx;
   font-weight: 700;
   line-height: 1.3;
@@ -113,7 +113,7 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
 
 .magazine-card__count {
   margin-top: 10rpx;
-  color: #999;
+  color: var(--qs-text-placeholder);
   font-size: 22rpx;
 }
 
@@ -121,7 +121,7 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
   display: -webkit-box;
   margin-top: 22rpx;
   overflow: hidden;
-  color: #333;
+  color: var(--qs-text-regular);
   font-size: 24rpx;
   font-weight: 500;
   line-height: 1.55;
@@ -142,8 +142,8 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
   padding: 0;
   border: none;
   border-radius: 999rpx;
-  background: #c8161d;
-  color: #fff;
+  background: $qs-color-primary;
+  color: $qs-text-inverse;
   font-size: 24rpx;
   font-weight: 600;
   line-height: 64rpx;
@@ -154,15 +154,15 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
 }
 
 .magazine-card__button--ghost {
-  border: 2rpx solid #c8161d;
-  background: #fff;
-  color: #c8161d;
+  border: 2rpx solid $qs-color-primary;
+  background: $qs-card-bg;
+  color: $qs-color-primary;
 }
 
 .magazine-swiper__empty {
   padding: 72rpx 0;
   text-align: center;
-  color: #999;
+  color: var(--qs-text-placeholder);
   font-size: 26rpx;
 }
 
@@ -182,6 +182,6 @@ const onSwiperChange = (event: SwiperChangeEvent) => {
 
 .magazine-swiper__dot--active {
   width: 32rpx;
-  background: #c8161d;
+  background: $qs-color-primary;
 }
 </style>

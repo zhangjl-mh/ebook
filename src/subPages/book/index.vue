@@ -1,6 +1,6 @@
 <template>
     <view class="book-reader">
-        <QSSubPageHeader :title="title" mode="compact" />
+        <QSSubPageHeader :title="title" :mode="HeaderMode.Compact" />
         <!-- 顶部悬浮栏 -->
         <view class="reader-header" v-show="toolbarVisible" :style="headerFloatStyle" @tap.stop>
             <view class="reader-header__main">
@@ -15,10 +15,10 @@
 
         <!-- 翻书主体 -->
         <view class="reader-book" :class="{ 'reader-book--animating': animating }" :style="readerBookStyle"
-            @touchstart="onTouchStart" @touchmove="onTouchMove"
-            @touchend="onTouchEnd" @touchcancel="onTouchEnd" @tap="toggleToolbar">
+            @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd" @touchcancel="onTouchEnd"
+            @tap="toggleToolbar">
             <!-- 下一页 -->
-            <view class="reader-sheet reader-sheet--under" v-show="showUnderSheet" :style="underSheetStyle">
+            <view class="reader-sheet reader-sheet--under" :style="underSheetStyle">
                 <view class="book-page__paper">
                     <view class="book-page__scroll">
                         <view class="book-page__image-wrap" :style="imageWrapStyle">
@@ -47,7 +47,7 @@
             </view>
 
             <!-- 上一页 -->
-            <view class="reader-sheet reader-sheet--turn" v-show="showTurnSheet" :style="prevSheetStyle">
+            <view class="reader-sheet reader-sheet--turn" :style="prevSheetStyle">
                 <view class="book-page__paper">
                     <view class="book-page__scroll">
                         <view class="book-page__image-wrap" :style="imageWrapStyle">
@@ -88,6 +88,8 @@ import { computed, nextTick, ref, watch } from 'vue';
 import { onLoad, onReady } from '@dcloudio/uni-app';
 import { useSafeArea } from '@/hooks/useSafeArea';
 import QSSubPageHeader from '@/components/QSSubPageHeader.vue';
+import { HeaderMode } from '@/types/enums';
+import type { UniSliderChangeEvent, UniTouchEvent } from '@/types/events';
 
 type ReaderQuery = Record<string, string | undefined>;
 type TurnDirection = 'next' | 'prev' | '';
@@ -237,10 +239,10 @@ const currentSheetStyle = computed(() => {
 });
 
 const underSheetStyle = computed(() => {
-    if (turnDirection.value !== 'next') {
+    if (!showUnderSheet.value) {
         return {
-            zIndex: 1,
-            opacity: 1,
+            zIndex: 0,
+            opacity: 0,
             transform: 'translate3d(0, 0, 0) scale(1)'
         };
     }
@@ -257,6 +259,14 @@ const underSheetStyle = computed(() => {
 });
 
 const prevSheetStyle = computed(() => {
+    if (!showTurnSheet.value) {
+        return {
+            zIndex: 0,
+            opacity: 0,
+            transform: `translate3d(-28rpx, 0, 0) rotateY(${-MAX_ROTATE}deg) scale(0.985)`
+        };
+    }
+
     const progress = turnProgress.value;
     const rotate = -MAX_ROTATE + MAX_ROTATE * progress;
     const translateX = -28 + 28 * progress;
@@ -264,6 +274,7 @@ const prevSheetStyle = computed(() => {
 
     return {
         zIndex: 9,
+        opacity: 1,
         transform: `translate3d(${translateX}rpx, 0, 0) rotateY(${rotate}deg) scale(${scale})`
     };
 });
@@ -290,7 +301,7 @@ const readerAreaHeight = computed(() => {
 });
 
 const headerFloatStyle = computed(() => ({
-    top: `${headerTop.value}px`
+    top: `${headerTop.value + 15}px`
 }));
 
 const controlFloatStyle = computed(() => ({
@@ -298,7 +309,7 @@ const controlFloatStyle = computed(() => ({
 }));
 
 const readerBookStyle = computed(() => ({
-    top: `${readerAreaTop.value}px`,
+    top: `${readerAreaTop.value + 10}px`,
     height: `${readerAreaHeight.value}px`
 }));
 
@@ -353,7 +364,7 @@ function initLayout() {
     windowWidth.value = systemInfo.windowWidth || 375;
 }
 
-function onTouchStart(e: any) {
+function onTouchStart(e: UniTouchEvent) {
     if (animating.value) return;
 
     const touch = e.touches?.[0];
@@ -369,7 +380,7 @@ function onTouchStart(e: any) {
     gestureDirection.value = '';
 }
 
-function onTouchMove(e: any) {
+function onTouchMove(e: UniTouchEvent) {
     if (!dragging.value || animating.value) return;
 
     const touch = e.touches?.[0];
@@ -528,7 +539,7 @@ function openCatalog() {
     });
 }
 
-function onSliderChange(e: any) {
+function onSliderChange(e: UniSliderChangeEvent) {
     const page = Number(e.detail.value);
     const nextPageIndex = clamp(page - 1, 0, pages.value.length - 1);
 
@@ -702,7 +713,9 @@ $theme: #e03e2d;
     width: 100%;
     overflow: hidden;
     perspective: 2200rpx;
+    -webkit-perspective: 2200rpx;
     transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
     transform: translate3d(0, 0, 0);
     transition: top 0.24s ease, height 0.24s ease;
     background:
@@ -718,8 +731,10 @@ $theme: #e03e2d;
     height: 100%;
     transform-origin: left center;
     transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    pointer-events: none;
     will-change: transform;
     transition: none;
     transform: translate3d(0, 0, 0);
@@ -764,7 +779,10 @@ $theme: #e03e2d;
         0 24rpx 60rpx rgba(111, 37, 28, 0.14),
         0 8rpx 20rpx rgba(111, 37, 28, 0.07);
     box-sizing: border-box;
+    will-change: transform;
     transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .book-page__scroll {
@@ -791,6 +809,7 @@ $theme: #e03e2d;
     display: block;
     background: #fff;
     border-radius: 0 28rpx 28rpx 0;
+    will-change: transform;
     transform: translate3d(0, 0, 0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;

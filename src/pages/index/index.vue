@@ -1,5 +1,5 @@
 <template>
-  <view class="index-page">
+  <view class="index-page qs-page">
     <QSHeader />
 
     <view class="index-page__carousel">
@@ -47,14 +47,14 @@ onPullDownRefresh(async () => {
 
 <style lang="scss">
 page {
-  background-color: #f5f6f8;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--qs-page-bg);
 }
 
 .index-page {
   min-height: 100vh;
   overflow-x: hidden;
-  background: #f5f6f8;
+  padding-bottom: var(--qs-page-bottom-gap);
+  background: var(--qs-page-bg);
 }
 
 .index-page__carousel {
@@ -66,16 +66,15 @@ page {
 .index-page__content {
   position: relative;
   z-index: 1;
-  margin: 20rpx 32rpx 160rpx;
+  margin: 20rpx 32rpx $qs-tabbar-bottom-space;
 }
 
 .article-section {
   overflow: hidden;
-  margin-top: 8rpx;
-  border: 1rpx solid #f0f0f0;
+  border: 1rpx solid $qs-border-color-light;
   border-radius: 18rpx;
-  background: #fff;
-  box-shadow: 0 10rpx 30rpx rgba(25, 28, 34, 0.04);
+  background: $qs-card-bg;
+  box-shadow: $qs-shadow-card-soft;
   margin-top: 40rpx;
 }
 </style>

@@ -1,10 +1,12 @@
 <template>
-  <view class="my-page">
-    <ProfileHero :profile="profileInfo" />
-    <RecentReading :items="recentReadItems" @select="openRecentReading" />
-    <MemberBanner :banner="memberBanner" />
-    <ProfileMenu :items="profileMenuItems" />
-  </view>
+  <scroll-view class="my-page qs-page-scroll" scroll-y enable-flex>
+    <view class="my-page__inner qs-page-scroll__inner">
+      <ProfileHero :profile="profileInfo" />
+      <RecentReading :items="recentReadItems" @select="openRecentReading" />
+      <MemberBanner :banner="memberBanner" />
+      <ProfileMenu :items="profileMenuItems" />
+    </view>
+  </scroll-view>
 </template>
 
 <script setup lang="ts">
@@ -54,13 +56,15 @@ const openRecentReading = (item: RecentReadItem) => {
 
 <style lang="scss">
 page {
-  background: #f5f6f8;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--qs-page-bg);
 }
 
 .my-page {
-  min-height: 100vh;
   overflow-x: hidden;
-  background: #f5f6f8;
+  background: var(--qs-page-bg);
+}
+
+.my-page__inner {
+  background: var(--qs-page-bg);
 }
 </style>

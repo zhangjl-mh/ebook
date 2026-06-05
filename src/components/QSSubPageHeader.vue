@@ -12,15 +12,15 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useSafeArea } from '@/hooks/useSafeArea';
-
-type HeaderMode = 'default' | 'compact';
+import { HeaderMode } from '@/types/enums';
+import type { HeaderMode as HeaderModeType } from '@/types/enums';
 
 interface Props {
   title: string;
 }
 
 defineProps<Props>();
-const mode = defineModel<HeaderMode>('mode', { default: 'default' });
+const mode = defineModel<HeaderModeType>('mode', { default: HeaderMode.Default });
 
 const { safeArea } = useSafeArea();
 
@@ -50,7 +50,7 @@ const goBack = () => {
   padding-bottom: 130rpx;
   background:
     radial-gradient(circle at 18% 28%, rgba(255, 255, 255, 0.3) 0, rgba(255, 255, 255, 0) 34%),
-    linear-gradient(180deg, #e81822 0%, #d70f19 100%);
+    linear-gradient(180deg, #e81822 0%, $qs-color-primary 100%);
   box-sizing: border-box;
 }
 
@@ -89,7 +89,7 @@ const goBack = () => {
   padding: 0;
   border: none;
   background: transparent;
-  color: #fff;
+  color: $qs-text-inverse;
   line-height: 1;
   transform: translateY(-50%);
 
@@ -101,7 +101,7 @@ const goBack = () => {
 .qs-sub-page-header__title {
   max-width: 420rpx;
   overflow: hidden;
-  color: #fff;
+  color: $qs-text-inverse;
   font-size: 36rpx;
   font-weight: 700;
   line-height: 1.2;

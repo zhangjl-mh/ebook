@@ -1,12 +1,14 @@
 <template>
-  <view class="magazine-page">
-    <MagazineHeader :query="searchQuery" @search="setSearchQuery" />
-    <view class="magazine-page__content">
-      <IssueYearTabs :options="issueYearOptions" :active-year="activeYear" @change="setActiveYear"
-        @filter="showFilterTips" />
-      <IssueGrid :issues="filteredIssues" @select="openIssueDetail" />
+  <scroll-view class="magazine-page qs-page-scroll" scroll-y enable-flex>
+    <view class="magazine-page__inner qs-page-scroll__inner">
+      <MagazineHeader :query="searchQuery" @search="setSearchQuery" />
+      <view class="magazine-page__content">
+        <IssueYearTabs :options="issueYearOptions" :active-year="activeYear" @change="setActiveYear"
+          @filter="showFilterTips" />
+        <IssueGrid :issues="filteredIssues" @select="openIssueDetail" />
+      </view>
     </view>
-  </view>
+  </scroll-view>
 </template>
 
 <script setup lang="ts">
@@ -15,9 +17,10 @@ import MagazineHeader from './components/MagazineHeader.vue';
 import IssueGrid from './components/IssueGrid.vue';
 import IssueYearTabs from './components/IssueYearTabs.vue';
 import { issueCatalogItems, issueYearOptions } from '@/config/issueCatalog';
-import type { IssueCatalogItem, IssueYearFilter } from '@/types/pageData';
+import { IssueYearFilter } from '@/types/enums';
+import type { IssueCatalogItem, IssueYearFilter as IssueYearFilterType } from '@/types/pageData';
 
-const activeYear = ref<IssueYearFilter>('all');
+const activeYear = ref<IssueYearFilterType>(IssueYearFilter.All);
 const searchQuery = ref('');
 const openingIssueId = ref('');
 
@@ -32,7 +35,7 @@ const filteredIssues = computed(() => {
   });
 });
 
-const setActiveYear = (year: IssueYearFilter) => {
+const setActiveYear = (year: IssueYearFilterType) => {
   activeYear.value = year;
 };
 
@@ -86,19 +89,22 @@ const showFilterTips = () => {
 
 <style lang="scss">
 page {
-  background: #f8f8f8;
+  background: var(--qs-page-bg);
 }
 
 .magazine-page {
-  min-height: 100vh;
   overflow-x: hidden;
-  background: linear-gradient(180deg, #fff6f5 0, #f8f8f8 330rpx);
+  background: linear-gradient(180deg, #fff6f5 0, var(--qs-page-bg) 330rpx);
+}
+
+.magazine-page__inner {
+  background: linear-gradient(180deg, #fff6f5 0, var(--qs-page-bg) 330rpx);
 }
 
 .magazine-page__content {
   position: relative;
   z-index: 2;
   margin-top: -95rpx;
-  padding-bottom: 154rpx;
+  padding-bottom: $qs-tabbar-bottom-space;
 }
 </style>

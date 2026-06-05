@@ -11,21 +11,29 @@
       "style": {
         "navigationBarTitleText": "推荐",
         "navigationStyle": "custom",
-        "enablePullDownRefresh": true
+        "enablePullDownRefresh": true,
+        "backgroundColor": "#F5F6F8",
+        "backgroundColorBottom": "#F5F6F8"
       }
     },
     {
       "path": "pages/magazine/index",
       "style": {
         "navigationBarTitleText": "",
-        "navigationStyle": "custom"
+        "navigationStyle": "custom",
+        "disableScroll": true,
+        "backgroundColor": "#F5F6F8",
+        "backgroundColorBottom": "#F5F6F8"
       }
     },
     {
       "path": "pages/my/index",
       "style": {
         "navigationBarTitleText": "我的",
-        "navigationStyle": "custom"
+        "navigationStyle": "custom",
+        "disableScroll": true,
+        "backgroundColor": "#F5F6F8",
+        "backgroundColorBottom": "#F5F6F8"
       }
     }
   ],
@@ -36,35 +44,50 @@
         {
           "path": "webview/index",
           "style": {
-            "navigationBarTitleText": "详情"
+            "navigationBarTitleText": "详情",
+            "disableScroll": true,
+            "backgroundColor": "#F5F6F8",
+            "backgroundColorBottom": "#F5F6F8"
           }
         },
         {
           "path": "book/index",
           "style": {
             "navigationBarTitleText": "数字刊",
-            "navigationStyle": "custom"
+            "navigationStyle": "custom",
+            "disableScroll": true,
+            "backgroundColor": "#F7F1EE",
+            "backgroundColorBottom": "#F7F1EE"
           }
         },
         {
           "path": "catalog/index",
           "style": {
             "navigationBarTitleText": "目录",
-            "navigationStyle": "custom"
+            "navigationStyle": "custom",
+            "disableScroll": true,
+            "backgroundColor": "#F6F7F9",
+            "backgroundColorBottom": "#F6F7F9"
           }
         },
         {
           "path": "subscribe/index",
           "style": {
             "navigationBarTitleText": "会员",
-            "navigationStyle": "custom"
+            "navigationStyle": "custom",
+            "disableScroll": true,
+            "backgroundColor": "#F7F7F8",
+            "backgroundColorBottom": "#F7F7F8"
           }
         },
         {
           "path": "article-detail/index",
           "style": {
             "navigationBarTitleText": "详情",
-            "navigationStyle": "custom"
+            "navigationStyle": "custom",
+            "disableScroll": true,
+            "backgroundColor": "#F6F7F9",
+            "backgroundColorBottom": "#F6F7F9"
           }
         }
       ]
@@ -74,7 +97,8 @@
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "应用",
     "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
+    "backgroundColor": "#F5F6F8",
+    "backgroundColorBottom": "#F5F6F8"
   },
   "tabBar": {
     "color": "#999999",

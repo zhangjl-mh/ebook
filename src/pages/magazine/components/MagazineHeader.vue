@@ -44,7 +44,7 @@ const onInput = (event: unknown) => {
   position: relative;
   overflow: hidden;
   padding: 0 29rpx 112rpx;
-  background: #ed171d;
+  background: $qs-color-primary-strong;
 }
 
 .magazine-header__bg {
@@ -64,7 +64,7 @@ const onInput = (event: unknown) => {
 }
 
 .magazine-header__title {
-  color: #fff;
+  color: $qs-text-inverse;
   font-size: 34rpx;
   font-weight: 600;
   line-height: 1;
@@ -88,11 +88,11 @@ const onInput = (event: unknown) => {
 .magazine-header__input {
   min-width: 0;
   flex: 1;
-  color: #333;
+  color: var(--qs-text-regular);
   font-size: 25rpx;
 }
 
 .magazine-header__placeholder {
-  color: #8a8f96;
+  color: var(--qs-text-muted);
 }
 </style>

@@ -38,7 +38,7 @@ const onSearchInput = (event: unknown) => {
   position: relative;
   overflow: hidden;
   padding: 0 32rpx 172rpx;
-  background: #d71920;
+  background: $qs-color-primary;
 
   &::after {
     position: absolute;
@@ -111,11 +111,11 @@ const onSearchInput = (event: unknown) => {
 .qs-header__input {
   min-width: 0;
   flex: 1;
-  color: #333;
+  color: var(--qs-text-regular);
   font-size: 28rpx;
 }
 
 .qs-header__placeholder {
-  color: #666a70;
+  color: var(--qs-text-secondary);
 }
 </style>

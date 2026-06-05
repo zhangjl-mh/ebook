@@ -35,8 +35,10 @@ onLoad((query?: WebviewQuery) => {
 
 <style lang="scss" scoped>
 .webview-page {
-  min-height: 100vh;
   width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--qs-page-bg);
 }
 
 .webview-page__empty {
@@ -44,7 +46,7 @@ onLoad((query?: WebviewQuery) => {
   min-height: 100vh;
   align-items: center;
   justify-content: center;
-  color: #999;
+  color: var(--qs-text-placeholder);
   font-size: 28rpx;
 }
 </style>

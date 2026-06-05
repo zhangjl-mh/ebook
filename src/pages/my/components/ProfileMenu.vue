@@ -33,9 +33,9 @@ defineProps<Props>();
   overflow: hidden;
   margin: 0 36rpx 154rpx;
   border: 1rpx solid rgba(255, 255, 255, 0.86);
-  border-radius: 24rpx;
+  border-radius: $qs-radius-panel;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, #fff 100%);
-  box-shadow: 0 16rpx 42rpx rgba(25, 28, 34, 0.06);
+  box-shadow: $qs-shadow-card-soft;
 }
 
 .profile-menu__item {
@@ -44,7 +44,7 @@ defineProps<Props>();
   align-items: center;
   height: 112rpx;
   margin: 0 30rpx;
-  border-bottom: 1rpx solid rgba(230, 232, 236, 0.9);
+  border-bottom: 1rpx solid $qs-border-color;
   transition: opacity 0.16s ease, transform 0.16s ease;
 }
 
@@ -84,7 +84,7 @@ defineProps<Props>();
   width: 6rpx;
   height: 6rpx;
   border-radius: 50%;
-  background: #df151f;
+  background: $qs-color-primary;
 }
 
 .profile-menu__icon-dot::before,
@@ -103,12 +103,12 @@ defineProps<Props>();
   width: 24rpx;
   height: 5rpx;
   border-radius: 999rpx;
-  background: #df151f;
+  background: $qs-color-primary;
 }
 
 .profile-menu__label {
   flex: 1;
-  color: #1f2024;
+  color: var(--qs-text-main);
   font-size: 32rpx;
   font-weight: 500;
   line-height: 1;

@@ -1,5 +1,16 @@
-export type IssueYearFilter = 'all' | '2026' | '2025' | '2024' | '2023';
-export type IssueYear = Exclude<IssueYearFilter, 'all'>;
+import type {
+  IssueYear,
+  IssueYearFilter,
+  ProfileBadgeType,
+  ProfileMenuIcon
+} from '@/types/enums';
+
+export type {
+  IssueYear,
+  IssueYearFilter,
+  ProfileBadgeType,
+  ProfileMenuIcon
+} from '@/types/enums';
 
 export interface IssueYearOption {
   label: string;
@@ -19,15 +30,13 @@ export interface IssueCatalogItem {
 
 export interface ProfileBadge {
   text: string;
-  type: 'gold' | 'gray' | 'red';
+  type: ProfileBadgeType;
 }
 
 export interface ProfileInfo {
   name: string;
   badges: ProfileBadge[];
 }
-
-export type ProfileMenuIcon = 'order' | 'verify' | 'invoice' | 'favorite' | 'service';
 
 export interface ProfileMenuItem {
   id: string;

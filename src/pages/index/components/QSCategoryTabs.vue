@@ -19,22 +19,22 @@ const store = useMagazineStore();
   align-items: center;
   gap: 58rpx;
   padding: 28rpx 38rpx 0;
-  border-bottom: 1rpx solid #ececec;
-  background: #fff;
+  border-bottom: 1rpx solid $qs-border-color;
+  background: $qs-card-bg;
 }
 
 .category-tabs__item {
   padding-bottom: 20rpx;
   border-bottom: 5rpx solid transparent;
-  color: #888;
+  color: var(--qs-text-muted);
   font-size: 31rpx;
   font-weight: 500;
   line-height: 1.25;
 }
 
 .category-tabs__item--active {
-  border-bottom-color: #d71920;
-  color: #d71920;
+  border-bottom-color: $qs-color-primary;
+  color: $qs-color-primary;
   font-weight: 700;
 }
 </style>

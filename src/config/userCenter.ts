@@ -1,21 +1,22 @@
 import type { MemberBanner, ProfileInfo, ProfileMenuItem, RecentReadItem } from '@/types/pageData';
 import { magazineConfig } from '@/config/magazineData';
+import { ProfileBadgeType, ProfileMenuIcon } from '@/types/enums';
 
 export const profileInfo: ProfileInfo = {
   name: '华华',
   badges: [
-    { text: '求是数字刊年度会员', type: 'gold' },
-    { text: '已认证用户', type: 'gray' },
-    { text: '理论学习者', type: 'red' }
+    { text: '求是数字刊年度会员', type: ProfileBadgeType.Gold },
+    { text: '已认证用户', type: ProfileBadgeType.Gray },
+    { text: '理论学习者', type: ProfileBadgeType.Red }
   ]
 };
 
 export const profileMenuItems: ProfileMenuItem[] = [
-  { id: 'orders', label: '我的订单', icon: 'order' },
-  { id: 'verify', label: '单位认证', icon: 'verify' },
-  { id: 'invoice', label: '补开发票', icon: 'invoice' },
-  { id: 'favorite', label: '我的收藏', icon: 'favorite' },
-  { id: 'service', label: '联系客服', icon: 'service' }
+  { id: 'orders', label: '我的订单', icon: ProfileMenuIcon.Order },
+  { id: 'verify', label: '单位认证', icon: ProfileMenuIcon.Verify },
+  { id: 'invoice', label: '补开发票', icon: ProfileMenuIcon.Invoice },
+  { id: 'favorite', label: '我的收藏', icon: ProfileMenuIcon.Favorite },
+  { id: 'service', label: '联系客服', icon: ProfileMenuIcon.Service }
 ];
 
 const recentIssueProgress: Record<string, number> = {

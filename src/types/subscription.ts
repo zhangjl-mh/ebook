@@ -1,4 +1,14 @@
-export type SubscriptionPlanId = 'month' | 'year';
+import type {
+  PaymentMethodId,
+  SubscriptionBenefitIcon,
+  SubscriptionPlanId
+} from '@/types/enums';
+
+export type {
+  PaymentMethodId,
+  SubscriptionBenefitIcon,
+  SubscriptionPlanId
+} from '@/types/enums';
 
 export interface SubscriptionPlan {
   id: SubscriptionPlanId;
@@ -14,11 +24,11 @@ export interface SubscriptionBenefit {
   id: string;
   title: string;
   desc: string;
-  icon: 'video' | 'notes' | 'audio' | 'knowledge';
+  icon: SubscriptionBenefitIcon;
 }
 
 export interface SubscriptionPaymentMethod {
-  id: 'wechat';
+  id: PaymentMethodId;
   title: string;
 }
 

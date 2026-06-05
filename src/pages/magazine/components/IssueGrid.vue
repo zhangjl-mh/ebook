@@ -55,7 +55,7 @@ const markCoverFailed = (issueId: string) => {
   width: 100%;
   padding: 96rpx 0;
   text-align: center;
-  color: #8a8f96;
+  color: var(--qs-text-muted);
   font-size: 28rpx;
 }
 
@@ -64,8 +64,8 @@ const markCoverFailed = (issueId: string) => {
   overflow: hidden;
   padding: 18rpx;
   border-radius: 15rpx;
-  background: #fff;
-  box-shadow: 0 12rpx 32rpx rgba(27, 27, 27, 0.055);
+  background: $qs-card-bg;
+  box-shadow: $qs-shadow-soft;
   box-sizing: border-box;
 }
 
@@ -88,7 +88,7 @@ const markCoverFailed = (issueId: string) => {
   height: 100%;
   align-items: center;
   justify-content: center;
-  color: #9a9a9a;
+  color: var(--qs-text-placeholder);
   font-size: 22rpx;
 }
 
@@ -96,7 +96,7 @@ const markCoverFailed = (issueId: string) => {
   display: block;
   margin-top: 16rpx;
   overflow: hidden;
-  color: #222;
+  color: var(--qs-text-main);
   font-size: 26rpx;
   font-weight: 500;
   line-height: 1.25;
@@ -108,7 +108,7 @@ const markCoverFailed = (issueId: string) => {
   display: block;
   margin-top: 8rpx;
   overflow: hidden;
-  color: #858585;
+  color: var(--qs-text-muted);
   font-size: 22rpx;
   line-height: 1.2;
   white-space: nowrap;

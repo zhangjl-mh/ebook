@@ -1,37 +1,41 @@
 <template>
   <view class="article-detail-page">
-    <QSSubPageHeader title="详情" />
+    <scroll-view class="article-detail-page__scroll qs-page-scroll" scroll-y enable-flex>
+      <view class="qs-page-scroll__inner">
+        <QSSubPageHeader title="详情" />
 
-    <view class="article-detail-page__content" :style="contentStyle">
-      <view v-if="article" class="article-card">
-        <view class="article-card__source">
-          <text>来源：{{ article.source }}</text>
-          <text>作者：{{ article.author }}</text>
-          <text>字数：{{ article.wordCount }}</text>
-        </view>
-
-        <text class="article-card__title">{{ article.title }}</text>
-
-        <view class="article-card__meta">
-          <text>{{ article.issue }}</text>
-          <text>{{ article.publishTime }}</text>
-        </view>
-
-        <view class="article-body">
-          <template v-for="block in article.body" :key="block.id">
-            <view v-if="isImageBlock(block)" class="article-body__image-card">
-              <image v-if="!failedImageMap[block.id]" class="article-body__image" :src="getImageSrc(block)"
-                :alt="getImageAlt(block)" mode="widthFix" lazy-load show-menu-by-longpress
-                @error="markImageFailed(block.id)" />
-              <view v-else class="article-body__image-fallback">图片加载失败</view>
+        <view class="article-detail-page__content" :style="contentStyle">
+          <view v-if="article" class="article-card">
+            <view class="article-card__source">
+              <text>来源：{{ article.source }}</text>
+              <text>作者：{{ article.author }}</text>
+              <text>字数：{{ article.wordCount }}</text>
             </view>
-            <text v-else :class="getBlockClass(block.type)">{{ getBlockText(block) }}</text>
-          </template>
+
+            <text class="article-card__title">{{ article.title }}</text>
+
+            <view class="article-card__meta">
+              <text>{{ article.issue }}</text>
+              <text>{{ article.publishTime }}</text>
+            </view>
+
+            <view class="article-body">
+              <template v-for="block in article.body" :key="block.id">
+                <view v-if="isImageBlock(block)" class="article-body__image-card">
+                  <image v-if="!failedImageMap[block.id]" class="article-body__image" :src="getImageSrc(block)"
+                    :alt="getImageAlt(block)" mode="widthFix" lazy-load show-menu-by-longpress
+                    @error="markImageFailed(block.id)" />
+                  <view v-else class="article-body__image-fallback">图片加载失败</view>
+                </view>
+                <text v-else :class="getBlockClass(block.type)">{{ getBlockText(block) }}</text>
+              </template>
+            </view>
+          </view>
+
+          <view v-else class="article-detail-page__empty">暂无文章内容</view>
         </view>
       </view>
-
-      <view v-else class="article-detail-page__empty">暂无文章内容</view>
-    </view>
+    </scroll-view>
 
     <view v-if="article" class="article-actions" :style="actionBarStyle">
       <button class="article-actions__item" :class="{ 'article-actions__item--active': isFavorited }"
@@ -53,7 +57,12 @@ import QSSubPageHeader from '@/components/QSSubPageHeader.vue';
 import { articleDetails } from '@/config/articleDetail';
 import { useSafeArea } from '@/hooks/useSafeArea';
 import { safeDecode } from '@/utils/text';
-import type { ArticleBodyBlock, ArticleBodyBlockType, ArticleDetail } from '@/types/articleDetail';
+import { ArticleBodyBlockType } from '@/types/enums';
+import type {
+  ArticleBodyBlock,
+  ArticleBodyBlockType as ArticleBodyBlockTypeValue,
+  ArticleDetail
+} from '@/types/articleDetail';
 
 type ArticleQuery = Record<string, string | undefined>;
 
@@ -102,18 +111,24 @@ const setArticle = (nextArticle: ArticleDetail) => {
   failedImageMap.value = {};
 };
 
-const getBlockClass = (type: ArticleBodyBlockType) => [
+const getBlockClass = (type: ArticleBodyBlockTypeValue) => [
   'article-body__block',
   `article-body__block--${type}`
 ];
 
-const isImageBlock = (block: ArticleBodyBlock) => block.type === 'image';
+const isImageBlock = (block: ArticleBodyBlock) => block.type === ArticleBodyBlockType.Image;
 
-const getImageSrc = (block: ArticleBodyBlock) => (block.type === 'image' ? block.src : '');
+const getImageSrc = (block: ArticleBodyBlock) => (
+  block.type === ArticleBodyBlockType.Image ? block.src : ''
+);
 
-const getImageAlt = (block: ArticleBodyBlock) => (block.type === 'image' ? block.alt : '');
+const getImageAlt = (block: ArticleBodyBlock) => (
+  block.type === ArticleBodyBlockType.Image ? block.alt : ''
+);
 
-const getBlockText = (block: ArticleBodyBlock) => (block.type === 'image' ? '' : block.text);
+const getBlockText = (block: ArticleBodyBlock) => (
+  block.type === ArticleBodyBlockType.Image ? '' : block.text
+);
 
 const markImageFailed = (blockId: string) => {
   failedImageMap.value = {
@@ -157,31 +172,34 @@ const shareArticle = () => {
 
 <style lang="scss">
 page {
-  background: #f6f7f9;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--qs-page-bg-soft);
 }
 </style>
 
 <style lang="scss" scoped>
 .article-detail-page {
-  min-height: 100vh;
-  overflow-x: hidden;
-  background: #f6f7f9;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--qs-page-bg-soft);
+}
+
+.article-detail-page__scroll {
+  background: var(--qs-page-bg-soft);
 }
 
 .article-detail-page__content {
   position: relative;
   z-index: 2;
   margin-top: -92rpx;
-  padding: 0 30rpx;
+  padding: 0 $qs-page-padding-x;
   box-sizing: border-box;
 }
 
 .article-card {
   padding: 40rpx 34rpx 52rpx;
-  border-radius: 24rpx;
-  background: #fff;
-  box-shadow: 0 18rpx 42rpx rgba(56, 28, 28, 0.08);
+  border-radius: $qs-radius-panel;
+  background: $qs-card-bg;
+  box-shadow: $qs-shadow-card;
   box-sizing: border-box;
 }
 
@@ -212,7 +230,7 @@ page {
   gap: 12rpx 26rpx;
   margin-top: 20rpx;
   padding-bottom: 30rpx;
-  border-bottom: 1rpx solid #eceef1;
+  border-bottom: 1rpx solid $qs-border-color;
   color: #8b9098;
   font-size: 24rpx;
   line-height: 1.45;
@@ -296,7 +314,7 @@ page {
 .article-detail-page__empty {
   padding: 120rpx 0;
   border-radius: 20rpx;
-  background: #fff;
+  background: $qs-card-bg;
   text-align: center;
   color: #999;
   font-size: 28rpx;
@@ -312,7 +330,7 @@ page {
   align-items: center;
   gap: 1rpx;
   padding: 14rpx 30rpx;
-  border-top: 1rpx solid #eceef1;
+  border-top: 1rpx solid $qs-border-color;
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 -10rpx 30rpx rgba(28, 30, 34, 0.05);
   box-sizing: border-box;
