@@ -21,14 +21,13 @@
             <!-- 下一页底图 -->
             <view class="reader-sheet reader-sheet--under" :style="underSheetStyle">
                 <image v-if="getPageSrc(underSheetIndex)" class="reader-page-image" :src="getPageSrc(underSheetIndex)"
-                    mode="aspectFit" :fade-show="false" show-menu-by-longpress @load="onImageLoad(underSheetIndex)" />
+                    mode="aspectFit" :fade-show="false" show-menu-by-longpress />
             </view>
 
             <!-- 当前页 -->
             <view class="reader-sheet reader-sheet--current" :style="currentSheetStyle">
                 <image v-if="getPageSrc(currentSheetIndex)" class="reader-page-image"
-                    :src="getPageSrc(currentSheetIndex)" mode="aspectFit" :fade-show="false" show-menu-by-longpress
-                    @load="onImageLoad(currentSheetIndex)" />
+                    :src="getPageSrc(currentSheetIndex)" mode="aspectFit" :fade-show="false" show-menu-by-longpress />
 
                 <view class="reader-page-shadow" :style="{ opacity: shadowOpacity }"></view>
             </view>
@@ -36,7 +35,7 @@
             <!-- 上一页翻入层 -->
             <view class="reader-sheet reader-sheet--prev" :style="prevSheetStyle">
                 <image v-if="getPageSrc(prevSheetIndex)" class="reader-page-image" :src="getPageSrc(prevSheetIndex)"
-                    mode="aspectFit" :fade-show="false" show-menu-by-longpress @load="onImageLoad(prevSheetIndex)" />
+                    mode="aspectFit" :fade-show="false" show-menu-by-longpress />
 
                 <view class="reader-page-shadow" :style="{ opacity: shadowOpacity }"></view>
             </view>
@@ -61,15 +60,11 @@
             </button>
         </view>
 
-        <!-- 隐藏预加载：减少翻页时图片白闪 -->
-        <view class="reader-preload">
-            <image v-for="src in preloadPages" :key="src" :src="src" mode="aspectFit" :fade-show="false" />
-        </view>
     </view>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 import { onLoad, onReady } from '@dcloudio/uni-app';
 import { useSafeArea } from '@/hooks/useSafeArea';
 import QSSubPageHeader from '@/components/QSSubPageHeader.vue';
@@ -97,8 +92,6 @@ const MAX_ROTATE = 82;
 const FINISH_THRESHOLD = 0.16;
 const ANIMATION_DURATION = 420;
 const DRAG_PROGRESS_SCALE = 1.28;
-const PRELOAD_RANGE = 2;
-
 const HEADER_TOP_GAP_RPX = 20;
 const HEADER_HEIGHT_RPX = 88;
 const CONTROL_BOTTOM_GAP_RPX = 18;
@@ -119,6 +112,8 @@ const windowWidth = ref(375);
 
 const toolbarVisible = ref(true);
 const openingCatalog = ref(false);
+const backGuardVisible = ref(true);
+const pageLeaveAllowed = ref(false);
 
 const touchStartX = ref(0);
 const touchStartY = ref(0);
@@ -131,9 +126,6 @@ const turnDirection = ref<TurnDirection>('');
 const turnProgress = ref(0);
 const turnFromIndex = ref(0);
 const turnToIndex = ref(0);
-
-const loadedMap = ref<Record<number, boolean>>({});
-const preloadingSet = new Set<number>();
 
 let flipTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -155,7 +147,7 @@ const clamp = (value: number, min: number, max: number) => {
 };
 
 const pages = Array.from({ length: LOCAL_PAGE_COUNT }, (_, index) => {
-    return `${LOCAL_PAGE_BASE_URL}/${index}.jpg`;
+    return `${LOCAL_PAGE_BASE_URL}/page-${index}.jpg`;
 });
 
 const hasPrev = computed(() => current.value > 0);
@@ -188,20 +180,6 @@ const prevSheetIndex = computed(() => {
 const progressPercent = computed(() => {
     if (!pages.length) return 0;
     return Math.round(((current.value + 1) / pages.length) * 100);
-});
-
-const preloadPages = computed(() => {
-    const list: string[] = [];
-
-    for (let offset = -PRELOAD_RANGE; offset <= PRELOAD_RANGE; offset += 1) {
-        const src = getPageSrc(current.value + offset);
-
-        if (src) {
-            list.push(src);
-        }
-    }
-
-    return list;
 });
 
 const shadowOpacity = computed(() => {
@@ -348,12 +326,6 @@ onReady(() => {
     const systemInfo = uni.getSystemInfoSync();
 
     windowWidth.value = systemInfo.windowWidth || 375;
-
-    preloadAround(current.value);
-});
-
-watch(current, (index) => {
-    preloadAround(index);
 });
 
 function getPageSrc(index: number) {
@@ -442,8 +414,6 @@ function beginTurn(direction: ActiveTurnDirection) {
     turnFromIndex.value = current.value;
     turnToIndex.value = direction === 'next' ? nextIndex.value : prevIndex.value;
     turnDirection.value = direction;
-
-    preloadImage(turnToIndex.value);
 
     return true;
 }
@@ -562,6 +532,32 @@ function openCatalog() {
     });
 }
 
+async function blockSwipeBack() {
+    if (pageLeaveAllowed.value) return;
+
+    backGuardVisible.value = false;
+    await nextTick();
+    backGuardVisible.value = true;
+}
+
+async function exitReader() {
+    if (pageLeaveAllowed.value) return;
+
+    pageLeaveAllowed.value = true;
+    backGuardVisible.value = false;
+
+    await nextTick();
+
+    if (getCurrentPages().length > 1) {
+        uni.navigateBack();
+        return;
+    }
+
+    uni.switchTab({
+        url: '/pages/index/index'
+    });
+}
+
 function resetFlipState() {
     clearFlipTimer();
 
@@ -585,40 +581,6 @@ function clearFlipTimer() {
     flipTimer = null;
 }
 
-function preloadAround(centerIndex: number) {
-    for (let offset = -PRELOAD_RANGE; offset <= PRELOAD_RANGE; offset += 1) {
-        preloadImage(centerIndex + offset);
-    }
-}
-
-function preloadImage(index: number) {
-    const src = getPageSrc(index);
-
-    if (!src) return;
-    if (loadedMap.value[index] || preloadingSet.has(index)) return;
-
-    preloadingSet.add(index);
-
-    uni.getImageInfo({
-        src,
-        success: () => {
-            loadedMap.value = {
-                ...loadedMap.value,
-                [index]: true
-            };
-        },
-        complete: () => {
-            preloadingSet.delete(index);
-        }
-    });
-}
-
-function onImageLoad(index: number) {
-    loadedMap.value = {
-        ...loadedMap.value,
-        [index]: true
-    };
-}
 </script>
 
 <style lang="scss" scoped>
@@ -822,21 +784,5 @@ function onImageLoad(index: number) {
     text-align: right;
     color: rgba(44, 21, 16, 0.5);
     font-size: 21rpx;
-}
-
-.reader-preload {
-    position: absolute;
-    left: -9999px;
-    top: -9999px;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    opacity: 0;
-    pointer-events: none;
-}
-
-.reader-preload image {
-    width: 1px;
-    height: 1px;
 }
 </style>
