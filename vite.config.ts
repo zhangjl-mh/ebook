@@ -20,6 +20,7 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         api: 'modern-compiler',
+        additionalData: '@import "@/uni.scss";',
         silenceDeprecations: ['legacy-js-api', 'import'],
       },
     },

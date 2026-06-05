@@ -1,7 +1,7 @@
 <template>
   <view class="article-detail-page">
-    <scroll-view class="article-detail-page__scroll qs-page-scroll" scroll-y enable-flex>
-      <view class="qs-page-scroll__inner">
+    <scroll-view class="article-detail-page__scroll" :scroll-y="true" :enable-flex="true">
+      <view class="article-detail-page__inner">
         <QSSubPageHeader title="详情" />
 
         <view class="article-detail-page__content" :style="contentStyle">
@@ -179,27 +179,32 @@ page {
 <style lang="scss" scoped>
 .article-detail-page {
   height: 100vh;
-  overflow: hidden;
   background: var(--qs-page-bg-soft);
 }
 
 .article-detail-page__scroll {
+  height: 100%;
   background: var(--qs-page-bg-soft);
+}
+
+.article-detail-page__inner {
+  min-height: 100%;
+  box-sizing: border-box;
 }
 
 .article-detail-page__content {
   position: relative;
   z-index: 2;
   margin-top: -92rpx;
-  padding: 0 $qs-page-padding-x;
+  padding: 0 var(--qs-page-padding-x);
   box-sizing: border-box;
 }
 
 .article-card {
   padding: 40rpx 34rpx 52rpx;
-  border-radius: $qs-radius-panel;
-  background: $qs-card-bg;
-  box-shadow: $qs-shadow-card;
+  border-radius: var(--qs-radius-panel);
+  background: var(--qs-card-bg);
+  box-shadow: var(--qs-shadow-card);
   box-sizing: border-box;
 }
 
@@ -230,7 +235,7 @@ page {
   gap: 12rpx 26rpx;
   margin-top: 20rpx;
   padding-bottom: 30rpx;
-  border-bottom: 1rpx solid $qs-border-color;
+  border-bottom: 1rpx solid var(--qs-border-color);
   color: #8b9098;
   font-size: 24rpx;
   line-height: 1.45;
@@ -314,7 +319,7 @@ page {
 .article-detail-page__empty {
   padding: 120rpx 0;
   border-radius: 20rpx;
-  background: $qs-card-bg;
+  background: var(--qs-card-bg);
   text-align: center;
   color: #999;
   font-size: 28rpx;
@@ -330,7 +335,7 @@ page {
   align-items: center;
   gap: 1rpx;
   padding: 14rpx 30rpx;
-  border-top: 1rpx solid $qs-border-color;
+  border-top: 1rpx solid var(--qs-border-color);
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 -10rpx 30rpx rgba(28, 30, 34, 0.05);
   box-sizing: border-box;

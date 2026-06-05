@@ -44,7 +44,7 @@ const onInput = (event: unknown) => {
   position: relative;
   overflow: hidden;
   padding: 0 29rpx 112rpx;
-  background: $qs-color-primary-strong;
+  background: var(--qs-color-primary-strong);
 }
 
 .magazine-header__bg {
@@ -64,7 +64,7 @@ const onInput = (event: unknown) => {
 }
 
 .magazine-header__title {
-  color: $qs-text-inverse;
+  color: var(--qs-text-inverse);
   font-size: 34rpx;
   font-weight: 600;
   line-height: 1;

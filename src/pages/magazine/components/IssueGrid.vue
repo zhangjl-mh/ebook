@@ -64,8 +64,8 @@ const markCoverFailed = (issueId: string) => {
   overflow: hidden;
   padding: 18rpx;
   border-radius: 15rpx;
-  background: $qs-card-bg;
-  box-shadow: $qs-shadow-soft;
+  background: var(--qs-card-bg);
+  box-shadow: var(--qs-shadow-soft);
   box-sizing: border-box;
 }
 

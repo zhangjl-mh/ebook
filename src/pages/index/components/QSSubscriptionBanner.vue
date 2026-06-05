@@ -47,7 +47,7 @@ const store = useMagazineStore();
 
 .subscription-banner__title {
   display: block;
-  color: $qs-color-primary;
+  color: var(--qs-color-primary);
   font-size: 29rpx;
   font-weight: 700;
   line-height: 1.25;
@@ -71,7 +71,7 @@ const store = useMagazineStore();
   border: none;
   border-radius: 999rpx;
   background: linear-gradient(180deg, #ee3337 0%, #c9161d 100%);
-  color: $qs-text-inverse;
+  color: var(--qs-text-inverse);
   font-size: 25rpx;
   font-weight: 600;
   line-height: 58rpx;

@@ -20,12 +20,12 @@
             <!-- 下一页 -->
             <view class="reader-sheet reader-sheet--under" :style="underSheetStyle">
                 <view class="book-page__paper">
-                    <view class="book-page__scroll">
+                    <scroll-view class="book-page__scroll" :scroll-y="true" :enable-flex="true" :show-scrollbar="false">
                         <view class="book-page__image-wrap" :style="imageWrapStyle">
-                            <image class="book-page__image" :src="pages[underSheetIndex]" mode="aspectFit"
+                            <image class="book-page__image" :src="pages[underSheetIndex]" mode="widthFix"
                                 :fade-show="false" show-menu-by-longpress @load="onImageLoad(underSheetIndex)" />
                         </view>
-                    </view>
+                    </scroll-view>
 
                     <view class="book-page__spine"></view>
                 </view>
@@ -34,12 +34,12 @@
             <!-- 当前页 -->
             <view class="reader-sheet reader-sheet--current" :style="currentSheetStyle">
                 <view class="book-page__paper">
-                    <view class="book-page__scroll">
+                    <scroll-view class="book-page__scroll" :scroll-y="true" :enable-flex="true" :show-scrollbar="false">
                         <view class="book-page__image-wrap" :style="imageWrapStyle">
-                            <image class="book-page__image" :src="pages[currentSheetIndex]" mode="aspectFit"
+                            <image class="book-page__image" :src="pages[currentSheetIndex]" mode="widthFix"
                                 :fade-show="false" show-menu-by-longpress @load="onImageLoad(currentSheetIndex)" />
                         </view>
-                    </view>
+                    </scroll-view>
 
                     <view class="book-page__spine"></view>
                     <view class="book-page__turn-shadow" :style="{ opacity: shadowOpacity }"></view>
@@ -49,12 +49,12 @@
             <!-- 上一页 -->
             <view class="reader-sheet reader-sheet--turn" :style="prevSheetStyle">
                 <view class="book-page__paper">
-                    <view class="book-page__scroll">
+                    <scroll-view class="book-page__scroll" :scroll-y="true" :enable-flex="true" :show-scrollbar="false">
                         <view class="book-page__image-wrap" :style="imageWrapStyle">
-                            <image class="book-page__image" :src="pages[turnSheetIndex]" mode="aspectFit"
+                            <image class="book-page__image" :src="pages[turnSheetIndex]" mode="widthFix"
                                 :fade-show="false" show-menu-by-longpress @load="onImageLoad(turnSheetIndex)" />
                         </view>
-                    </view>
+                    </scroll-view>
 
                     <view class="book-page__spine"></view>
                     <view class="book-page__turn-shadow" :style="{ opacity: shadowOpacity }"></view>
@@ -314,7 +314,7 @@ const readerBookStyle = computed(() => ({
 }));
 
 const imageWrapStyle = computed(() => ({
-    height: `${readerAreaHeight.value}px`,
+    minHeight: `${readerAreaHeight.value}px`,
 }));
 
 onLoad((query?: ReaderQuery) => {
@@ -620,8 +620,6 @@ function onImageLoad(index: number) {
 </script>
 
 <style lang="scss" scoped>
-$theme: #e03e2d;
-
 .book-reader {
     position: relative;
     height: 100vh;
@@ -696,7 +694,7 @@ $theme: #e03e2d;
 }
 
 .reader-page-pill__current {
-    color: $theme;
+    color: var(--qs-color-primary-strong);
     font-size: 24rpx;
     font-weight: 600;
 }
@@ -799,13 +797,16 @@ $theme: #e03e2d;
 }
 
 .book-page__image-wrap {
+    display: flex;
     width: 100%;
+    align-items: center;
+    justify-content: center;
     box-sizing: border-box;
 }
 
 .book-page__image {
     width: 100%;
-    height: 100%;
+    height: auto;
     display: block;
     background: #fff;
     border-radius: 0 28rpx 28rpx 0;
@@ -878,7 +879,7 @@ $theme: #e03e2d;
 }
 
 .reader-control__btn--primary {
-    background: linear-gradient(135deg, #ff6a58 0%, $theme 100%);
+    background: linear-gradient(135deg, #ff6a58 0%, var(--qs-color-primary-strong) 100%);
     color: #fff;
     box-shadow: 0 14rpx 30rpx rgba(224, 62, 45, 0.25);
 }

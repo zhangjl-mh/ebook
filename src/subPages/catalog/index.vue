@@ -1,7 +1,7 @@
 <template>
   <view class="catalog-page">
-    <scroll-view class="catalog-page__scroll qs-page-scroll" scroll-y enable-flex>
-      <view class="qs-page-scroll__inner">
+    <scroll-view class="catalog-page__scroll" :scroll-y="true" :enable-flex="true">
+      <view class="catalog-page__inner">
         <QSSubPageHeader title="目录" />
 
         <view class="catalog-page__content">
@@ -103,26 +103,31 @@ page {
 <style lang="scss" scoped>
 .catalog-page {
   height: 100vh;
-  overflow: hidden;
   background: var(--qs-page-bg-soft);
 }
 
 .catalog-page__scroll {
+  height: 100%;
   background: var(--qs-page-bg-soft);
+}
+
+.catalog-page__inner {
+  min-height: 100%;
+  box-sizing: border-box;
 }
 
 .catalog-page__content {
   position: relative;
   z-index: 3;
   margin-top: -92rpx;
-  padding: 0 $qs-page-padding-x 70rpx;
+  padding: 0 var(--qs-page-padding-x) 70rpx;
 }
 
 .catalog-card {
   overflow: hidden;
-  border-radius: $qs-radius-card;
-  background: $qs-card-bg;
-  box-shadow: $qs-shadow-card;
+  border-radius: var(--qs-radius-card);
+  background: var(--qs-card-bg);
+  box-shadow: var(--qs-shadow-card);
 }
 
 .catalog-card__issue {
@@ -182,7 +187,7 @@ page {
   align-items: flex-start;
   gap: 22rpx;
   padding: 28rpx 0;
-  border-top: 1rpx solid $qs-border-color-light;
+  border-top: 1rpx solid var(--qs-border-color-light);
 }
 
 .catalog-item__index {

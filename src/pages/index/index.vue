@@ -66,15 +66,15 @@ page {
 .index-page__content {
   position: relative;
   z-index: 1;
-  margin: 20rpx 32rpx $qs-tabbar-bottom-space;
+  margin: 20rpx 32rpx var(--qs-tabbar-bottom-space);
 }
 
 .article-section {
   overflow: hidden;
-  border: 1rpx solid $qs-border-color-light;
+  border: 1rpx solid var(--qs-border-color-light);
   border-radius: 18rpx;
-  background: $qs-card-bg;
-  box-shadow: $qs-shadow-card-soft;
+  background: var(--qs-card-bg);
+  box-shadow: var(--qs-shadow-card-soft);
   margin-top: 40rpx;
 }
 </style>

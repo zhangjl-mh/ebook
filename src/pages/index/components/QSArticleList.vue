@@ -38,7 +38,7 @@ const openArticle = (article: Article) => {
 <style lang="scss" scoped>
 .article-list {
   padding: 0 38rpx 28rpx;
-  background: $qs-card-bg;
+  background: var(--qs-card-bg);
 }
 
 .article-list__state {
@@ -55,7 +55,7 @@ const openArticle = (article: Article) => {
 }
 
 .article-item--bordered {
-  border-bottom: 1rpx solid $qs-border-color-light;
+  border-bottom: 1rpx solid var(--qs-border-color-light);
 }
 
 .article-item__body {
@@ -94,7 +94,7 @@ const openArticle = (article: Article) => {
   padding: 8rpx 16rpx;
   border-radius: 7rpx;
   background: #fde8ea;
-  color: $qs-color-primary;
+  color: var(--qs-color-primary);
   font-size: 22rpx;
   line-height: 1;
 }

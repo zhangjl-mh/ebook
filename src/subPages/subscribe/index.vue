@@ -1,7 +1,7 @@
 <template>
   <view class="subscribe-page">
-    <scroll-view class="subscribe-page__scroll qs-page-scroll" scroll-y enable-flex>
-      <view class="qs-page-scroll__inner">
+    <scroll-view class="subscribe-page__scroll" :scroll-y="true" :enable-flex="true">
+      <view class="subscribe-page__scroll-inner">
         <QSSubPageHeader title="会员" />
 
         <view class="subscribe-page__content">
@@ -180,25 +180,31 @@ page {
 }
 
 .subscribe-page__scroll {
+  height: 100%;
   background:
     linear-gradient(180deg, rgba(232, 24, 34, 0.06) 0, rgba(232, 24, 34, 0) 420rpx),
     #f7f7f8;
+}
+
+.subscribe-page__scroll-inner {
+  min-height: 100%;
+  box-sizing: border-box;
 }
 
 .subscribe-page__content {
   position: relative;
   z-index: 2;
   margin-top: -92rpx;
-  padding: 0 $qs-page-padding-x 190rpx;
+  padding: 0 var(--qs-page-padding-x) 190rpx;
 }
 
 .product-card {
   display: flex;
   gap: 30rpx;
   padding: 30rpx;
-  border-radius: $qs-radius-panel;
-  background: $qs-card-bg;
-  box-shadow: $qs-shadow-card;
+  border-radius: var(--qs-radius-panel);
+  background: var(--qs-card-bg);
+  box-shadow: var(--qs-shadow-card);
   box-sizing: border-box;
 }
 
@@ -211,7 +217,7 @@ page {
   justify-content: center;
   overflow: hidden;
   border: 1rpx solid #f1d4d4;
-  background: $qs-card-bg-warm;
+  background: var(--qs-card-bg-warm);
 }
 
 .product-card__cover-image {
@@ -225,7 +231,7 @@ page {
   height: 100%;
   align-items: center;
   justify-content: center;
-  color: $qs-color-primary;
+  color: var(--qs-color-primary);
   font-size: 34rpx;
   font-weight: 800;
 }
@@ -252,7 +258,7 @@ page {
 .product-card__tag {
   padding: 5rpx 12rpx;
   border-radius: 8rpx;
-  background: $qs-color-primary-light;
+  background: var(--qs-color-primary-light);
   color: #df1b25;
   font-size: 22rpx;
   font-weight: 700;
@@ -272,7 +278,7 @@ page {
   padding: 8rpx 14rpx;
   border-radius: 999rpx;
   background: #fff5f5;
-  color: $qs-color-primary;
+  color: var(--qs-color-primary);
   font-size: 22rpx;
   font-weight: 700;
   line-height: 1.25;
@@ -296,14 +302,14 @@ page {
   width: 8rpx;
   height: 34rpx;
   border-radius: 999rpx;
-  background: $qs-color-primary-strong;
+  background: var(--qs-color-primary-strong);
 }
 
 .subscribe-empty {
   margin-top: 24rpx;
   padding: 44rpx 0;
   border-radius: 18rpx;
-  background: $qs-card-bg;
+  background: var(--qs-card-bg);
   color: var(--qs-text-placeholder);
   font-size: 26rpx;
   text-align: center;
@@ -321,14 +327,14 @@ page {
   align-items: center;
   min-height: 146rpx;
   padding: 28rpx 28rpx;
-  border: 2rpx solid $qs-border-color;
+  border: 2rpx solid var(--qs-border-color);
   border-radius: 18rpx;
-  background: $qs-card-bg;
+  background: var(--qs-card-bg);
   box-sizing: border-box;
 }
 
 .plan-card--active {
-  border-color: $qs-color-primary-strong;
+  border-color: var(--qs-color-primary-strong);
   background: linear-gradient(90deg, #fff8f8 0%, #fff 100%);
 }
 
@@ -350,8 +356,8 @@ page {
 }
 
 .plan-card--active .plan-card__radio {
-  border-color: $qs-color-primary-strong;
-  background: $qs-color-primary-strong;
+  border-color: var(--qs-color-primary-strong);
+  background: var(--qs-color-primary-strong);
 }
 
 .plan-card__body {
@@ -386,7 +392,7 @@ page {
   align-items: center;
   justify-content: flex-end;
   gap: 12rpx;
-  color: $qs-color-primary-strong;
+  color: var(--qs-color-primary-strong);
   font-size: 44rpx;
   font-weight: 800;
   line-height: 1.15;
@@ -395,7 +401,7 @@ page {
 .plan-card__badge {
   padding: 5rpx 10rpx;
   border-radius: 7rpx;
-  background: $qs-color-primary-light;
+  background: var(--qs-color-primary-light);
   color: #df1b25;
   font-size: 21rpx;
   font-weight: 700;
@@ -414,8 +420,8 @@ page {
   margin-top: 24rpx;
   padding: 26rpx 18rpx 24rpx;
   border-radius: 18rpx;
-  background: $qs-card-bg;
-  box-shadow: $qs-shadow-soft;
+  background: var(--qs-card-bg);
+  box-shadow: var(--qs-shadow-soft);
   box-sizing: border-box;
 }
 
@@ -558,10 +564,10 @@ page {
   min-height: 104rpx;
   margin-top: 24rpx;
   padding: 0 26rpx;
-  border: 1rpx solid $qs-border-color;
+  border: 1rpx solid var(--qs-border-color);
   border-radius: 18rpx;
-  background: $qs-card-bg;
-  box-shadow: $qs-shadow-soft;
+  background: var(--qs-card-bg);
+  box-shadow: var(--qs-shadow-soft);
   box-sizing: border-box;
 }
 
@@ -637,7 +643,7 @@ page {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: $qs-color-primary-strong;
+  background: var(--qs-color-primary-strong);
   color: #fff;
   font-size: 26rpx;
   font-weight: 800;
@@ -654,7 +660,7 @@ page {
   align-items: center;
   gap: 26rpx;
   padding: 22rpx 30rpx;
-  border-top: 1rpx solid $qs-border-color;
+  border-top: 1rpx solid var(--qs-border-color);
   background: rgba(255, 255, 255, 0.98);
   box-shadow: 0 -10rpx 34rpx rgba(31, 34, 40, 0.06);
   box-sizing: border-box;
@@ -670,7 +676,7 @@ page {
 
 .subscribe-footer__price {
   margin-left: 8rpx;
-  color: $qs-color-primary-strong;
+  color: var(--qs-color-primary-strong);
   font-size: 40rpx;
   font-weight: 900;
 }

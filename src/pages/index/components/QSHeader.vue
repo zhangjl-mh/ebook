@@ -38,7 +38,7 @@ const onSearchInput = (event: unknown) => {
   position: relative;
   overflow: hidden;
   padding: 0 32rpx 172rpx;
-  background: $qs-color-primary;
+  background: var(--qs-color-primary);
 
   &::after {
     position: absolute;

@@ -19,8 +19,8 @@ const store = useMagazineStore();
   align-items: center;
   gap: 58rpx;
   padding: 28rpx 38rpx 0;
-  border-bottom: 1rpx solid $qs-border-color;
-  background: $qs-card-bg;
+  border-bottom: 1rpx solid var(--qs-border-color);
+  background: var(--qs-card-bg);
 }
 
 .category-tabs__item {
@@ -33,8 +33,8 @@ const store = useMagazineStore();
 }
 
 .category-tabs__item--active {
-  border-bottom-color: $qs-color-primary;
-  color: $qs-color-primary;
+  border-bottom-color: var(--qs-color-primary);
+  color: var(--qs-color-primary);
   font-weight: 700;
 }
 </style>

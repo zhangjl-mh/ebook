@@ -1,6 +1,6 @@
 <template>
-  <scroll-view class="magazine-page qs-page-scroll" scroll-y enable-flex>
-    <view class="magazine-page__inner qs-page-scroll__inner">
+  <scroll-view class="magazine-page" :scroll-y="true" :enable-flex="true">
+    <view class="magazine-page__inner">
       <MagazineHeader :query="searchQuery" @search="setSearchQuery" />
       <view class="magazine-page__content">
         <IssueYearTabs :options="issueYearOptions" :active-year="activeYear" @change="setActiveYear"
@@ -93,18 +93,19 @@ page {
 }
 
 .magazine-page {
-  overflow-x: hidden;
+  height: 100vh;
   background: linear-gradient(180deg, #fff6f5 0, var(--qs-page-bg) 330rpx);
 }
 
 .magazine-page__inner {
-  background: linear-gradient(180deg, #fff6f5 0, var(--qs-page-bg) 330rpx);
+  min-height: 100%;
+  box-sizing: border-box;
 }
 
 .magazine-page__content {
   position: relative;
   z-index: 2;
   margin-top: -95rpx;
-  padding-bottom: $qs-tabbar-bottom-space;
+  padding-bottom: var(--qs-tabbar-bottom-space);
 }
 </style>

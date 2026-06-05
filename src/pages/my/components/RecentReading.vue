@@ -102,8 +102,8 @@ const getProgressStyle = (progress: number) => ({
   padding: 22rpx 22rpx 20rpx;
   box-sizing: border-box;
   border-radius: 20rpx;
-  background: $qs-card-bg;
-  box-shadow: $qs-shadow-card-soft;
+  background: var(--qs-card-bg);
+  box-shadow: var(--qs-shadow-card-soft);
 }
 
 .recent__item+.recent__item {
@@ -134,7 +134,7 @@ const getProgressStyle = (progress: number) => ({
 }
 
 .recent__cover-title {
-  color: $qs-color-primary;
+  color: var(--qs-color-primary);
   font-family: KaiTi, STKaiti, serif;
   font-size: 36rpx;
   font-weight: 700;
@@ -143,7 +143,7 @@ const getProgressStyle = (progress: number) => ({
 
 .recent__cover-issue {
   margin-top: 16rpx;
-  color: $qs-color-primary;
+  color: var(--qs-color-primary);
   font-size: 18rpx;
   line-height: 1;
 }
@@ -185,7 +185,7 @@ const getProgressStyle = (progress: number) => ({
 .recent__progress-bar {
   height: 100%;
   border-radius: 999rpx;
-  background: $qs-color-primary;
+  background: var(--qs-color-primary);
 }
 
 .recent__empty {
@@ -194,8 +194,8 @@ const getProgressStyle = (progress: number) => ({
   justify-content: center;
   height: 172rpx;
   border-radius: 20rpx;
-  background: $qs-card-bg;
-  box-shadow: $qs-shadow-card-soft;
+  background: var(--qs-card-bg);
+  box-shadow: var(--qs-shadow-card-soft);
 }
 
 .recent__empty-text {

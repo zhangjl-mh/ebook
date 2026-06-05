@@ -33,7 +33,7 @@ defineProps<Props>();
   border: 1rpx solid rgba(230, 31, 40, 0.08);
   border-radius: 18rpx;
   background: linear-gradient(110deg, #fff 0%, #fff7f6 58%, #fff1ef 100%);
-  box-shadow: $qs-shadow-card-soft;
+  box-shadow: var(--qs-shadow-card-soft);
 }
 
 .member-banner__icon {
@@ -74,7 +74,7 @@ defineProps<Props>();
   position: absolute;
   top: 9rpx;
   left: 7rpx;
-  color: $qs-color-primary;
+  color: var(--qs-color-primary);
   font-size: 18rpx;
   line-height: 1;
   content: '★';
@@ -88,7 +88,7 @@ defineProps<Props>();
 
 .member-banner__title {
   display: block;
-  color: $qs-color-primary;
+  color: var(--qs-color-primary);
   font-size: 32rpx;
   font-weight: 700;
   line-height: 1;
@@ -111,7 +111,7 @@ defineProps<Props>();
   border: none;
   border-radius: 999rpx;
   background: linear-gradient(135deg, #e21a24, #c60812);
-  color: $qs-text-inverse;
+  color: var(--qs-text-inverse);
   font-size: 26rpx;
   font-weight: 600;
   line-height: 60rpx;
