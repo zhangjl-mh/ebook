@@ -1,6 +1,7 @@
 <template>
   <view class="subscribe-page">
-    <scroll-view class="subscribe-page__scroll" :scroll-y="true" :enable-flex="true">
+    <scroll-view class="subscribe-page__scroll" :scroll-y="true" :enable-flex="true" :enhanced="true"
+      :bounces="false">
       <view class="subscribe-page__scroll-inner">
         <QSSubPageHeader title="会员" />
 
@@ -172,7 +173,7 @@ page {
 
 <style lang="scss" scoped>
 .subscribe-page {
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   background:
     linear-gradient(180deg, rgba(232, 24, 34, 0.06) 0, rgba(232, 24, 34, 0) 420rpx),

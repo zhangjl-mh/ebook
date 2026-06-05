@@ -1,6 +1,7 @@
 <template>
   <view class="article-detail-page">
-    <scroll-view class="article-detail-page__scroll" :scroll-y="true" :enable-flex="true">
+    <scroll-view class="article-detail-page__scroll" :scroll-y="true" :enable-flex="true" :enhanced="true"
+      :bounces="false">
       <view class="article-detail-page__inner">
         <QSSubPageHeader title="详情" />
 
@@ -178,7 +179,8 @@ page {
 
 <style lang="scss" scoped>
 .article-detail-page {
-  height: 100vh;
+  height: 100%;
+  overflow: hidden;
   background: var(--qs-page-bg-soft);
 }
 

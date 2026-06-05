@@ -15,20 +15,31 @@
           </view>
         </view>
 
-        <image :src="article.thumbnail" mode="aspectFill" class="article-item__image" />
+        <view v-if="article.thumbnail && !failedImageMap[article.id]" class="article-item__media">
+          <image :src="article.thumbnail" mode="aspectFill" class="article-item__image" lazy-load
+            @error="markImageFailed(article.id)" />
+        </view>
       </view>
     </template>
   </view>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useMagazineStore } from '@/store/magazineStore';
 import type { Article } from '@/types/magazine';
 
 const store = useMagazineStore();
 const articles = computed(() => store.filteredArticles);
 const emptyText = computed(() => store.errorMessage || '暂无符合条件的文章');
+const failedImageMap = ref<Record<string, boolean>>({});
+
+const markImageFailed = (articleId: string) => {
+  failedImageMap.value = {
+    ...failedImageMap.value,
+    [articleId]: true
+  };
+};
 
 const openArticle = (article: Article) => {
   store.openWebview(article.linkUrl, article.title);
@@ -99,11 +110,20 @@ const openArticle = (article: Article) => {
   line-height: 1;
 }
 
-.article-item__image {
+.article-item__media {
+  display: flex;
   width: 150rpx;
   height: 138rpx;
   flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   border-radius: 10rpx;
   background: #f3f4f6;
+}
+
+.article-item__image {
+  width: 100%;
+  height: 100%;
 }
 </style>

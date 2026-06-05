@@ -81,7 +81,7 @@ type ActiveTurnDirection = Exclude<TurnDirection, ''>;
 type GestureDirection = 'horizontal' | 'vertical' | '';
 
 type UniTouchEvent = {
-    touches?: Array<{
+    touches?: ArrayLike<{
         clientX: number;
         clientY: number;
     }>;
@@ -106,15 +106,12 @@ const CONTROL_HEIGHT_RPX = 92;
 const READER_VISIBLE_GAP_RPX = 18;
 const READER_HIDDEN_TOP_GAP_RPX = 0;
 const READER_HIDDEN_BOTTOM_GAP_RPX = 0;
+const LOCAL_PAGE_BASE_URL = '/static/ebook/202610';
+const LOCAL_PAGE_COUNT = 12;
 
 const { safeArea } = useSafeArea();
 
 const title = ref('2026 第 10 期');
-
-const imageBaseUrl = ref('https://www.qstheory.cn/ebooks/202610');
-const pageCount = ref(12);
-const ext = ref('jpg');
-const pageStart = ref(0);
 const issueId = ref('');
 
 const current = ref(0);
@@ -157,15 +154,13 @@ const clamp = (value: number, min: number, max: number) => {
     return Math.max(min, Math.min(max, value));
 };
 
-const pages = computed(() => {
-    return Array.from({ length: pageCount.value }, (_, index) => {
-        return `${imageBaseUrl.value}/${pageStart.value + index}.${ext.value}`;
-    });
+const pages = Array.from({ length: LOCAL_PAGE_COUNT }, (_, index) => {
+    return `${LOCAL_PAGE_BASE_URL}/${index}.jpg`;
 });
 
 const hasPrev = computed(() => current.value > 0);
 
-const hasNext = computed(() => current.value < pages.value.length - 1);
+const hasNext = computed(() => current.value < pages.length - 1);
 
 const prevIndex = computed(() => {
     return hasPrev.value ? current.value - 1 : current.value;
@@ -191,8 +186,8 @@ const prevSheetIndex = computed(() => {
 });
 
 const progressPercent = computed(() => {
-    if (!pages.value.length) return 0;
-    return Math.round(((current.value + 1) / pages.value.length) * 100);
+    if (!pages.length) return 0;
+    return Math.round(((current.value + 1) / pages.length) * 100);
 });
 
 const preloadPages = computed(() => {
@@ -336,20 +331,10 @@ const readerBookStyle = computed(() => ({
 
 onLoad((query?: ReaderQuery) => {
     title.value = safeDecode(query?.title || '2026 第 10 期');
-
-    imageBaseUrl.value = safeDecode(
-        query?.imageBaseUrl || 'https://www.qstheory.cn/ebooks/202610'
-    );
-
-    pageCount.value = toNumber(query?.pageCount, 30);
-    ext.value = safeDecode(query?.ext || 'jpg');
     issueId.value = safeDecode(query?.issueId || '');
 
-    const start = Number(query?.pageStart ?? 0);
-    pageStart.value = Number.isFinite(start) ? start : 0;
-
     const startPage = toNumber(query?.page, 1);
-    current.value = clamp(startPage - 1, 0, pageCount.value - 1);
+    current.value = clamp(startPage - 1, 0, pages.length - 1);
 
     turnFromIndex.value = current.value;
     turnToIndex.value = current.value;
@@ -371,15 +356,9 @@ watch(current, (index) => {
     preloadAround(index);
 });
 
-watch(pages, () => {
-    loadedMap.value = {};
-    preloadingSet.clear();
-    preloadAround(current.value);
-});
-
 function getPageSrc(index: number) {
-    if (index < 0 || index >= pages.value.length) return '';
-    return pages.value[index] || '';
+    if (index < 0 || index >= pages.length) return '';
+    return pages[index] || '';
 }
 
 function onTouchStart(e: UniTouchEvent) {
@@ -498,7 +477,7 @@ function finishFlip(direction: TurnDirection) {
     });
 
     flipTimer = setTimeout(() => {
-        current.value = clamp(targetIndex, 0, pages.value.length - 1);
+        current.value = clamp(targetIndex, 0, pages.length - 1);
         resetFlipState();
     }, ANIMATION_DURATION + 30);
 }
@@ -519,8 +498,8 @@ async function playFlip(direction: ActiveTurnDirection) {
     flipTimer = setTimeout(() => {
         current.value =
             direction === 'next'
-                ? clamp(current.value + 1, 0, pages.value.length - 1)
-                : clamp(current.value - 1, 0, pages.value.length - 1);
+                ? clamp(current.value + 1, 0, pages.length - 1)
+                : clamp(current.value - 1, 0, pages.length - 1);
 
         resetFlipState();
     }, ANIMATION_DURATION + 60);
@@ -536,7 +515,7 @@ function nextPage() {
 
 function onSliderChange(e: UniSliderChangeEvent) {
     const page = Number(e.detail.value);
-    const nextPageIndex = clamp(page - 1, 0, pages.value.length - 1);
+    const nextPageIndex = clamp(page - 1, 0, pages.length - 1);
 
     if (nextPageIndex === current.value) return;
 

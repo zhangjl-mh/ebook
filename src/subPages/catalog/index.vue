@@ -1,6 +1,7 @@
 <template>
   <view class="catalog-page">
-    <scroll-view class="catalog-page__scroll" :scroll-y="true" :enable-flex="true">
+    <scroll-view class="catalog-page__scroll" :scroll-y="true" :enable-flex="true" :enhanced="true"
+      :bounces="false">
       <view class="catalog-page__inner">
         <QSSubPageHeader title="目录" />
 
@@ -102,7 +103,8 @@ page {
 
 <style lang="scss" scoped>
 .catalog-page {
-  height: 100vh;
+  height: 100%;
+  overflow: hidden;
   background: var(--qs-page-bg-soft);
 }
 

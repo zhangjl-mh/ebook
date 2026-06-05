@@ -1,5 +1,6 @@
 <template>
-  <scroll-view class="magazine-page" :scroll-y="true" :enable-flex="true">
+  <scroll-view class="magazine-page qs-page-scroll" :scroll-y="true" :enable-flex="true" :enhanced="true"
+    :bounces="false">
     <view class="magazine-page__inner">
       <MagazineHeader :query="searchQuery" @search="setSearchQuery" />
       <view class="magazine-page__content">
@@ -93,7 +94,6 @@ page {
 }
 
 .magazine-page {
-  height: 100vh;
   background: linear-gradient(180deg, #fff6f5 0, var(--qs-page-bg) 330rpx);
 }
 

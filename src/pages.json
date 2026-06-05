@@ -11,8 +11,9 @@
       "style": {
         "navigationBarTitleText": "推荐",
         "navigationStyle": "custom",
-        "enablePullDownRefresh": true,
+        "disableScroll": true,
         "backgroundColor": "#F5F6F8",
+        "backgroundColorTop": "#F5F6F8",
         "backgroundColorBottom": "#F5F6F8"
       }
     },
@@ -23,6 +24,7 @@
         "navigationStyle": "custom",
         "disableScroll": true,
         "backgroundColor": "#F5F6F8",
+        "backgroundColorTop": "#F5F6F8",
         "backgroundColorBottom": "#F5F6F8"
       }
     },
@@ -33,6 +35,7 @@
         "navigationStyle": "custom",
         "disableScroll": true,
         "backgroundColor": "#F5F6F8",
+        "backgroundColorTop": "#F5F6F8",
         "backgroundColorBottom": "#F5F6F8"
       }
     }
@@ -47,6 +50,7 @@
             "navigationBarTitleText": "详情",
             "disableScroll": true,
             "backgroundColor": "#F5F6F8",
+            "backgroundColorTop": "#F5F6F8",
             "backgroundColorBottom": "#F5F6F8"
           }
         },
@@ -57,6 +61,7 @@
             "navigationStyle": "custom",
             "disableScroll": true,
             "backgroundColor": "#F7F1EE",
+            "backgroundColorTop": "#F7F1EE",
             "backgroundColorBottom": "#F7F1EE"
           }
         },
@@ -67,6 +72,7 @@
             "navigationStyle": "custom",
             "disableScroll": true,
             "backgroundColor": "#F6F7F9",
+            "backgroundColorTop": "#F6F7F9",
             "backgroundColorBottom": "#F6F7F9"
           }
         },
@@ -77,6 +83,7 @@
             "navigationStyle": "custom",
             "disableScroll": true,
             "backgroundColor": "#F7F7F8",
+            "backgroundColorTop": "#F7F7F8",
             "backgroundColorBottom": "#F7F7F8"
           }
         },
@@ -87,6 +94,7 @@
             "navigationStyle": "custom",
             "disableScroll": true,
             "backgroundColor": "#F6F7F9",
+            "backgroundColorTop": "#F6F7F9",
             "backgroundColorBottom": "#F6F7F9"
           }
         }
@@ -98,6 +106,7 @@
     "navigationBarTitleText": "应用",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F5F6F8",
+    "backgroundColorTop": "#F5F6F8",
     "backgroundColorBottom": "#F5F6F8"
   },
   "tabBar": {

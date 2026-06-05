@@ -1,5 +1,5 @@
 <template>
-  <scroll-view class="my-page" :scroll-y="true" :enable-flex="true">
+  <scroll-view class="my-page qs-page-scroll" :scroll-y="true" :enable-flex="true" :enhanced="true" :bounces="false">
     <view class="my-page__inner">
       <ProfileHero :profile="profileInfo" />
       <RecentReading :items="recentReadItems" @select="openRecentReading" />
@@ -60,7 +60,6 @@ page {
 }
 
 .my-page {
-  height: 100vh;
   overflow-x: hidden;
   background: var(--qs-page-bg);
 }
@@ -69,5 +68,6 @@ page {
   min-height: 100%;
   background: var(--qs-page-bg);
   box-sizing: border-box;
+  padding-bottom: 10rpx;
 }
 </style>

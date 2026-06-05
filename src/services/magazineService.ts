@@ -29,17 +29,18 @@ interface RemoteCategoryPayload {
   datasource?: RemoteDataItem[];
 }
 
-const FALLBACK_IMAGE = 'https://picsum.photos/300/200';
 const DEFAULT_SOURCE = '求是网';
 const DEFAULT_DOMAIN = 'https://www.qstheory.cn';
 
 const normalizeImageUrl = (publishDomain = DEFAULT_DOMAIN, imageUrl = '') => {
-  if (!imageUrl) return FALLBACK_IMAGE;
-  if (/^https?:\/\//.test(imageUrl)) return imageUrl;
+  const source = imageUrl.trim();
+  if (!source) return '';
+  if (/^https:\/\//i.test(source)) return encodeURI(source);
+  if (/^http:\/\//i.test(source)) return encodeURI(source.replace(/^http:\/\//i, 'https://'));
 
-  const domain = publishDomain.replace(/\/$/, '');
-  const path = imageUrl.replace(/^(\.\.\/)+/, '').replace(/^\/+/, '');
-  return `${domain}/${path}`;
+  const domain = publishDomain.trim().replace(/^http:\/\//i, 'https://').replace(/\/+$/, '') || DEFAULT_DOMAIN;
+  const path = source.replace(/^(\.\.\/)+/, '').replace(/^\/+/, '');
+  return encodeURI(`${domain}/${path}`);
 };
 
 const buildSummary = (item: RemoteDataItem, categoryName = '') => {

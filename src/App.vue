@@ -59,7 +59,9 @@ page {
   --qs-page-bottom-gap: calc(var(--qs-window-bottom) + var(--qs-bottom-safe));
   --qs-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
-  min-height: 100%;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   background: var(--qs-page-bg);
   color: var(--qs-text-main);
   font-family: var(--qs-font-family);
@@ -68,7 +70,14 @@ page {
 }
 
 .qs-page {
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   background: var(--qs-page-bg);
+}
+
+.qs-page-scroll {
+  width: 100%;
+  height: 100%;
 }
 </style>

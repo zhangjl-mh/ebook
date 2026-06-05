@@ -1,23 +1,28 @@
 <template>
   <view class="index-page qs-page">
-    <QSHeader />
+    <scroll-view class="index-page__scroll qs-page-scroll" :scroll-y="true" :enable-flex="true" :enhanced="true"
+      :bounces="false">
+      <view class="index-page__inner">
+        <QSHeader />
 
-    <view class="index-page__carousel">
-      <QSMagazineSwiper />
-    </view>
+        <view class="index-page__carousel">
+          <QSMagazineSwiper />
+        </view>
 
-    <view class="index-page__content">
-      <QSSubscriptionBanner />
-      <view class="article-section">
-        <QSCategoryTabs />
-        <QSArticleList />
+        <view class="index-page__content">
+          <QSSubscriptionBanner />
+          <view class="article-section">
+            <QSCategoryTabs />
+            <QSArticleList />
+          </view>
+        </view>
       </view>
-    </view>
+    </scroll-view>
   </view>
 </template>
 
 <script setup lang="ts">
-import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app';
+import { onLoad } from '@dcloudio/uni-app';
 import QSHeader from './components/QSHeader.vue';
 import QSMagazineSwiper from './components/QSMagazineSwiper.vue';
 import QSSubscriptionBanner from './components/QSSubscriptionBanner.vue';
@@ -30,19 +35,6 @@ const store = useMagazineStore();
 onLoad(() => {
   store.fetchArticles();
 });
-
-onPullDownRefresh(async () => {
-  await store.fetchArticles();
-  uni.stopPullDownRefresh();
-
-  if (!store.errorMessage) {
-    uni.showToast({
-      title: '更新成功',
-      icon: 'success',
-      duration: 1000
-    });
-  }
-});
 </script>
 
 <style lang="scss">
@@ -51,10 +43,20 @@ page {
 }
 
 .index-page {
-  min-height: 100vh;
+  height: 100%;
+  background: var(--qs-page-bg);
+}
+
+.index-page__scroll {
+  background: var(--qs-page-bg);
+}
+
+.index-page__inner {
+  min-height: 100%;
   overflow-x: hidden;
   padding-bottom: var(--qs-page-bottom-gap);
   background: var(--qs-page-bg);
+  box-sizing: border-box;
 }
 
 .index-page__carousel {
