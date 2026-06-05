@@ -1,7 +1,8 @@
 <template>
     <view class="book-reader">
         <QSSubPageHeader :title="title" :mode="HeaderMode.Compact" />
-        <!-- 顶部悬浮栏 -->
+
+        <!-- 顶部悬浮栏：保留 -->
         <view class="reader-header" v-show="toolbarVisible" :style="headerFloatStyle" @tap.stop>
             <view class="reader-header__main">
                 <text class="reader-title">{{ title }}</text>
@@ -13,56 +14,35 @@
             </button>
         </view>
 
-        <!-- 翻书主体 -->
+        <!-- 电子书主体：不用 swiper，自定义翻页 -->
         <view class="reader-book" :class="{ 'reader-book--animating': animating }" :style="readerBookStyle"
             @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd" @touchcancel="onTouchEnd"
             @tap="toggleToolbar">
-            <!-- 下一页 -->
+            <!-- 下一页底图 -->
             <view class="reader-sheet reader-sheet--under" :style="underSheetStyle">
-                <view class="book-page__paper">
-                    <scroll-view class="book-page__scroll" :scroll-y="true" :enable-flex="true" :show-scrollbar="false">
-                        <view class="book-page__image-wrap" :style="imageWrapStyle">
-                            <image class="book-page__image" :src="pages[underSheetIndex]" mode="widthFix"
-                                :fade-show="false" show-menu-by-longpress @load="onImageLoad(underSheetIndex)" />
-                        </view>
-                    </scroll-view>
-
-                    <view class="book-page__spine"></view>
-                </view>
+                <image v-if="getPageSrc(underSheetIndex)" class="reader-page-image" :src="getPageSrc(underSheetIndex)"
+                    mode="aspectFit" :fade-show="false" show-menu-by-longpress @load="onImageLoad(underSheetIndex)" />
             </view>
 
             <!-- 当前页 -->
             <view class="reader-sheet reader-sheet--current" :style="currentSheetStyle">
-                <view class="book-page__paper">
-                    <scroll-view class="book-page__scroll" :scroll-y="true" :enable-flex="true" :show-scrollbar="false">
-                        <view class="book-page__image-wrap" :style="imageWrapStyle">
-                            <image class="book-page__image" :src="pages[currentSheetIndex]" mode="widthFix"
-                                :fade-show="false" show-menu-by-longpress @load="onImageLoad(currentSheetIndex)" />
-                        </view>
-                    </scroll-view>
+                <image v-if="getPageSrc(currentSheetIndex)" class="reader-page-image"
+                    :src="getPageSrc(currentSheetIndex)" mode="aspectFit" :fade-show="false" show-menu-by-longpress
+                    @load="onImageLoad(currentSheetIndex)" />
 
-                    <view class="book-page__spine"></view>
-                    <view class="book-page__turn-shadow" :style="{ opacity: shadowOpacity }"></view>
-                </view>
+                <view class="reader-page-shadow" :style="{ opacity: shadowOpacity }"></view>
             </view>
 
-            <!-- 上一页 -->
-            <view class="reader-sheet reader-sheet--turn" :style="prevSheetStyle">
-                <view class="book-page__paper">
-                    <scroll-view class="book-page__scroll" :scroll-y="true" :enable-flex="true" :show-scrollbar="false">
-                        <view class="book-page__image-wrap" :style="imageWrapStyle">
-                            <image class="book-page__image" :src="pages[turnSheetIndex]" mode="widthFix"
-                                :fade-show="false" show-menu-by-longpress @load="onImageLoad(turnSheetIndex)" />
-                        </view>
-                    </scroll-view>
+            <!-- 上一页翻入层 -->
+            <view class="reader-sheet reader-sheet--prev" :style="prevSheetStyle">
+                <image v-if="getPageSrc(prevSheetIndex)" class="reader-page-image" :src="getPageSrc(prevSheetIndex)"
+                    mode="aspectFit" :fade-show="false" show-menu-by-longpress @load="onImageLoad(prevSheetIndex)" />
 
-                    <view class="book-page__spine"></view>
-                    <view class="book-page__turn-shadow" :style="{ opacity: shadowOpacity }"></view>
-                </view>
+                <view class="reader-page-shadow" :style="{ opacity: shadowOpacity }"></view>
             </view>
         </view>
 
-        <!-- 底部控制栏 -->
+        <!-- 底部控制栏：保留 -->
         <view class="reader-control" v-show="toolbarVisible" :style="controlFloatStyle" @tap.stop>
             <button class="reader-control__btn" :disabled="!hasPrev"
                 :class="{ 'reader-control__btn--disabled': !hasPrev }" @tap.stop="prevPage">
@@ -80,6 +60,11 @@
                 下一页
             </button>
         </view>
+
+        <!-- 隐藏预加载：减少翻页时图片白闪 -->
+        <view class="reader-preload">
+            <image v-for="src in preloadPages" :key="src" :src="src" mode="aspectFit" :fade-show="false" />
+        </view>
     </view>
 </template>
 
@@ -89,27 +74,71 @@ import { onLoad, onReady } from '@dcloudio/uni-app';
 import { useSafeArea } from '@/hooks/useSafeArea';
 import QSSubPageHeader from '@/components/QSSubPageHeader.vue';
 import { HeaderMode } from '@/types/enums';
-import type { UniSliderChangeEvent, UniTouchEvent } from '@/types/events';
 
 type ReaderQuery = Record<string, string | undefined>;
 type TurnDirection = 'next' | 'prev' | '';
 type ActiveTurnDirection = Exclude<TurnDirection, ''>;
 type GestureDirection = 'horizontal' | 'vertical' | '';
 
-const MAX_ROTATE = 84;
-const FINISH_THRESHOLD = 0.18;
-const ANIMATION_DURATION = 520;
+type UniTouchEvent = {
+    touches?: Array<{
+        clientX: number;
+        clientY: number;
+    }>;
+};
+
+type UniSliderChangeEvent = {
+    detail: {
+        value: number;
+    };
+};
+
+const MAX_ROTATE = 82;
+const FINISH_THRESHOLD = 0.16;
+const ANIMATION_DURATION = 420;
+const DRAG_PROGRESS_SCALE = 1.28;
 const PRELOAD_RANGE = 2;
-const DRAG_PROGRESS_SCALE = 1.32;
+
 const HEADER_TOP_GAP_RPX = 20;
 const HEADER_HEIGHT_RPX = 88;
 const CONTROL_BOTTOM_GAP_RPX = 18;
 const CONTROL_HEIGHT_RPX = 92;
-const READER_VISIBLE_GAP_RPX = 22;
-const READER_HIDDEN_TOP_GAP_RPX = 24;
-const READER_HIDDEN_BOTTOM_GAP_RPX = 28;
+const READER_VISIBLE_GAP_RPX = 18;
+const READER_HIDDEN_TOP_GAP_RPX = 0;
+const READER_HIDDEN_BOTTOM_GAP_RPX = 0;
 
 const { safeArea } = useSafeArea();
+
+const title = ref('2026 第 10 期');
+
+const imageBaseUrl = ref('https://www.qstheory.cn/ebooks/202610');
+const pageCount = ref(12);
+const ext = ref('jpg');
+const pageStart = ref(0);
+const issueId = ref('');
+
+const current = ref(0);
+const windowWidth = ref(375);
+
+const toolbarVisible = ref(true);
+const openingCatalog = ref(false);
+
+const touchStartX = ref(0);
+const touchStartY = ref(0);
+const dragging = ref(false);
+const hasMoved = ref(false);
+const animating = ref(false);
+const gestureDirection = ref<GestureDirection>('');
+
+const turnDirection = ref<TurnDirection>('');
+const turnProgress = ref(0);
+const turnFromIndex = ref(0);
+const turnToIndex = ref(0);
+
+const loadedMap = ref<Record<number, boolean>>({});
+const preloadingSet = new Set<number>();
+
+let flipTimer: ReturnType<typeof setTimeout> | null = null;
 
 const safeDecode = (value = '') => {
     try {
@@ -128,37 +157,6 @@ const clamp = (value: number, min: number, max: number) => {
     return Math.max(min, Math.min(max, value));
 };
 
-const title = ref('2026 第 10 期');
-
-const imageBaseUrl = ref('https://www.qstheory.cn/ebooks/202610');
-const pageCount = ref(12);
-const ext = ref('jpg');
-const pageStart = ref(0);
-const issueId = ref('');
-
-const current = ref(0);
-const readerHeight = ref(700);
-const windowWidth = ref(375);
-
-const toolbarVisible = ref(true);
-const openingCatalog = ref(false);
-const loadedMap = ref<Record<number, boolean>>({});
-
-const touchStartX = ref(0);
-const touchStartY = ref(0);
-const dragging = ref(false);
-const hasMoved = ref(false);
-const animating = ref(false);
-const gestureDirection = ref<GestureDirection>('');
-
-const turnDirection = ref<TurnDirection>('');
-const turnProgress = ref(0);
-const turnFromIndex = ref(0);
-const turnToIndex = ref(0);
-
-let flipTimer: ReturnType<typeof setTimeout> | null = null;
-const preloadingSet = new Set<number>();
-
 const pages = computed(() => {
     return Array.from({ length: pageCount.value }, (_, index) => {
         return `${imageBaseUrl.value}/${pageStart.value + index}.${ext.value}`;
@@ -166,6 +164,7 @@ const pages = computed(() => {
 });
 
 const hasPrev = computed(() => current.value > 0);
+
 const hasNext = computed(() => current.value < pages.value.length - 1);
 
 const prevIndex = computed(() => {
@@ -181,19 +180,14 @@ const currentSheetIndex = computed(() => {
 });
 
 const underSheetIndex = computed(() => {
-    return turnDirection.value === 'next' ? turnToIndex.value : nextIndex.value;
+    if (turnDirection.value === 'next') return turnToIndex.value;
+    if (turnDirection.value === 'prev') return current.value;
+    return nextIndex.value;
 });
 
-const turnSheetIndex = computed(() => {
-    return turnDirection.value === 'prev' ? turnToIndex.value : prevIndex.value;
-});
-
-const showUnderSheet = computed(() => {
-    return turnDirection.value === 'next' && hasNext.value;
-});
-
-const showTurnSheet = computed(() => {
-    return turnDirection.value === 'prev' && hasPrev.value;
+const prevSheetIndex = computed(() => {
+    if (turnDirection.value === 'prev') return turnToIndex.value;
+    return prevIndex.value;
 });
 
 const progressPercent = computed(() => {
@@ -201,76 +195,100 @@ const progressPercent = computed(() => {
     return Math.round(((current.value + 1) / pages.value.length) * 100);
 });
 
+const preloadPages = computed(() => {
+    const list: string[] = [];
+
+    for (let offset = -PRELOAD_RANGE; offset <= PRELOAD_RANGE; offset += 1) {
+        const src = getPageSrc(current.value + offset);
+
+        if (src) {
+            list.push(src);
+        }
+    }
+
+    return list;
+});
+
 const shadowOpacity = computed(() => {
     if (!turnDirection.value) return '0';
 
-    const foldShadow = Math.sin(turnProgress.value * Math.PI);
-    return String(0.12 + foldShadow * 0.36 + turnProgress.value * 0.08);
+    const value = Math.sin(turnProgress.value * Math.PI);
+    return String(0.1 + value * 0.22);
 });
 
 const currentSheetStyle = computed(() => {
     if (turnDirection.value === 'next') {
         const progress = turnProgress.value;
         const rotate = -MAX_ROTATE * progress;
-        const translateX = -22 * progress;
-        const scale = 1 - 0.018 * progress;
+        const translateX = -18 * progress;
+        const scale = 1 - 0.012 * progress;
 
         return {
             zIndex: 8,
+            opacity: 1,
             transform: `translate3d(${translateX}rpx, 0, 0) rotateY(${rotate}deg) scale(${scale})`
         };
     }
 
     if (turnDirection.value === 'prev') {
         const progress = turnProgress.value;
-        const translateX = 12 * (1 - progress);
         const scale = 0.992 + 0.008 * progress;
 
         return {
-            zIndex: 5,
-            transform: `translate3d(${translateX}rpx, 0, 0) scale(${scale})`
+            zIndex: 4,
+            opacity: 1,
+            transform: `translate3d(0, 0, 0) scale(${scale})`
         };
     }
 
     return {
         zIndex: 5,
-        transform: 'translate3d(0, 0, 0) rotateY(0deg)'
+        opacity: 1,
+        transform: 'translate3d(0, 0, 0) rotateY(0deg) scale(1)'
     };
 });
 
 const underSheetStyle = computed(() => {
-    if (!showUnderSheet.value) {
+    if (turnDirection.value === 'next') {
+        const progress = turnProgress.value;
+        const translateX = 20 * (1 - progress);
+        const scale = 0.992 + 0.008 * progress;
+
         return {
-            zIndex: 0,
-            opacity: 0,
+            zIndex: 2,
+            opacity: 1,
+            transform: `translate3d(${translateX}rpx, 0, 0) scale(${scale})`
+        };
+    }
+
+    if (turnDirection.value === 'prev') {
+        return {
+            zIndex: 1,
+            opacity: 1,
             transform: 'translate3d(0, 0, 0) scale(1)'
         };
     }
 
-    const progress = turnProgress.value;
-    const translateX = 28 * (1 - progress);
-    const scale = 0.985 + 0.015 * progress;
-
     return {
         zIndex: 1,
-        opacity: 0.88 + 0.12 * progress,
-        transform: `translate3d(${translateX}rpx, 0, 0) scale(${scale})`
+        opacity: 0,
+        transform: 'translate3d(0, 0, 0) scale(1)'
     };
 });
 
 const prevSheetStyle = computed(() => {
-    if (!showTurnSheet.value) {
+    if (turnDirection.value !== 'prev') {
         return {
             zIndex: 0,
             opacity: 0,
-            transform: `translate3d(-28rpx, 0, 0) rotateY(${-MAX_ROTATE}deg) scale(0.985)`
+            transform: `translate3d(-20rpx, 0, 0) rotateY(${-MAX_ROTATE}deg) scale(0.992)`
         };
     }
 
     const progress = turnProgress.value;
     const rotate = -MAX_ROTATE + MAX_ROTATE * progress;
-    const translateX = -28 + 28 * progress;
-    const scale = 0.985 + 0.015 * progress;
+    const translateX = -20 + 20 * progress;
+    const scale = 0.992 + 0.008 * progress;
 
     return {
         zIndex: 9,
@@ -279,11 +297,15 @@ const prevSheetStyle = computed(() => {
     };
 });
 
-const headerTop = computed(() => safeArea.value.capsuleBottom + uni.upx2px(HEADER_TOP_GAP_RPX));
+const headerTop = computed(() => {
+    return safeArea.value.capsuleBottom + uni.upx2px(HEADER_TOP_GAP_RPX);
+});
 
-const controlBottom = computed(() => safeArea.value.bottomInset + uni.upx2px(CONTROL_BOTTOM_GAP_RPX));
+const controlBottom = computed(() => {
+    return safeArea.value.bottomInset + uni.upx2px(CONTROL_BOTTOM_GAP_RPX);
+});
 
-const readerAreaTop = computed(() => {
+const readerTop = computed(() => {
     if (!toolbarVisible.value) {
         return safeArea.value.headerHeight + uni.upx2px(READER_HIDDEN_TOP_GAP_RPX);
     }
@@ -291,17 +313,16 @@ const readerAreaTop = computed(() => {
     return headerTop.value + uni.upx2px(HEADER_HEIGHT_RPX + READER_VISIBLE_GAP_RPX);
 });
 
-const readerAreaHeight = computed(() => {
-    const bottomSpace = toolbarVisible.value
-        ? controlBottom.value + uni.upx2px(CONTROL_HEIGHT_RPX + READER_VISIBLE_GAP_RPX)
-        : safeArea.value.bottomInset + uni.upx2px(READER_HIDDEN_BOTTOM_GAP_RPX);
-    const bottomEdge = readerHeight.value - bottomSpace;
+const readerBottom = computed(() => {
+    if (!toolbarVisible.value) {
+        return safeArea.value.bottomInset + uni.upx2px(READER_HIDDEN_BOTTOM_GAP_RPX);
+    }
 
-    return Math.max(bottomEdge - readerAreaTop.value, 0);
+    return controlBottom.value + uni.upx2px(CONTROL_HEIGHT_RPX + READER_VISIBLE_GAP_RPX);
 });
 
 const headerFloatStyle = computed(() => ({
-    top: `${headerTop.value + 15}px`
+    top: `${headerTop.value}px`
 }));
 
 const controlFloatStyle = computed(() => ({
@@ -309,12 +330,8 @@ const controlFloatStyle = computed(() => ({
 }));
 
 const readerBookStyle = computed(() => ({
-    top: `${readerAreaTop.value + 10}px`,
-    height: `${readerAreaHeight.value}px`
-}));
-
-const imageWrapStyle = computed(() => ({
-    minHeight: `${readerAreaHeight.value}px`,
+    top: `${readerTop.value}px`,
+    bottom: `${readerBottom.value}px`
 }));
 
 onLoad((query?: ReaderQuery) => {
@@ -324,7 +341,7 @@ onLoad((query?: ReaderQuery) => {
         query?.imageBaseUrl || 'https://www.qstheory.cn/ebooks/202610'
     );
 
-    pageCount.value = toNumber(query?.pageCount, 12);
+    pageCount.value = toNumber(query?.pageCount, 30);
     ext.value = safeDecode(query?.ext || 'jpg');
     issueId.value = safeDecode(query?.issueId || '');
 
@@ -343,7 +360,10 @@ onLoad((query?: ReaderQuery) => {
 });
 
 onReady(() => {
-    initLayout();
+    const systemInfo = uni.getSystemInfoSync();
+
+    windowWidth.value = systemInfo.windowWidth || 375;
+
     preloadAround(current.value);
 });
 
@@ -357,11 +377,9 @@ watch(pages, () => {
     preloadAround(current.value);
 });
 
-function initLayout() {
-    const systemInfo = uni.getSystemInfoSync();
-
-    readerHeight.value = systemInfo.windowHeight;
-    windowWidth.value = systemInfo.windowWidth || 375;
+function getPageSrc(index: number) {
+    if (index < 0 || index >= pages.value.length) return '';
+    return pages.value[index] || '';
 }
 
 function onTouchStart(e: UniTouchEvent) {
@@ -516,29 +534,6 @@ function nextPage() {
     playFlip('next');
 }
 
-function openCatalog() {
-    if (openingCatalog.value) return;
-
-    if (!issueId.value) {
-        uni.showToast({ title: '期刊信息不可用', icon: 'none' });
-        return;
-    }
-
-    openingCatalog.value = true;
-
-    uni.navigateTo({
-        url: `/subPages/catalog/index?issueId=${encodeURIComponent(issueId.value)}`,
-        fail: () => {
-            uni.showToast({ title: '打开目录失败', icon: 'none' });
-        },
-        complete: () => {
-            setTimeout(() => {
-                openingCatalog.value = false;
-            }, 500);
-        }
-    });
-}
-
 function onSliderChange(e: UniSliderChangeEvent) {
     const page = Number(e.detail.value);
     const nextPageIndex = clamp(page - 1, 0, pages.value.length - 1);
@@ -557,6 +552,35 @@ function onSliderChange(e: UniSliderChangeEvent) {
 function toggleToolbar() {
     if (dragging.value || animating.value || hasMoved.value) return;
     toolbarVisible.value = !toolbarVisible.value;
+}
+
+function openCatalog() {
+    if (openingCatalog.value) return;
+
+    if (!issueId.value) {
+        uni.showToast({
+            title: '期刊信息不可用',
+            icon: 'none'
+        });
+        return;
+    }
+
+    openingCatalog.value = true;
+
+    uni.navigateTo({
+        url: `/subPages/catalog/index?issueId=${encodeURIComponent(issueId.value)}`,
+        fail: () => {
+            uni.showToast({
+                title: '打开目录失败',
+                icon: 'none'
+            });
+        },
+        complete: () => {
+            setTimeout(() => {
+                openingCatalog.value = false;
+            }, 500);
+        }
+    });
 }
 
 function resetFlipState() {
@@ -589,11 +613,10 @@ function preloadAround(centerIndex: number) {
 }
 
 function preloadImage(index: number) {
-    if (index < 0 || index >= pages.value.length) return;
-    if (loadedMap.value[index] || preloadingSet.has(index)) return;
+    const src = getPageSrc(index);
 
-    const src = pages.value[index];
     if (!src) return;
+    if (loadedMap.value[index] || preloadingSet.has(index)) return;
 
     preloadingSet.add(index);
 
@@ -625,9 +648,7 @@ function onImageLoad(index: number) {
     height: 100vh;
     min-height: 100vh;
     overflow: hidden;
-    background:
-        radial-gradient(circle at 50% -10%, rgba(224, 62, 45, 0.14) 0, rgba(224, 62, 45, 0) 42%),
-        linear-gradient(180deg, #fff5f1 0%, #faebe6 42%, #f7f1ee 100%);
+    background: #fff;
     box-sizing: border-box;
 }
 
@@ -635,12 +656,11 @@ function onImageLoad(index: number) {
     position: absolute;
     left: 24rpx;
     right: 24rpx;
-    top: 24rpx;
     z-index: 30;
     height: 88rpx;
     padding: 0 24rpx;
     border-radius: 999rpx;
-    background: rgba(255, 255, 255, 0.94);
+    background: rgba(255, 255, 255, 0.96);
     box-shadow: 0 16rpx 42rpx rgba(112, 38, 28, 0.12);
     display: flex;
     align-items: center;
@@ -680,12 +700,11 @@ function onImageLoad(index: number) {
     border: none;
     border-radius: 999rpx;
     background: rgba(224, 62, 45, 0.1);
-    color: rgba(45, 23, 18, 0.58);
+    color: #e03e2d;
     font-size: 23rpx;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5rpx;
     line-height: 54rpx;
 }
 
@@ -694,13 +713,9 @@ function onImageLoad(index: number) {
 }
 
 .reader-page-pill__current {
-    color: var(--qs-color-primary-strong);
+    color: #e03e2d;
     font-size: 24rpx;
-    font-weight: 600;
-}
-
-.reader-page-pill__split {
-    opacity: 0.42;
+    font-weight: 700;
 }
 
 .reader-book {
@@ -708,17 +723,15 @@ function onImageLoad(index: number) {
     left: 0;
     right: 0;
     z-index: 2;
-    width: 100%;
     overflow: hidden;
+    background: #fff;
     perspective: 2200rpx;
     -webkit-perspective: 2200rpx;
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
+    transition: top 0.24s ease, bottom 0.24s ease;
+    box-sizing: border-box;
     transform: translate3d(0, 0, 0);
-    transition: top 0.24s ease, height 0.24s ease;
-    background:
-        linear-gradient(90deg, rgba(94, 32, 22, 0.06), rgba(255, 255, 255, 0) 16%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
 }
 
 .reader-sheet {
@@ -727,6 +740,8 @@ function onImageLoad(index: number) {
     top: 0;
     width: 100%;
     height: 100%;
+    overflow: hidden;
+    background: #fff;
     transform-origin: left center;
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
@@ -734,112 +749,34 @@ function onImageLoad(index: number) {
     backface-visibility: hidden;
     pointer-events: none;
     will-change: transform;
-    transition: none;
     transform: translate3d(0, 0, 0);
 }
 
 .reader-book--animating .reader-sheet {
-    transition:
-        transform 0.52s cubic-bezier(0.18, 0.82, 0.2, 1),
-        opacity 0.52s cubic-bezier(0.18, 0.82, 0.2, 1);
+    transition: transform 0.42s cubic-bezier(0.18, 0.82, 0.2, 1);
 }
 
-.reader-book--animating .book-page__turn-shadow {
-    transition: opacity 0.52s cubic-bezier(0.18, 0.82, 0.2, 1);
-}
-
-.reader-sheet--under {
-    z-index: 1;
-}
-
-.reader-sheet--under .book-page__paper {
-    box-shadow:
-        0 18rpx 44rpx rgba(111, 37, 28, 0.1),
-        0 6rpx 18rpx rgba(111, 37, 28, 0.06);
-}
-
-.reader-sheet--current {
-    z-index: 5;
-}
-
-.reader-sheet--turn {
-    z-index: 9;
-}
-
-.book-page__paper {
-    position: relative;
+.reader-page-image {
     width: 100%;
     height: 100%;
-    overflow: hidden;
-    border-radius: 0 28rpx 28rpx 0;
-    background: #fff;
-    box-shadow:
-        0 24rpx 60rpx rgba(111, 37, 28, 0.14),
-        0 8rpx 20rpx rgba(111, 37, 28, 0.07);
-    box-sizing: border-box;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-}
-
-.book-page__scroll {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #fff;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.book-page__image-wrap {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-}
-
-.book-page__image {
-    width: 100%;
-    height: auto;
     display: block;
     background: #fff;
-    border-radius: 0 28rpx 28rpx 0;
     will-change: transform;
     transform: translate3d(0, 0, 0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
 
-.book-page__spine {
-    position: absolute;
-    z-index: 5;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 42rpx;
-    background: linear-gradient(90deg,
-            rgba(48, 20, 14, 0.18) 0%,
-            rgba(48, 20, 14, 0.07) 42%,
-            rgba(255, 255, 255, 0) 100%);
-    pointer-events: none;
-}
-
-.book-page__turn-shadow {
+.reader-page-shadow {
     position: absolute;
     z-index: 6;
     right: 0;
     top: 0;
     bottom: 0;
-    width: 168rpx;
+    width: 180rpx;
     background: linear-gradient(270deg,
-            rgba(45, 14, 10, 0.34) 0%,
-            rgba(45, 14, 10, 0.14) 38%,
+            rgba(45, 14, 10, 0.2) 0%,
+            rgba(45, 14, 10, 0.08) 42%,
             rgba(45, 14, 10, 0) 100%);
     pointer-events: none;
 }
@@ -851,7 +788,7 @@ function onImageLoad(index: number) {
     z-index: 30;
     padding: 14rpx;
     border-radius: 999rpx;
-    background: rgba(255, 255, 255, 0.94);
+    background: rgba(255, 255, 255, 0.96);
     box-shadow: 0 18rpx 46rpx rgba(111, 37, 28, 0.14);
     display: flex;
     align-items: center;
@@ -879,7 +816,7 @@ function onImageLoad(index: number) {
 }
 
 .reader-control__btn--primary {
-    background: linear-gradient(135deg, #ff6a58 0%, var(--qs-color-primary-strong) 100%);
+    background: linear-gradient(135deg, #ff6a58 0%, #e03e2d 100%);
     color: #fff;
     box-shadow: 0 14rpx 30rpx rgba(224, 62, 45, 0.25);
 }
@@ -906,5 +843,21 @@ function onImageLoad(index: number) {
     text-align: right;
     color: rgba(44, 21, 16, 0.5);
     font-size: 21rpx;
+}
+
+.reader-preload {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.reader-preload image {
+    width: 1px;
+    height: 1px;
 }
 </style>
