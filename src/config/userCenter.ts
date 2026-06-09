@@ -3,7 +3,7 @@ import { magazineConfig } from '@/config/magazineData';
 import { ProfileBadgeType, ProfileMenuIcon } from '@/types/enums';
 
 export const profileInfo: ProfileInfo = {
-  name: '华华',
+  name: '用户06543',
   badges: [
     { text: '求是数字刊年度会员', type: ProfileBadgeType.Gold },
     { text: '已认证用户', type: ProfileBadgeType.Gray },
