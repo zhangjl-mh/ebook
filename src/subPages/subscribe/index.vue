@@ -3,7 +3,7 @@
     <scroll-view class="subscribe-page__scroll" :scroll-y="true" :enable-flex="true" :enhanced="true"
       :bounces="false">
       <view class="subscribe-page__scroll-inner">
-        <QSSubPageHeader title="会员" />
+        <QSSubPageHeader title="会员中心" />
 
         <view class="subscribe-page__content">
           <view class="product-card">
@@ -105,7 +105,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import QSSubPageHeader from '@/components/QSSubPageHeader.vue';
-import { subscriptionPaymentConfig } from '@/config/subscriptionPay';
+import { subscriptionPaymentConfig } from '@/subPages/config/subscriptionPay';
 import { useSafeArea } from '@/hooks/useSafeArea';
 import { useMagazineStore } from '@/store/magazineStore';
 import type { SubscriptionPlanId } from '@/types/subscription';

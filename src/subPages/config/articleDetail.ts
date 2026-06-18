@@ -1,4 +1,5 @@
 import { ArticleBodyBlockType } from '@/types/enums';
+import { homeIssueArticles } from '@/config/homePage';
 import type { ArticleDetail, IssueDirectory } from '@/types/articleDetail';
 
 export const issueDirectory: IssueDirectory = {
@@ -30,7 +31,7 @@ export const issueDirectory: IssueDirectory = {
   ]
 };
 
-export const articleDetails: ArticleDetail[] = [
+const catalogArticleDetails: ArticleDetail[] = [
   {
     id: 'real-economy',
     title: '做强做优做大实体经济',
@@ -49,7 +50,7 @@ export const articleDetails: ArticleDetail[] = [
       { id: 'section-02', type: ArticleBodyBlockType.Heading, text: '二' },
       { id: 'paragraph-02', type: ArticleBodyBlockType.Paragraph, text: '一个国家一定要有正确的战略选择，我国是个大国，必须发展实体经济，不断推进工业现代化、提高制造业水平，不能脱实向虚。' },
       { id: 'note-02', type: ArticleBodyBlockType.Note, text: '（2017年4月20日在广西考察时的讲话）' },
-      { id: 'image-01', type: ArticleBodyBlockType.Image, src: '/static/article/real-economy-01.jpg', alt: '中央经济工作会议现场' },
+      { id: 'image-01', type: ArticleBodyBlockType.Image, src: '/subPages/static/article/real-economy-01.jpg', alt: '中央经济工作会议现场' },
       { id: 'caption-01', type: ArticleBodyBlockType.Caption, text: '2025年12月10日至11日，中央经济工作会议在北京举行。中共中央总书记、国家主席、中央军委主席习近平出席会议并发表重要讲话。新华社记者 谢环驰/摄' },
       { id: 'section-03', type: ArticleBodyBlockType.Heading, text: '三' },
       { id: 'paragraph-03', type: ArticleBodyBlockType.Paragraph, text: '实体经济是一国经济的立身之本，是财富创造的根本源泉，是国家强盛的重要支柱。要深化供给侧结构性改革，加快发展先进制造业，推动互联网、大数据、人工智能同实体经济深度融合，推动资源要素向实体经济集聚、政策措施向实体经济倾斜、工作力量向实体经济加强，营造脚踏实地、勤劳创业、实业致富的发展环境和社会氛围。' },
@@ -66,7 +67,7 @@ export const articleDetails: ArticleDetail[] = [
       { id: 'section-07', type: ArticleBodyBlockType.Heading, text: '七' },
       { id: 'paragraph-07', type: ArticleBodyBlockType.Paragraph, text: '推动数字经济和实体经济融合发展。要把握数字化、网络化、智能化方向，推动制造业、服务业、农业等产业数字化，利用互联网新技术对传统产业进行全方位、全链条的改造，提高全要素生产率，发挥数字技术对经济发展的放大、叠加、倍增作用。要推动互联网、大数据、人工智能同产业深度融合，加快培育一批“专精特新”企业和制造业单项冠军企业。当然，要脚踏实地、因企制宜，不能为数字化而数字化。' },
       { id: 'note-07', type: ArticleBodyBlockType.Note, text: '（2021年10月18日在十九届中央政治局第三十四次集体学习时的讲话）' },
-      { id: 'image-02', type: ArticleBodyBlockType.Image, src: '/static/article/real-economy-02.jpg', alt: '习近平在河南洛阳轴承集团股份有限公司智能工厂考察' },
+      { id: 'image-02', type: ArticleBodyBlockType.Image, src: '/subPages/static/article/real-economy-02.jpg', alt: '习近平在河南洛阳轴承集团股份有限公司智能工厂考察' },
       { id: 'caption-02', type: ArticleBodyBlockType.Caption, text: '2025年5月19日至20日，中共中央总书记、国家主席、中央军委主席习近平在河南考察。这是19日下午，习近平在洛阳轴承集团股份有限公司智能工厂考察时，同企业职工亲切交流。新华社记者 燕雁/摄' },
       { id: 'section-08', type: ArticleBodyBlockType.Heading, text: '八' },
       { id: 'paragraph-08', type: ArticleBodyBlockType.Paragraph, text: '建设现代化产业体系。坚持把发展经济的着力点放在实体经济上，推进新型工业化，加快建设制造强国、质量强国、航天强国、交通强国、网络强国、数字中国。实施产业基础再造工程和重大技术装备攻关工程，支持专精特新企业发展，推动制造业高端化、智能化、绿色化发展。巩固优势产业领先地位，在关系安全发展的领域加快补齐短板，提升战略性资源供应保障能力。推动战略性新兴产业融合集群发展，构建新一代信息技术、人工智能、生物技术、新能源、新材料、高端装备、绿色环保等一批新的增长引擎。构建优质高效的服务业新体系，推动现代服务业同先进制造业、现代农业深度融合。加快发展物联网，建设高效顺畅的流通体系，降低物流成本。加快发展数字经济，促进数字经济和实体经济深度融合，打造具有国际竞争力的数字产业集群。优化基础设施布局、结构、功能和系统集成，构建现代化基础设施体系。' },
@@ -80,7 +81,7 @@ export const articleDetails: ArticleDetail[] = [
       { id: 'section-11', type: ArticleBodyBlockType.Heading, text: '十一' },
       { id: 'paragraph-11', type: ArticleBodyBlockType.Paragraph, text: '坚持把金融服务实体经济作为根本宗旨。实体经济是金融的根基，金融是实体经济的血脉，服务实体经济是金融的天职。如果热衷于自我循环、自我膨胀，金融就会变成无源之水、无本之木，迟早酿成危机。我国金融必须守好服务实体经济本分，推动高质量发展，决不能脱实向虚。' },
       { id: 'note-11', type: ArticleBodyBlockType.Note, text: '（2024年1月16日在省部级主要领导干部推动金融高质量发展专题研讨班上的讲话）' },
-      { id: 'image-03', type: ArticleBodyBlockType.Image, src: '/static/article/real-economy-03.jpg', alt: '习近平在北京亦庄国家信创园考察' },
+      { id: 'image-03', type: ArticleBodyBlockType.Image, src: '/subPages/static/article/real-economy-03.jpg', alt: '习近平在北京亦庄国家信创园考察' },
       { id: 'caption-03', type: ArticleBodyBlockType.Caption, text: '2026年2月9日至10日，中共中央总书记、国家主席、中央军委主席习近平在北京考察并看望慰问基层干部群众。这是9日上午，习近平在位于北京亦庄的国家信创园考察。新华社记者 谢环驰/摄' },
       { id: 'section-12', type: ArticleBodyBlockType.Heading, text: '十二' },
       { id: 'paragraph-12', type: ArticleBodyBlockType.Paragraph, text: '“十五五”时期，必须把因地制宜发展新质生产力摆在更加突出的战略位置，以科技创新为引领、以实体经济为根基，坚持全面推进传统产业转型升级、积极发展新兴产业、超前布局未来产业并举，加快建设现代化产业体系。要完善国家创新体系，激发各类创新主体活力，瞄准世界科技前沿，在加强基础研究、提高原始创新能力上持续用力，在突破关键核心技术、前沿技术上抓紧攻关。要统筹推进教育科技人才一体发展，筑牢新质生产力发展的基础性、战略性支撑。' },
@@ -97,4 +98,178 @@ export const articleDetails: ArticleDetail[] = [
       { id: 'source-note', type: ArticleBodyBlockType.Note, text: '※这是习近平总书记2016年12月至2025年12月期间有关做强做优做大实体经济重要论述的节录。' }
     ]
   }
+];
+
+interface HomeArticleContent {
+  author: string;
+  source: string;
+  issue: string;
+  language?: 'zh' | 'en';
+  paragraphs: string[];
+}
+
+const homeArticleContent: Record<string, HomeArticleContent> = {
+  'qiushi-article-future-industry': {
+    author: '习近平',
+    source: '《求是》2026/11',
+    issue: '《求是》2026年第11期',
+    paragraphs: [
+      '当前，新一轮科技革命和产业变革加速演进，前沿技术不断涌现，引领和支撑未来产业快速崛起。培育发展未来产业，对于我们抢占科技和产业制高点、牢牢把握发展主动权具有重要意义。',
+      '要加强前沿技术研判，围绕人工智能、量子科技、生物制造、未来网络等重点方向，推动创新链、产业链、资金链、人才链深度融合，加快形成一批具有国际竞争力的新增长引擎。',
+      '未来产业技术迭代快、影响因素多、决策风险大。各级领导干部要加强科技前沿知识学习，提高专业化能力，努力做到知科技、懂产业、善决策。'
+    ]
+  },
+  'qiushi-article-latest': {
+    author: '本刊编辑部',
+    source: '《求是》2026/11',
+    issue: '《求是》2026年第11期',
+    paragraphs: [
+      '最新一期《求是》杂志聚焦现代化产业体系建设、科技创新和高质量发展，刊发一系列重要文章。',
+      '本期内容围绕理论与实践的结合展开，既梳理新时代以来取得的重要成就，也分析当前发展面临的新形势新任务。',
+      '通过专题导读，读者可以快速把握本期重点内容，并结合实际工作深化理解和学习。'
+    ]
+  },
+  'qiushi-article-huawei': {
+    author: '求是网评论员',
+    source: '求是网',
+    issue: '理论观察',
+    paragraphs: [
+      '长期主义、持续创新和以客户为中心，是观察企业成长和产业竞争力的重要视角。',
+      '面对技术快速迭代和外部环境变化，企业需要保持战略定力，在基础研究、人才培养和组织能力建设上持续投入。',
+      '高质量发展不是短期速度竞赛，而是创新能力、治理能力和产业协同能力的综合比拼。'
+    ]
+  },
+  'qiushi-en-article-governance': {
+    author: 'QIUSHI Editorial Board',
+    source: 'QIUSHI',
+    issue: 'QIUSHI 2026/02',
+    language: 'en',
+    paragraphs: [
+      'A new round of scientific and technological revolution and industrial transformation is gathering pace. Frontier technologies are emerging rapidly and creating new opportunities for future industries.',
+      'China will strengthen strategic planning, promote deeper integration across innovation, industrial, capital, and talent chains, and accelerate the development of new drivers of high-quality growth.',
+      'Future industries evolve quickly and involve considerable uncertainty. Stronger research, professional expertise, and international cooperation are essential for sound decisions and sustainable development.'
+    ]
+  },
+  'qiushi-en-article-new-issue': {
+    author: 'QIUSHI Editorial Board',
+    source: 'QIUSHI',
+    issue: 'QIUSHI 2026/02',
+    language: 'en',
+    paragraphs: [
+      'The latest issue of QIUSHI focuses on innovation, modernization, and the development of a strong industrial system.',
+      'Its feature articles explain major policy priorities, review practical progress, and explore how new technologies can contribute to high-quality development.',
+      'This overview presents the key arguments and helps readers understand the issue in a clear and concise way.'
+    ]
+  },
+  'qiushi-en-article-practice': {
+    author: 'QIUSHI Commentary',
+    source: 'QIUSHI',
+    issue: 'Business and Innovation',
+    language: 'en',
+    paragraphs: [
+      'Long-term commitment, continuous innovation, and a strong focus on real-world needs are central to building lasting competitiveness.',
+      'In a rapidly changing technological environment, enterprises need to invest in fundamental research, talent, and organizational capabilities.',
+      'High-quality development depends not only on short-term growth, but also on resilience, responsible governance, and collaboration across the industrial ecosystem.'
+    ]
+  },
+  'hongqi-article-culture': {
+    author: '红旗文稿编辑部',
+    source: '《红旗文稿》2026/10',
+    issue: '《红旗文稿》2026年第10期',
+    paragraphs: [
+      '文化自信是更基础、更广泛、更深厚的自信，是推进中国式现代化的深厚精神力量。',
+      '要把中华优秀传统文化、革命文化和社会主义先进文化融入现代化建设实践，让文化创新创造活力充分涌流。',
+      '坚持以人民为中心，推出更多增强人民精神力量的优秀作品，不断丰富人民精神世界。'
+    ]
+  },
+  'hongqi-article-theory': {
+    author: '红旗文稿编辑部',
+    source: '《红旗文稿》2026/10',
+    issue: '本期导读',
+    paragraphs: [
+      '本期《红旗文稿》围绕理论创新、文化建设和基层治理推出一组重点文章。',
+      '文章坚持问题导向，注重从实践中总结经验、提炼规律，为推动实际工作提供理论参考。',
+      '本期导读帮助读者快速了解重点栏目和核心观点。'
+    ]
+  },
+  'hongqi-article-enterprise': {
+    author: '本刊调研组',
+    source: '《红旗文稿》',
+    issue: '深度调研',
+    paragraphs: [
+      '企业是科技创新和产业创新的重要主体，也是推动高质量发展的重要力量。',
+      '调研发现，持续增加研发投入、完善人才机制、加强产业协同，是创新型企业实现长期成长的共同经验。',
+      '要进一步优化创新生态，促进科技成果转化，为企业发展新质生产力创造良好条件。'
+    ]
+  }
+};
+
+const homeDirectoryMeta = {
+  qiushi: {
+    issueTitle: '2026年第11期《求是》目录',
+    issueDesc: '《求是》2026年第11期'
+  },
+  'qiushi-en': {
+    issueTitle: 'QIUSHI 2026年第2期目录',
+    issueDesc: 'QIUSHI 2026 NO.02'
+  },
+  hongqi: {
+    issueTitle: '2026年第10期《红旗文稿》目录',
+    issueDesc: '《红旗文稿》2026年第10期'
+  }
+} as const;
+
+export const homeIssueDirectories: Record<string, IssueDirectory> = Object.fromEntries(
+  Object.entries(homeIssueArticles).map(([issueId, items]) => {
+    const meta = homeDirectoryMeta[issueId as keyof typeof homeDirectoryMeta];
+
+    return [
+      issueId,
+      {
+        issueId,
+        issueTitle: meta.issueTitle,
+        guideTitle: '本期导读',
+        targetArticleId: items[0]?.id || '',
+        items: items.map((item) => ({
+          id: `directory-${item.id}`,
+          title: item.title,
+          author: homeArticleContent[item.id]?.author,
+          targetArticleId: item.id
+        }))
+      }
+    ];
+  })
+);
+
+const homeArticleDetails: ArticleDetail[] = Object.values(homeIssueArticles)
+  .flat()
+  .map((item) => {
+    const content = homeArticleContent[item.id];
+
+    return {
+      id: item.id,
+      title: item.title,
+      source: content.source,
+      issue: content.issue,
+      author: content.author,
+      publishTime: `${item.date} 09:00:00`,
+      wordCount: content.paragraphs.join('').length,
+      likeCount: 27,
+      heroImage: item.id === 'qiushi-article-future-industry'
+        ? '/subPages/static/article/future-industry-video-poster.jpg'
+        : item.thumbnail,
+      heroMedia: item.issueId === 'qiushi' ? 'video' : 'image',
+      language: content.language || 'zh',
+      theme: 'prototype-dark',
+      body: content.paragraphs.map((text, index) => ({
+        id: `${item.id}-paragraph-${index + 1}`,
+        type: ArticleBodyBlockType.Paragraph,
+        text
+      }))
+    };
+  });
+
+export const articleDetails: ArticleDetail[] = [
+  ...catalogArticleDetails,
+  ...homeArticleDetails
 ];

@@ -1,15 +1,22 @@
 <template>
   <view class="qs-header">
-    <image :src="store.config.headerBackground" mode="aspectFill" class="qs-header__bg" />
-
-    <view class="qs-header__brand" :style="brandStyle">
-      <image :src="store.config.headerLogo" mode="heightFix" class="qs-header__wordmark" />
+    <view class="qs-header__nav" :style="navStyle">
+      <text class="qs-header__title">首页</text>
+      <view class="qs-header__capsule" :style="capsuleStyle">
+        <text class="qs-header__dot">•••</text>
+        <view class="qs-header__circle"></view>
+      </view>
     </view>
 
-    <view class="qs-header__search">
-      <view class="qs-header__search-icon"></view>
-      <input type="text" :value="store.searchQuery" placeholder="搜索文章、作者、关键词" placeholder-class="qs-header__placeholder"
-        class="qs-header__input" @input="onSearchInput" />
+    <view class="qs-header__tools">
+      <view class="qs-header__search">
+        <view class="qs-header__search-icon"></view>
+        <input type="text" :value="store.searchQuery" placeholder="请输入检索内容" placeholder-class="qs-header__placeholder"
+          class="qs-header__input" @input="onSearchInput" />
+      </view>
+      <button class="qs-header__ai" aria-label="打开AI小是" @tap="emit('open-ai')">
+        <image src="/static/home/ai-mark.png" mode="aspectFit" />
+      </button>
     </view>
   </view>
 </template>
@@ -20,12 +27,21 @@ import { useSafeArea } from '@/hooks/useSafeArea';
 import { useMagazineStore } from '@/store/magazineStore';
 import { getUniInputValue } from '@/utils/events';
 
+const emit = defineEmits<{
+  'open-ai': [];
+}>();
+
 const store = useMagazineStore();
 const { safeArea } = useSafeArea();
 
-const brandStyle = computed(() => ({
-  height: `${safeArea.value.capsuleHeight}px`,
-  marginTop: `${safeArea.value.capsuleTop}px`
+const navStyle = computed(() => ({
+  height: `${safeArea.value.headerHeight}px`,
+  paddingTop: `${safeArea.value.statusBarHeight}px`
+}));
+
+const capsuleStyle = computed(() => ({
+  top: `${safeArea.value.capsuleTop}px`,
+  height: `${safeArea.value.capsuleHeight}px`
 }));
 
 const onSearchInput = (event: unknown) => {
@@ -36,72 +52,102 @@ const onSearchInput = (event: unknown) => {
 <style lang="scss" scoped>
 .qs-header {
   position: relative;
-  overflow: hidden;
-  padding: 0 32rpx 172rpx;
-  background: var(--qs-color-primary);
+  background: #fff;
+}
+
+.qs-header__nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.qs-header__title {
+  color: #111;
+  font-size: 28rpx;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.qs-header__capsule {
+  position: absolute;
+  right: 18rpx;
+  display: flex;
+  width: 160rpx;
+  align-items: center;
+  justify-content: space-around;
+  border: 1rpx solid #e2e2e2;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.96);
+  box-sizing: border-box;
+}
+
+.qs-header__dot {
+  color: #333;
+  font-size: 30rpx;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.qs-header__circle {
+  width: 30rpx;
+  height: 30rpx;
+  border: 3rpx solid #333;
+  border-radius: 50%;
+  box-sizing: border-box;
 
   &::after {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background:
-      linear-gradient(180deg, rgba(214, 25, 32, 0.98) 0%, rgba(219, 26, 32, 0.96) 46%, rgba(225, 50, 54, 0.72) 72%, rgba(245, 246, 248, 0) 100%),
-      radial-gradient(circle at 18% 46%, rgba(255, 255, 255, 0.24) 0, rgba(255, 255, 255, 0) 34%);
+    display: block;
+    width: 12rpx;
+    height: 12rpx;
+    margin: 6rpx auto 0;
+    border-radius: 50%;
+    background: #333;
     content: '';
   }
 }
 
-.qs-header__bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.qs-header__brand {
-  position: relative;
-  z-index: 1;
+.qs-header__tools {
   display: flex;
   align-items: center;
-}
-
-.qs-header__wordmark {
-  display: block;
-  height: 100%;
-  width: auto;
+  gap: 12rpx;
+  padding: 10rpx 18rpx 8rpx;
+  box-sizing: border-box;
 }
 
 .qs-header__search {
-  position: relative;
-  z-index: 1;
   display: flex;
+  min-width: 0;
+  flex: 1;
   align-items: center;
-  height: 72rpx;
-  margin-top: 32rpx;
-  padding: 0 30rpx;
+  height: 62rpx;
+  padding: 0 24rpx;
+  border: 2rpx solid #cd1305;
   border-radius: 999rpx;
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 12rpx 30rpx rgba(105, 0, 0, 0.08);
+  background: #fff;
+  box-sizing: border-box;
 }
 
 .qs-header__search-icon {
   position: relative;
-  width: 28rpx;
-  height: 28rpx;
+  width: 34rpx;
+  height: 34rpx;
   flex-shrink: 0;
   margin-right: 22rpx;
-  border: 4rpx solid #696d72;
+  border: 6rpx solid #d71920;
   border-radius: 50%;
   box-sizing: border-box;
 
   &::after {
     position: absolute;
-    right: -10rpx;
-    bottom: -7rpx;
-    width: 15rpx;
-    height: 4rpx;
+    right: -13rpx;
+    bottom: -8rpx;
+    width: 17rpx;
+    height: 6rpx;
     border-radius: 999rpx;
-    background: #696d72;
+    background: #d71920;
     content: '';
     transform: rotate(45deg);
     transform-origin: left center;
@@ -112,10 +158,34 @@ const onSearchInput = (event: unknown) => {
   min-width: 0;
   flex: 1;
   color: var(--qs-text-regular);
-  font-size: 28rpx;
+  font-size: 26rpx;
 }
 
 .qs-header__placeholder {
-  color: var(--qs-text-secondary);
+  color: #9a9a9a;
+}
+
+.qs-header__ai {
+  display: flex;
+  width: 68rpx;
+  height: 68rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  line-height: 1;
+
+  &::after {
+    border: 0;
+  }
+}
+
+.qs-header__ai image {
+  display: block;
+  width: 68rpx;
+  height: 68rpx;
 }
 </style>

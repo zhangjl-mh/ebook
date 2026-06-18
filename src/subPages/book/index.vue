@@ -99,7 +99,7 @@ const CONTROL_HEIGHT_RPX = 92;
 const READER_VISIBLE_GAP_RPX = 18;
 const READER_HIDDEN_TOP_GAP_RPX = 0;
 const READER_HIDDEN_BOTTOM_GAP_RPX = 0;
-const LOCAL_PAGE_BASE_URL = '/static/ebook/202610';
+const LOCAL_PAGE_BASE_URL = '/subPages/static/ebook/202610';
 const LOCAL_PAGE_COUNT = 12;
 
 const { safeArea } = useSafeArea();

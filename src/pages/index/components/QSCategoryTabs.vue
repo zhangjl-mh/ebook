@@ -17,24 +17,26 @@ const store = useMagazineStore();
 .category-tabs {
   display: flex;
   align-items: center;
-  gap: 58rpx;
-  padding: 28rpx 38rpx 0;
-  border-bottom: 1rpx solid var(--qs-border-color);
-  background: var(--qs-card-bg);
+  justify-content: space-between;
+  padding: 18rpx 18rpx 0;
+  border-bottom: 1rpx solid #e4e4e4;
+  background: #fff;
 }
 
 .category-tabs__item {
-  padding-bottom: 20rpx;
-  border-bottom: 5rpx solid transparent;
-  color: var(--qs-text-muted);
-  font-size: 31rpx;
-  font-weight: 500;
+  min-width: 112rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 3rpx solid transparent;
+  color: #8c8c8c;
+  font-size: 28rpx;
+  font-weight: 400;
   line-height: 1.25;
+  text-align: center;
 }
 
 .category-tabs__item--active {
-  border-bottom-color: var(--qs-color-primary);
-  color: var(--qs-color-primary);
-  font-weight: 700;
+  border-bottom-color: #d71920;
+  color: #d71920;
+  font-weight: 650;
 }
 </style>

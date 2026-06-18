@@ -24,7 +24,8 @@ const createMagazineConfig = (): MagazineConfig => ({
   articles: {
     [ArticleTabKey.Recommend]: [...magazineConfig.articles[ArticleTabKey.Recommend]],
     [ArticleTabKey.News]: [...magazineConfig.articles[ArticleTabKey.News]],
-    [ArticleTabKey.Theory]: [...magazineConfig.articles[ArticleTabKey.Theory]]
+    [ArticleTabKey.Theory]: [...magazineConfig.articles[ArticleTabKey.Theory]],
+    [ArticleTabKey.Enterprise]: [...magazineConfig.articles[ArticleTabKey.Enterprise]]
   }
 });
 export const useMagazineStore = defineStore('magazineStore', {
@@ -157,9 +158,12 @@ export const useMagazineStore = defineStore('magazineStore', {
       try {
         this.config.articles = await fetchMagazineArticles();
       } catch (error) {
-        this.errorMessage = '数据加载失败';
+        const hasFallbackArticles = Object.values(this.config.articles).some((items) => items.length > 0);
+        this.errorMessage = hasFallbackArticles ? '' : '数据加载失败';
         console.error('Fetch qstheory articles failed:', error);
-        uni.showToast({ title: this.errorMessage, icon: 'none' });
+        if (this.errorMessage) {
+          uni.showToast({ title: this.errorMessage, icon: 'none' });
+        }
       } finally {
         this.isArticlesLoading = false;
       }

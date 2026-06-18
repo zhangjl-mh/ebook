@@ -2,11 +2,9 @@
   <scroll-view class="magazine-page qs-page-scroll" :scroll-y="true" :enable-flex="true" :enhanced="true"
     :bounces="false">
     <view class="magazine-page__inner">
-      <MagazineHeader :query="searchQuery" @search="setSearchQuery" />
+      <DatabaseHeader :query="searchQuery" @search="setSearchQuery" />
       <view class="magazine-page__content">
-        <IssueYearTabs :options="issueYearOptions" :active-year="activeYear" @change="setActiveYear"
-          @filter="showFilterTips" />
-        <IssueGrid :issues="filteredIssues" @select="openIssueDetail" />
+        <PublicationGrid :publications="filteredPublications" @select="openPublication" />
       </view>
     </view>
   </scroll-view>
@@ -14,76 +12,45 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import MagazineHeader from './components/MagazineHeader.vue';
-import IssueGrid from './components/IssueGrid.vue';
-import IssueYearTabs from './components/IssueYearTabs.vue';
-import { issueCatalogItems, issueYearOptions } from '@/config/issueCatalog';
-import { IssueYearFilter } from '@/types/enums';
-import type { IssueCatalogItem, IssueYearFilter as IssueYearFilterType } from '@/types/pageData';
+import DatabaseHeader from '@/components/DatabaseHeader.vue';
+import PublicationGrid from './components/PublicationGrid.vue';
+import { databasePublications } from '@/config/issueCatalog';
+import type { DatabasePublication } from '@/types/pageData';
 
-const activeYear = ref<IssueYearFilterType>(IssueYearFilter.All);
 const searchQuery = ref('');
-const openingIssueId = ref('');
+const openingPublicationId = ref('');
 
-const filteredIssues = computed(() => {
+const filteredPublications = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
 
-  return issueCatalogItems.filter((issue) => {
-    const matchedYear = activeYear.value === 'all' || issue.year === activeYear.value;
-    const matchedQuery = !query || `${issue.issueTitle}${issue.title}${issue.subtitle}`.toLowerCase().includes(query);
-
-    return matchedYear && matchedQuery;
+  return databasePublications.filter((publication) => {
+    return !query || `${publication.title}${publication.updateText}`.toLowerCase().includes(query);
   });
 });
-
-const setActiveYear = (year: IssueYearFilterType) => {
-  activeYear.value = year;
-};
 
 const setSearchQuery = (query: string) => {
   searchQuery.value = query;
 };
 
-const openIssueDetail = (issue: IssueCatalogItem) => {
-  if (openingIssueId.value) return;
-
-  const title = issue.issueTitle.trim();
-
-  if (!title) {
-    uni.showToast({
-      title: '期刊信息不可用',
-      icon: 'none'
-    });
-    return;
-  }
-
-  openingIssueId.value = issue.id;
-
-  const directoryIssueId = `issue-${issue.issueNo.padStart(2, '0')}`;
+const openPublication = (publication: DatabasePublication) => {
+  if (openingPublicationId.value) return;
+  openingPublicationId.value = publication.id;
 
   uni.navigateTo({
-    url: `/subPages/book/index?title=${encodeURIComponent(title)}&issueId=${encodeURIComponent(directoryIssueId)}`,
+    url: `/subPages/database-issues/index?publicationId=${encodeURIComponent(publication.id)}`,
     fail: () => {
       uni.showToast({
-        title: '打开电子刊失败',
+        title: '打开期刊列表失败',
         icon: 'none'
       });
     },
     complete: () => {
       setTimeout(() => {
-        if (openingIssueId.value === issue.id) {
-          openingIssueId.value = '';
+        if (openingPublicationId.value === publication.id) {
+          openingPublicationId.value = '';
         }
       }, 500);
     }
-  });
-};
-
-const showFilterTips = () => {
-  uni.showToast({
-    title: '暂无更多筛选',
-    icon: 'none',
-    duration: 1200
   });
 };
 </script>
@@ -94,7 +61,7 @@ page {
 }
 
 .magazine-page {
-  background: linear-gradient(180deg, #fff6f5 0, var(--qs-page-bg) 330rpx);
+  background: linear-gradient(180deg, #fff2f1 0, var(--qs-page-bg) 390rpx);
 }
 
 .magazine-page__inner {
@@ -105,7 +72,7 @@ page {
 .magazine-page__content {
   position: relative;
   z-index: 2;
-  margin-top: -95rpx;
+  margin-top: -24rpx;
   padding-bottom: var(--qs-tabbar-bottom-space);
 }
 </style>

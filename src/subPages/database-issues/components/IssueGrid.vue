@@ -1,12 +1,12 @@
 <template>
   <view class="issue-grid">
-    <view v-if="!issues.length" class="issue-grid__empty">暂无匹配书刊</view>
+    <view v-if="!issues.length" class="issue-grid__empty">暂无匹配期刊</view>
 
     <template v-else>
       <view v-for="issue in issues" :key="issue.id" class="issue-card" @tap="emit('select', issue)">
         <view class="issue-card__cover">
           <image v-if="issue.coverImage && !failedCoverMap[issue.id]" class="issue-card__cover-image"
-            :src="issue.coverImage" mode="heightFix" lazy-load @error="markCoverFailed(issue.id)" />
+            :src="issue.coverImage" mode="aspectFit" lazy-load @error="markCoverFailed(issue.id)" />
           <view v-else class="issue-card__cover-fallback">
             <text>暂无封面</text>
           </view>
@@ -45,10 +45,10 @@ const markCoverFailed = (issueId: string) => {
 
 <style lang="scss" scoped>
 .issue-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 26rpx 25rpx;
-  padding: 0 29rpx 44rpx;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18rpx 14rpx;
+  padding: 0 20rpx 44rpx;
 }
 
 .issue-grid__empty {
@@ -60,12 +60,10 @@ const markCoverFailed = (issueId: string) => {
 }
 
 .issue-card {
-  width: calc((100% - 50rpx) / 3);
   overflow: hidden;
-  padding: 18rpx;
-  border-radius: 15rpx;
+  padding: 12rpx 10rpx 16rpx;
+  border-radius: 14rpx;
   background: var(--qs-card-bg);
-  box-shadow: var(--qs-shadow-soft);
   box-sizing: border-box;
 }
 
@@ -80,6 +78,7 @@ const markCoverFailed = (issueId: string) => {
   width: 100%;
   height: 100%;
   display: block;
+  background: #f7f7f7;
 }
 
 .issue-card__cover-fallback {
@@ -94,10 +93,10 @@ const markCoverFailed = (issueId: string) => {
 
 .issue-card__title {
   display: block;
-  margin-top: 16rpx;
+  margin-top: 12rpx;
   overflow: hidden;
   color: var(--qs-text-main);
-  font-size: 26rpx;
+  font-size: 23rpx;
   font-weight: 500;
   line-height: 1.25;
   white-space: nowrap;
@@ -106,10 +105,10 @@ const markCoverFailed = (issueId: string) => {
 
 .issue-card__count {
   display: block;
-  margin-top: 8rpx;
+  margin-top: 7rpx;
   overflow: hidden;
   color: var(--qs-text-muted);
-  font-size: 22rpx;
+  font-size: 19rpx;
   line-height: 1.2;
   white-space: nowrap;
   text-overflow: ellipsis;

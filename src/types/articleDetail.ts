@@ -6,6 +6,7 @@ export interface IssueDirectoryItem {
   id: string;
   title: string;
   author?: string;
+  targetArticleId?: string;
 }
 
 export interface IssueDirectory {
@@ -40,5 +41,9 @@ export interface ArticleDetail {
   publishTime: string;
   wordCount: number;
   likeCount: number;
+  heroImage?: string;
+  heroMedia?: 'image' | 'video';
+  language?: 'zh' | 'en';
+  theme?: 'default' | 'prototype-dark';
   body: ArticleBodyBlock[];
 }

@@ -20,7 +20,18 @@
     {
       "path": "pages/magazine/index",
       "style": {
-        "navigationBarTitleText": "",
+        "navigationBarTitleText": "数据库",
+        "navigationStyle": "custom",
+        "disableScroll": true,
+        "backgroundColor": "#F5F6F8",
+        "backgroundColorTop": "#F5F6F8",
+        "backgroundColorBottom": "#F5F6F8"
+      }
+    },
+    {
+      "path": "pages/media/index",
+      "style": {
+        "navigationBarTitleText": "视频汇",
         "navigationStyle": "custom",
         "disableScroll": true,
         "backgroundColor": "#F5F6F8",
@@ -79,12 +90,23 @@
         {
           "path": "subscribe/index",
           "style": {
-            "navigationBarTitleText": "会员",
+            "navigationBarTitleText": "会员中心",
             "navigationStyle": "custom",
             "disableScroll": true,
             "backgroundColor": "#F7F7F8",
             "backgroundColorTop": "#F7F7F8",
             "backgroundColorBottom": "#F7F7F8"
+          }
+        },
+        {
+          "path": "paper-order/index",
+          "style": {
+            "navigationBarTitleText": "购买期刊",
+            "navigationStyle": "custom",
+            "disableScroll": true,
+            "backgroundColor": "#F5F5F7",
+            "backgroundColorTop": "#FFFFFF",
+            "backgroundColorBottom": "#F5F5F7"
           }
         },
         {
@@ -96,6 +118,39 @@
             "backgroundColor": "#F6F7F9",
             "backgroundColorTop": "#F6F7F9",
             "backgroundColorBottom": "#F6F7F9"
+          }
+        },
+        {
+          "path": "media-detail/index",
+          "style": {
+            "navigationBarTitleText": "内容详情",
+            "navigationStyle": "custom",
+            "disableScroll": true,
+            "backgroundColor": "#F6F7F9",
+            "backgroundColorTop": "#F6F7F9",
+            "backgroundColorBottom": "#F6F7F9"
+          }
+        },
+        {
+          "path": "profile-feature/index",
+          "style": {
+            "navigationBarTitleText": "我的内容",
+            "navigationStyle": "custom",
+            "disableScroll": true,
+            "backgroundColor": "#F6F7F9",
+            "backgroundColorTop": "#F6F7F9",
+            "backgroundColorBottom": "#F6F7F9"
+          }
+        },
+        {
+          "path": "database-issues/index",
+          "style": {
+            "navigationBarTitleText": "数据库",
+            "navigationStyle": "custom",
+            "disableScroll": true,
+            "backgroundColor": "#F5F6F8",
+            "backgroundColorTop": "#F5F6F8",
+            "backgroundColorBottom": "#F5F6F8"
           }
         }
       ]
@@ -122,10 +177,16 @@
         "selectedIconPath": "static/tabs/index_active.png"
       },
       {
+        "pagePath": "pages/media/index",
+        "text": "融媒",
+        "iconPath": "static/tabs/media.png",
+        "selectedIconPath": "static/tabs/media_active.png"
+      },
+      {
         "pagePath": "pages/magazine/index",
-        "text": "书刊",
-        "iconPath": "static/tabs/magazine.png",
-        "selectedIconPath": "static/tabs/magazine_active.png"
+        "text": "数据库",
+        "iconPath": "static/tabs/database.png",
+        "selectedIconPath": "static/tabs/database_active.png"
       },
       {
         "pagePath": "pages/my/index",

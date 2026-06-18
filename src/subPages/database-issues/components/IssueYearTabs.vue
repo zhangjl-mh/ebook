@@ -8,11 +8,6 @@
         </button>
       </view>
     </scroll-view>
-
-    <button class="year-tabs__filter" @tap="emit('filter')">
-      <view class="year-tabs__filter-icon"></view>
-      <text>筛选</text>
-    </button>
   </view>
 </template>
 
@@ -28,7 +23,6 @@ defineProps<Props>();
 
 const emit = defineEmits<{
   change: [value: IssueYearFilter];
-  filter: [];
 }>();
 </script>
 
@@ -36,8 +30,7 @@ const emit = defineEmits<{
 .year-tabs {
   display: flex;
   align-items: center;
-  gap: 22rpx;
-  padding: 12rpx 29rpx 20rpx;
+  padding: 0 20rpx 18rpx;
 }
 
 .year-tabs__scroller {
@@ -101,55 +94,4 @@ const emit = defineEmits<{
   color: var(--qs-text-inverse);
 }
 
-.year-tabs__filter {
-  display: flex;
-  width: 82rpx;
-  height: 56rpx;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 7rpx;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: #3f3f3f;
-  font-size: 24rpx;
-  line-height: 1;
-
-  &::after {
-    border: none;
-  }
-}
-
-.year-tabs__filter-icon {
-  position: relative;
-  width: 26rpx;
-  height: 28rpx;
-  flex-shrink: 0;
-
-  &::before {
-    position: absolute;
-    top: 4rpx;
-    left: 1rpx;
-    width: 21rpx;
-    height: 13rpx;
-    border: 3rpx solid #333;
-    border-bottom: 0;
-    border-radius: 3rpx 3rpx 0 0;
-    content: '';
-    transform: perspective(30rpx) rotateX(-32deg);
-  }
-
-  &::after {
-    position: absolute;
-    top: 16rpx;
-    left: 11rpx;
-    width: 6rpx;
-    height: 9rpx;
-    border-radius: 2rpx;
-    background: #343434;
-    content: '';
-  }
-}
 </style>

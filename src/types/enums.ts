@@ -8,7 +8,8 @@ export type HeaderMode = (typeof HeaderMode)[keyof typeof HeaderMode];
 export const ArticleTabKey = {
   Recommend: 'recommend',
   News: 'news',
-  Theory: 'theory'
+  Theory: 'theory',
+  Enterprise: 'enterprise'
 } as const;
 
 export type ArticleTabKey = (typeof ArticleTabKey)[keyof typeof ArticleTabKey];
@@ -16,7 +17,8 @@ export type ArticleTabKey = (typeof ArticleTabKey)[keyof typeof ArticleTabKey];
 export const articleTabKeys = [
   ArticleTabKey.Recommend,
   ArticleTabKey.News,
-  ArticleTabKey.Theory
+  ArticleTabKey.Theory,
+  ArticleTabKey.Enterprise
 ] as const;
 
 export const IssueYear = {
@@ -34,6 +36,16 @@ export const IssueYearFilter = {
 } as const;
 
 export type IssueYearFilter = (typeof IssueYearFilter)[keyof typeof IssueYearFilter];
+
+export const DatabasePublicationId = {
+  Qiushi: 'qiushi',
+  HongqiWengao: 'hongqi-wengao',
+  QiushiEn: 'qiushi-en',
+  HongqiArchive: 'hongqi-archive'
+} as const;
+
+export type DatabasePublicationId =
+  (typeof DatabasePublicationId)[keyof typeof DatabasePublicationId];
 
 export const SubscriptionPlanId = {
   Month: 'month',
@@ -78,12 +90,43 @@ export const ProfileBadgeType = {
 
 export type ProfileBadgeType = (typeof ProfileBadgeType)[keyof typeof ProfileBadgeType];
 
-export const ProfileMenuIcon = {
-  Order: 'order',
-  Verify: 'verify',
-  Invoice: 'invoice',
-  Favorite: 'favorite',
-  Service: 'service'
+export const MediaCategoryKey = {
+  Ai: 'ai',
+  Youth: 'youth',
+  Weekly: 'weekly',
+  Abroad: 'abroad'
 } as const;
 
-export type ProfileMenuIcon = (typeof ProfileMenuIcon)[keyof typeof ProfileMenuIcon];
+export type MediaCategoryKey = (typeof MediaCategoryKey)[keyof typeof MediaCategoryKey];
+
+export const MediaItemType = {
+  Video: 'video',
+  Article: 'article'
+} as const;
+
+export type MediaItemType = (typeof MediaItemType)[keyof typeof MediaItemType];
+
+export const WeeklySectionKey = {
+  Activities: 'activities',
+  Policies: 'policies',
+  Finance: 'finance',
+  Global: 'global'
+} as const;
+
+export type WeeklySectionKey = (typeof WeeklySectionKey)[keyof typeof WeeklySectionKey];
+
+export const ProfileFeatureType = {
+  Purchased: 'purchased',
+  History: 'history',
+  Favorite: 'favorite',
+  Subscribe: 'subscribe',
+  Download: 'download',
+  Notes: 'notes',
+  StudyData: 'studyData',
+  Invoice: 'invoice',
+  Ai: 'ai',
+  Service: 'service',
+  Help: 'help'
+} as const;
+
+export type ProfileFeatureType = (typeof ProfileFeatureType)[keyof typeof ProfileFeatureType];

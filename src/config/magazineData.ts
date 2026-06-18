@@ -43,13 +43,99 @@ export const magazineConfig: MagazineConfig = {
     btnText: '立即订阅'
   },
   tabCategories: [
-    { key: ArticleTabKey.Recommend, name: '推荐' },
-    { key: ArticleTabKey.News, name: '要闻' },
-    { key: ArticleTabKey.Theory, name: '思想' }
+    { key: ArticleTabKey.Recommend, name: '精选' },
+    { key: ArticleTabKey.News, name: '专栏' },
+    { key: ArticleTabKey.Theory, name: '求是号' },
+    { key: ArticleTabKey.Enterprise, name: '企业定制' }
   ],
   articles: {
-    [ArticleTabKey.Recommend]: [],
-    [ArticleTabKey.News]: [],
-    [ArticleTabKey.Theory]: []
+    [ArticleTabKey.Recommend]: [
+      {
+        id: 'home-recommend-1',
+        title: '前瞻布局和发展未来产业',
+        subtitle: '总结近年来我国未来产业发展情况，分析世界未来产业发展趋势',
+        summary: '总结近年来我国未来产业发展情况，分析世界未来产业发展趋势。',
+        tags: ['《求是》2025/23'],
+        thumbnail: '/static/home/article-thumb.png',
+        publishDate: '2026-06-18',
+        linkUrl: ''
+      },
+      {
+        id: 'home-recommend-2',
+        title: '《QIUSHI》最新一期解读',
+        subtitle: '权威解读最新一期重点文章',
+        summary: '权威解读最新一期重点文章。',
+        tags: ['QIUSHI'],
+        thumbnail: '/static/home/article-thumb-2.png',
+        publishDate: '2026-06-18',
+        linkUrl: ''
+      },
+      {
+        id: 'home-recommend-3',
+        title: '华为“韬定律”揭示了什么？',
+        subtitle: '从企业实践理解高质量发展方法论',
+        summary: '从企业实践理解高质量发展方法论。',
+        tags: ['红旗文稿'],
+        thumbnail: '/static/home/article-thumb-3.png',
+        publishDate: '2026-06-18',
+        linkUrl: ''
+      }
+    ],
+    [ArticleTabKey.News]: [
+      {
+        id: 'home-column-1',
+        title: '新时代人文经济学的丰富内涵和理论贡献',
+        subtitle: '作者：葛 扬',
+        summary: '来源：《求是》2025/23，时间：2025-12-01。',
+        tags: ['专栏'],
+        thumbnail: '',
+        publishDate: '2025-12-01',
+        linkUrl: ''
+      },
+      {
+        id: 'home-column-2',
+        title: '经济治理理论的创新和突破',
+        subtitle: '学习习近平经济思想的经济治理理论',
+        summary: '来源：《求是》2025/23，时间：2025-12-01。',
+        tags: ['专栏'],
+        thumbnail: '',
+        publishDate: '2025-12-01',
+        linkUrl: ''
+      }
+    ],
+    [ArticleTabKey.Theory]: [
+      {
+        id: 'home-account-1',
+        title: '华为“韬定律”揭示了什么',
+        subtitle: '作者：苏慧',
+        summary: '企业观察与理论学习内容。',
+        tags: ['订阅'],
+        thumbnail: '/static/home/account-logo.png',
+        publishDate: '2026-06-18',
+        linkUrl: ''
+      },
+      {
+        id: 'home-account-2',
+        title: '前线：华为“韬定律”揭示了什么',
+        subtitle: '作者：清华大学教育机构',
+        summary: '求是号精选内容。',
+        tags: ['订阅'],
+        thumbnail: '/static/home/account-logo.png',
+        publishDate: '2026-06-18',
+        linkUrl: ''
+      }
+    ],
+    [ArticleTabKey.Enterprise]: [
+      {
+        id: 'home-enterprise-1',
+        title: '学习知识库',
+        subtitle: '独家资料包、案例库、行业研究报告',
+        summary: '为企业学习场景提供专题知识服务。',
+        tags: ['企业定制'],
+        thumbnail: '/static/home/account-logo.png',
+        publishDate: '2026-06-18',
+        linkUrl: ''
+      }
+    ]
   }
 };

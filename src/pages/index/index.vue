@@ -3,80 +3,72 @@
     <scroll-view class="index-page__scroll qs-page-scroll" :scroll-y="true" :enable-flex="true" :enhanced="true"
       :bounces="false">
       <view class="index-page__inner">
-        <QSHeader />
-
-        <view class="index-page__carousel">
-          <QSMagazineSwiper />
-        </view>
-
-        <view class="index-page__content">
-          <QSSubscriptionBanner />
-          <view class="article-section">
-            <QSCategoryTabs />
-            <QSArticleList />
-          </view>
-        </view>
+        <QSHeader @open-ai="openAiAssistant" />
+        <QSCategoryTabs />
+        <QSHomeSections />
       </view>
     </scroll-view>
   </view>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
 import QSHeader from './components/QSHeader.vue';
-import QSMagazineSwiper from './components/QSMagazineSwiper.vue';
-import QSSubscriptionBanner from './components/QSSubscriptionBanner.vue';
 import QSCategoryTabs from './components/QSCategoryTabs.vue';
-import QSArticleList from './components/QSArticleList.vue';
+import QSHomeSections from './components/QSHomeSections.vue';
 import { useMagazineStore } from '@/store/magazineStore';
 
 const store = useMagazineStore();
+const openingAiPage = ref(false);
+
+const openAiAssistant = () => {
+  if (openingAiPage.value) return;
+
+  openingAiPage.value = true;
+  uni.navigateTo({
+    url: '/subPages/profile-feature/index?type=ai',
+    fail: () => {
+      uni.showToast({
+        title: 'AI小是打开失败',
+        icon: 'none'
+      });
+    },
+    complete: () => {
+      setTimeout(() => {
+        openingAiPage.value = false;
+      }, 500);
+    }
+  });
+};
 
 onLoad(() => {
+  // #ifdef MP-WEIXIN
   store.fetchArticles();
+  // #endif
 });
 </script>
 
 <style lang="scss">
 page {
-  background-color: var(--qs-page-bg);
+  background-color: #f5f5f5;
 }
 
 .index-page {
   height: 100%;
-  background: var(--qs-page-bg);
+  background: #f5f5f5;
 }
 
 .index-page__scroll {
-  background: var(--qs-page-bg);
+  background: #f5f5f5;
 }
 
 .index-page__inner {
   min-height: 100%;
   overflow-x: hidden;
   padding-bottom: var(--qs-page-bottom-gap);
-  background: var(--qs-page-bg);
+  background: #f5f5f5;
   box-sizing: border-box;
 }
 
-.index-page__carousel {
-  position: relative;
-  z-index: 2;
-  margin-top: -110rpx;
-}
-
-.index-page__content {
-  position: relative;
-  z-index: 1;
-  margin: 20rpx 32rpx var(--qs-tabbar-bottom-space);
-}
-
-.article-section {
-  overflow: hidden;
-  border: 1rpx solid var(--qs-border-color-light);
-  border-radius: 18rpx;
-  background: var(--qs-card-bg);
-  box-shadow: var(--qs-shadow-card-soft);
-  margin-top: 40rpx;
-}
 </style>

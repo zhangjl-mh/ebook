@@ -2,7 +2,9 @@ import { requestJson } from '@/services/request';
 import { stripHtml } from '@/utils/text';
 import type { Article, ArticleTabKey } from '@/types/magazine';
 
-const DATA_ENDPOINTS: Record<ArticleTabKey, string> = {
+type RemoteArticleTabKey = Exclude<ArticleTabKey, 'enterprise'>;
+
+const DATA_ENDPOINTS: Record<RemoteArticleTabKey, string> = {
   recommend: 'https://m.qstheory.cn/ceshi/ds_ec431a5380564d039e9336ca7870baaf.json',
   news: 'https://m.qstheory.cn/ceshi/ds_a1258b018fb54be5822c4e9a83db3bcb.json',
   theory: 'https://m.qstheory.cn/ceshi/ds_2a95645a3adc4dab8aa81747207cc847.json'
@@ -78,6 +80,7 @@ export const fetchMagazineArticles = async (): Promise<Record<ArticleTabKey, Art
   return {
     recommend: mapRemoteArticles('recommend', recommend),
     news: mapRemoteArticles('news', news),
-    theory: mapRemoteArticles('theory', theory)
+    theory: mapRemoteArticles('theory', theory),
+    enterprise: []
   };
 };
