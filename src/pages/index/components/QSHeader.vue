@@ -11,8 +11,17 @@
     <view class="qs-header__tools">
       <view class="qs-header__search">
         <view class="qs-header__search-icon"></view>
-        <input type="text" :value="store.searchQuery" placeholder="请输入检索内容" placeholder-class="qs-header__placeholder"
-          class="qs-header__input" @input="onSearchInput" />
+        <input
+          type="text"
+          :value="store.searchQuery"
+          placeholder="请输入检索内容"
+          placeholder-class="qs-header__placeholder"
+          class="qs-header__input"
+          confirm-type="search"
+          :maxlength="40"
+          @input="onSearchInput"
+          @confirm="onSearchInput"
+        />
       </view>
       <button class="qs-header__ai" aria-label="打开AI小是" @tap="emit('open-ai')">
         <image src="/static/home/ai-mark.png" mode="aspectFit" />
