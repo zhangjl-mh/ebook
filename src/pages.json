@@ -110,6 +110,17 @@
           }
         },
         {
+          "path": "search/index",
+          "style": {
+            "navigationBarTitleText": "搜索",
+            "navigationStyle": "custom",
+            "disableScroll": true,
+            "backgroundColor": "#F5F6F8",
+            "backgroundColorTop": "#FFFFFF",
+            "backgroundColorBottom": "#F5F6F8"
+          }
+        },
+        {
           "path": "article-detail/index",
           "style": {
             "navigationBarTitleText": "详情",

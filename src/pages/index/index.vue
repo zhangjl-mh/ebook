@@ -3,7 +3,7 @@
     <scroll-view class="index-page__scroll qs-page-scroll" :scroll-y="true" :enable-flex="true" :enhanced="true"
       :bounces="false">
       <view class="index-page__inner">
-        <QSHeader @open-ai="openAiAssistant" />
+        <QSHeader @open-ai="openAiAssistant" @open-search="openSearchPage" />
         <QSCategoryTabs />
         <QSHomeSections />
       </view>
@@ -21,6 +21,7 @@ import { useMagazineStore } from '@/store/magazineStore';
 
 const store = useMagazineStore();
 const openingAiPage = ref(false);
+const openingSearchPage = ref(false);
 
 const openAiAssistant = () => {
   if (openingAiPage.value) return;
@@ -37,6 +38,26 @@ const openAiAssistant = () => {
     complete: () => {
       setTimeout(() => {
         openingAiPage.value = false;
+      }, 500);
+    }
+  });
+};
+
+const openSearchPage = () => {
+  if (openingSearchPage.value) return;
+
+  openingSearchPage.value = true;
+  uni.navigateTo({
+    url: '/subPages/search/index',
+    fail: () => {
+      uni.showToast({
+        title: '搜索页打开失败',
+        icon: 'none'
+      });
+    },
+    complete: () => {
+      setTimeout(() => {
+        openingSearchPage.value = false;
       }, 500);
     }
   });

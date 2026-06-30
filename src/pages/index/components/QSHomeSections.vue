@@ -1,15 +1,6 @@
 <template>
   <view class="home-content">
-    <QSHomeSearchResults
-      v-if="isSearching"
-      :items="searchResults"
-      :query="store.searchQuery"
-      :loading="store.isArticlesLoading"
-      :error-message="store.errorMessage"
-      @select="openSearchItem"
-    />
-
-    <template v-else-if="store.activeTab === ArticleTabKey.Recommend">
+    <template v-if="store.activeTab === ArticleTabKey.Recommend">
       <view class="recommend-top">
         <QSMagazineSwiper />
         <QSNewIssueShelf :active-issue-id="activeIssueId" @select="handleIssueSelect" />
@@ -159,31 +150,17 @@ import {
   homeMessages
 } from '@/config/homePage';
 import type { HomeIssueArticle } from '@/config/homePage';
-import { ArticleTabKey, HomeSearchTargetType } from '@/types/enums';
+import { ArticleTabKey } from '@/types/enums';
 import { useMagazineStore } from '@/store/magazineStore';
-import { buildHomeSearchItems, filterHomeSearchItems } from '@/utils/homeSearch';
-import type { HomeSearchItem } from '@/types/homeSearch';
 import QSMagazineSwiper from './QSMagazineSwiper.vue';
 import QSNewIssueShelf from './QSNewIssueShelf.vue';
 import QSHomeActions from './QSHomeActions.vue';
-import QSHomeSearchResults from './QSHomeSearchResults.vue';
 
 const store = useMagazineStore();
 const activeIssueId = ref(homeIssueCards[0]?.id || '');
 const openingArticleId = ref('');
 const openingDirectory = ref(false);
-const openingSearchItemId = ref('');
 
-const isSearching = computed(() => store.searchQuery.trim().length > 0);
-const searchItems = computed(() =>
-  buildHomeSearchItems({
-    articlesByTab: store.config.articles,
-    issueArticles: homeIssueArticles,
-    columnArticles: homeColumnArticles,
-    accountItems: homeAccountItems
-  })
-);
-const searchResults = computed(() => filterHomeSearchItems(searchItems.value, store.searchQuery));
 const recommendColumns = computed(() => homeColumnArticles.slice(0, 2));
 const recommendAccounts = computed(() => homeAccountItems.slice(0, 2));
 const activeIssueArticles = computed(() => homeIssueArticles[activeIssueId.value] || []);
@@ -233,45 +210,6 @@ const openIssueDirectory = () => {
       }, 500);
     }
   });
-};
-
-const resetOpeningSearchItem = (itemId: string) => {
-  setTimeout(() => {
-    if (openingSearchItemId.value === itemId) {
-      openingSearchItemId.value = '';
-    }
-  }, 500);
-};
-
-const openSearchItem = (item: HomeSearchItem) => {
-  if (openingSearchItemId.value) return;
-
-  openingSearchItemId.value = item.id;
-
-  if (item.target.type === HomeSearchTargetType.ArticleDetail) {
-    uni.navigateTo({
-      url: `/subPages/article-detail/index?id=${encodeURIComponent(item.target.articleId)}`,
-      fail: () => {
-        uni.showToast({
-          title: '文章详情打开失败',
-          icon: 'none'
-        });
-      },
-      complete: () => {
-        resetOpeningSearchItem(item.id);
-      }
-    });
-    return;
-  }
-
-  if (item.target.type === HomeSearchTargetType.Webview) {
-    store.openWebview(item.target.url, item.target.title);
-    resetOpeningSearchItem(item.id);
-    return;
-  }
-
-  uni.showToast({ title: '内容建设中', icon: 'none' });
-  resetOpeningSearchItem(item.id);
 };
 
 const showPendingToast = () => {

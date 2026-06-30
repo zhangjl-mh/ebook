@@ -9,20 +9,10 @@
     </view>
 
     <view class="qs-header__tools">
-      <view class="qs-header__search">
+      <button class="qs-header__search" @tap="emit('open-search')">
         <view class="qs-header__search-icon"></view>
-        <input
-          type="text"
-          :value="store.searchQuery"
-          placeholder="请输入检索内容"
-          placeholder-class="qs-header__placeholder"
-          class="qs-header__input"
-          confirm-type="search"
-          :maxlength="40"
-          @input="onSearchInput"
-          @confirm="onSearchInput"
-        />
-      </view>
+        <text class="qs-header__placeholder">请输入检索内容</text>
+      </button>
       <button class="qs-header__ai" aria-label="打开AI小是" @tap="emit('open-ai')">
         <image src="/static/home/ai-mark.png" mode="aspectFit" />
       </button>
@@ -33,14 +23,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useSafeArea } from '@/hooks/useSafeArea';
-import { useMagazineStore } from '@/store/magazineStore';
-import { getUniInputValue } from '@/utils/events';
 
 const emit = defineEmits<{
   'open-ai': [];
+  'open-search': [];
 }>();
 
-const store = useMagazineStore();
 const { safeArea } = useSafeArea();
 
 const navStyle = computed(() => ({
@@ -53,9 +41,6 @@ const capsuleStyle = computed(() => ({
   height: `${safeArea.value.capsuleHeight}px`
 }));
 
-const onSearchInput = (event: unknown) => {
-  store.setSearchQuery(getUniInputValue(event));
-};
 </script>
 
 <style lang="scss" scoped>
@@ -132,11 +117,18 @@ const onSearchInput = (event: unknown) => {
   flex: 1;
   align-items: center;
   height: 62rpx;
+  margin: 0;
   padding: 0 24rpx;
   border: 2rpx solid #cd1305;
   border-radius: 999rpx;
   background: #fff;
   box-sizing: border-box;
+  line-height: 1;
+  text-align: left;
+
+  &::after {
+    border: none;
+  }
 }
 
 .qs-header__search-icon {
@@ -163,15 +155,12 @@ const onSearchInput = (event: unknown) => {
   }
 }
 
-.qs-header__input {
+.qs-header__placeholder {
   min-width: 0;
   flex: 1;
-  color: var(--qs-text-regular);
-  font-size: 26rpx;
-}
-
-.qs-header__placeholder {
   color: #9a9a9a;
+  font-size: 26rpx;
+  line-height: 1.3;
 }
 
 .qs-header__ai {
