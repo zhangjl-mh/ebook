@@ -130,3 +130,21 @@ export const ProfileFeatureType = {
 } as const;
 
 export type ProfileFeatureType = (typeof ProfileFeatureType)[keyof typeof ProfileFeatureType];
+
+export const HomeSearchItemKind = {
+  Article: 'article',
+  IssueArticle: 'issueArticle',
+  Column: 'column',
+  Account: 'account'
+} as const;
+
+export type HomeSearchItemKind = (typeof HomeSearchItemKind)[keyof typeof HomeSearchItemKind];
+
+export const HomeSearchTargetType = {
+  ArticleDetail: 'articleDetail',
+  Webview: 'webview',
+  Pending: 'pending'
+} as const;
+
+export type HomeSearchTargetType =
+  (typeof HomeSearchTargetType)[keyof typeof HomeSearchTargetType];
