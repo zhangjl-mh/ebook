@@ -73,7 +73,7 @@
     "autoprefixer": "^10.5.0",
     "postcss": "^8.5.15",
     "tailwindcss": "^3.4.17",
-    "typescript": "^6.0.3",
+    "typescript": "~5.4.5",
     "vite": "5.2.8",
     "vitest": "^2.1.9",
     "vue-tsc": "^1.0.24",
